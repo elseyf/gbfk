@@ -1,0 +1,67 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 1.
+Hexadecimal [32-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =   00002710 L
+    .__.ABS.                                                    =   00000000 G
+    .__.CPU.                                                    =   00000000 L
+    .__.H$L.                                                    =   00000000 L
+    __divuint                                                       ******** GX
+    __moduint                                                       ******** GX
+  1 _bf_cell                                                        00000807 GR
+  1 _bf_cell_p                                                      00000805 GR
+  0 _bf_clear_screen                                                0000061A GR
+  0 _bf_editor                                                      00000294 GR
+  0 _bf_editor_redraw_instr                                         00000570 GR
+  0 _bf_editor_update_instr                                         000004EA GR
+  0 _bf_hello_world                                                 0000019E GR
+  1 _bf_instr                                                       00000003 GR
+  1 _bf_instr_p                                                     00000001 GR
+  0 _bf_instruction_char                                            00000195 GR
+  0 _bf_interpreter                                                 0000069A GR
+  1 _bf_pc                                                          00000803 GR
+  1 _bf_screen_out_x                                                00001007 GR
+  1 _bf_screen_out_y                                                00001008 GR
+    _bg_tiles                                                       ******** GX
+    _copy_to_oam_obj                                                ******** GX
+  1 _cursor_obj                                                     00001009 GR
+  0 _dec_bf_cell_p                                                  00000249 GR
+  0 _dec_bf_instr_p                                                 00000221 GR
+  0 _dec_bf_pc                                                      0000027B GR
+    _fastcpy                                                        ******** GX
+    _fill                                                           ******** GX
+  0 _inc_bf_cell_p                                                  00000230 GR
+  0 _inc_bf_instr_p                                                 0000020E GR
+  0 _inc_bf_pc                                                      00000262 GR
+    _key_hold                                                       ******** GX
+    _key_push                                                       ******** GX
+  0 _main                                                           00000000 GR
+    _oam_dma_wait                                                   ******** GX
+    _oam_dma_wait_size                                              ******** GX
+    _obj                                                            ******** GX
+    _obj_slot                                                       ******** GX
+  0 _palette                                                        00000194 GR
+    _read_joypad                                                    ******** GX
+  1 _run_interpreter                                                00000000 GR
+    _scroll_x                                                       ******** GX
+    _scroll_y                                                       ******** GX
+    _set_bg_chr                                                     ******** GX
+    _set_bg_map_tile                                                ******** GX
+    _set_obj                                                        ******** GX
+    _update_bg_map_tile                                             ******** GX
+    _vblank_happened                                                ******** GX
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
+Hexadecimal [32-Bits]
+
+Area Table
+
+   0 _CODE                                      size      822   flags    0
+   1 _DATA                                      size     100D   flags    0
+   2 _DABS                                      size        0   flags    8
+   3 _HOME                                      size        0   flags    0
+   4 _GSINIT                                    size        0   flags    0
+   5 _GSFINAL                                   size        0   flags    0
+   6 _CABS                                      size        0   flags    8
+

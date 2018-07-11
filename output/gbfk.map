@@ -1,0 +1,220 @@
+ASxxxx Linker V03.00 + NoICE + sdld,  page 1.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+.  .ABS.                            00000000    00000000 =           0. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000000  .__.ABS.                           
+     00000000  l__CABS                         
+     00000000  l__DABS                         
+     00000000  l__GSFINAL                      
+     00000000  l__GSINIT                       
+     00000000  l__HOME                         
+     00000000  l__INTERRUPT                    
+     00000000  s__CABS                         
+     00000000  s__DABS                         
+     00000000  s__INTERRUPT                    
+     00000000  s__INTERRUPT0                   
+     00000000  s__INTERRUPT1                   
+     00000000  s__INTERRUPT2                   
+     00000000  s__INTERRUPT3                   
+     00000000  s__INTERRUPT4                   
+     00000000  s__INTERRUPT5                   
+     00000003  l__INTERRUPT0                   
+     00000003  l__INTERRUPT1                   
+     00000003  l__INTERRUPT2                   
+     00000003  l__INTERRUPT3                   
+     00000003  l__INTERRUPT4                   
+     00000003  l__INTERRUPT5                   
+     00000200  s__CODE                         
+     00001104  l__DATA                         
+     000013C2  l__CODE                         
+     0000C000  s__DATA                         
+     0000D104  s__GSFINAL                      
+     0000D104  s__GSINIT                       
+     0000D104  s__HOME                         
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 2.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    000013C2 =        5058. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00000200  _vblank_isr                        gb
+     00000238  _lcd_stat_isr                      gb
+     00000242  _timer_isr                         gb
+     0000024B  _serial_isr                        gb
+     00000255  _joypad_isr                        gb
+     0000025F  _init_gameboy                      gb
+     00000274  _fastcpy                           gb
+     00000292  _fill                              gb
+     000002AD  _set_bg_chr                        gb
+     000002D7  _set_bg_map                        gb
+     00000301  _set_bg_map_tile                   gb
+     00000311  _update_bg_map_tile                gb
+     0000037D  _set_obj_chr                       gb
+     000003A7  _set_obj                           gb
+     000003CF  _copy_to_oam_obj                   gb
+     000003F3  _read_joypad                       gb
+     00000417  _key_push                          gb
+     00000430  _key_hold                          gb
+     0000043D  _key_release                       gb
+     00000456  _oam_dma_wait                      oam_dma_wait
+     00000460  _oam_dma_wait_end                  oam_dma_wait
+     00000460  _oam_dma_wait_size                 oam_dma_wait
+     00000461  _main                              main
+     000005F5  _palette                           main
+     000005F6  _bf_instruction_char               main
+     000005FF  _bf_hello_world                    main
+     0000066F  _inc_bf_instr_p                    main
+     00000682  _dec_bf_instr_p                    main
+     00000691  _inc_bf_cell_p                     main
+     000006AA  _dec_bf_cell_p                     main
+     000006C3  _inc_bf_pc                         main
+     000006DC  _dec_bf_pc                         main
+     000006F5  _bf_editor                         main
+     0000094B  _bf_editor_update_instr            main
+     000009D1  _bf_editor_redraw_instr            main
+     00000A7B  _bf_clear_screen                   main
+     00000AFB  _bf_interpreter                    main
+     00000C83  _bg_tiles                          
+     00001483  __divsuchar                        
+     00001492  __modsuchar                        
+     0000149E  __divuschar                        
+     000014B0  __moduschar                        
+     000014C0  __divschar                         
+     000014CE  __modschar                         
+     000014DA  __divsint                          
+     000014EE  __modsint                          
+     00001500  __divuchar                         
+     0000150E  __moduchar                         
+     0000151A  __divuint                          
+     0000152E  __moduint                          
+ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_CODE                               00000200    000013C2 =        5058. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     00001540  .div8                              
+     00001540  .mod8                              
+     00001548  .div16                             
+     00001548  .mod16                             
+     0000157E  .divu8                             
+     0000157E  .modu8                             
+     00001581  .divu16                            
+     00001581  .modu16                            
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_DATA                               0000C000    00001104 =        4356. bytes (REL,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+     0000C000  _obj                               gb
+     0000C0A0  _vram_transfer_size                gb
+     0000C0A1  _vram_transfer_buffer              gb
+     0000C0F1  _obj_slot                          gb
+     0000C0F2  _joy0                              gb
+     0000C0F3  _old_joy0                          gb
+     0000C0F4  _scroll_x                          gb
+     0000C0F5  _scroll_y                          gb
+     0000C0F6  _vblank_happened                   gb
+     0000C0F7  _run_interpreter                   main
+     0000C0F8  _bf_instr_p                        main
+     0000C0FA  _bf_instr                          main
+     0000C8FA  _bf_pc                             main
+     0000C8FC  _bf_cell_p                         main
+     0000C8FE  _bf_cell                           main
+     0000D0FE  _bf_screen_out_x                   main
+     0000D0FF  _bf_screen_out_y                   main
+     0000D100  _cursor_obj                        main
+ASxxxx Linker V03.00 + NoICE + sdld,  page 5.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_INTERRUPT0                         00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 6.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_INTERRUPT1                         00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 7.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_INTERRUPT2                         00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 8.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_INTERRUPT3                         00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_INTERRUPT4                         00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
+Hexadecimal  [32-Bits]
+
+Area                                    Addr        Size        Decimal Bytes (Attributes)
+--------------------------------        ----        ----        ------- ----- ------------
+_INTERRUPT5                         00000000    00000003 =           3. bytes (ABS,CON)
+
+      Value  Global                              Global Defined In Module
+      -----  --------------------------------   ------------------------
+ASxxxx Linker V03.00 + NoICE + sdld,  page 11.
+
+Files Linked                              [ module(s) ]
+
+output/out/gb.rel                         [ gb ]
+output/out/oam_dma_wait.rel               [ oam_dma_wait ]
+output/out/main.rel                       [ main ]
+output/out/int_vector.rel                 [ int_vector ]
+output/out/bg_tiles.rel                   [  ]
+
+
+Libraries Linked                          [ object file ]
+
+C:/SDCC/lib/gbz80/gbz80.lib               [ div.rel ]
+
+ASxxxx Linker V03.00 + NoICE + sdld,  page 12.
+
+User Base Address Definitions
+
+_CODE = 0x0200
+_DATA = 0xc000
+
+
