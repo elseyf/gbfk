@@ -1,7 +1,3 @@
-/**
- * GameBoy Hardware Abstraction Layer, by el_seyf
- * Contains functions and defines for GameBoy Hardware
-*/
 
 #pragma disable_warning 59
 
@@ -15,6 +11,7 @@ uint8_t             vram_transfer_buffer[4 * MAX_BYTES_PER_VBLANK];
 uint8_t             obj_slot;
 uint8_t             joy0, old_joy0;
 uint8_t             scroll_x, scroll_y;
+uint8_t             offset_x, offset_y;
 volatile bool       vblank_happened;
 
 void vblank_isr() __interrupt {
@@ -47,6 +44,10 @@ void vblank_isr() __interrupt {
         ld (REG_BG_SCX), a
         ld a, (_scroll_y)
         ld (REG_BG_SCY), a
+        ld a, (_offset_x)
+        ld (REG_WX), a
+        ld a, (_offset_y)
+        ld (REG_WY), a
     __endasm;
     vblank_happened = true;
 }
@@ -75,6 +76,16 @@ void init_gameboy() __naked {
         jp ROM_START_ADDR       ;actual start address
     __endasm;
 }
+
+void set_bg_map_select(bool _offset){
+    if(_offset) *reg(REG_LCDC) |= LCDC_BG_MAP_SELECT;
+    else        *reg(REG_LCDC) &= ~LCDC_BG_MAP_SELECT;
+}
+void set_win_map_select(bool _offset){
+    if(_offset) *reg(REG_LCDC) |= LCDC_WIN_MAP_SELECT;
+    else        *reg(REG_LCDC) &= ~LCDC_WIN_MAP_SELECT;
+}
+
 
 void fastcpy(void* _dst, void* _src, uint16_t _size){
     _dst = _dst; _src = _src; _size = _size;
@@ -162,6 +173,22 @@ void set_bg_map_tile(uint16_t _addr, uint8_t _tile){
 void update_bg_map_tile(uint16_t _addr, uint8_t _tile){
     vram_transfer_buffer[(vram_transfer_size << 2) + 0] = (BG_MAP_ADDR + _addr) & 0xFF;
     vram_transfer_buffer[(vram_transfer_size << 2) + 1] = ((BG_MAP_ADDR + _addr) >> 8) & 0xFF;
+    vram_transfer_buffer[(vram_transfer_size << 2) + 2] = 0x00;
+    vram_transfer_buffer[(vram_transfer_size << 2) + 3] = _tile;
+    vram_transfer_size++;
+}
+
+void set_win_map(uint8_t* _data, uint16_t _addr, uint16_t _size){
+    fastcpy(WIN_MAP + _addr, _data, _size);
+}
+
+void set_win_map_tile(uint16_t _addr, uint8_t _tile){
+    *reg(WIN_MAP + _addr) = _tile;
+}
+
+void update_win_map_tile(uint16_t _addr, uint8_t _tile){
+    vram_transfer_buffer[(vram_transfer_size << 2) + 0] = (WIN_MAP_ADDR + _addr) & 0xFF;
+    vram_transfer_buffer[(vram_transfer_size << 2) + 1] = ((WIN_MAP_ADDR + _addr) >> 8) & 0xFF;
     vram_transfer_buffer[(vram_transfer_size << 2) + 2] = 0x00;
     vram_transfer_buffer[(vram_transfer_size << 2) + 3] = _tile;
     vram_transfer_size++;

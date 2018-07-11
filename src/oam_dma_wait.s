@@ -1,5 +1,3 @@
-;OAM DMA Routine, by el_seyf
-
 .module oam_dma_wait
 
 .globl _oam_dma_wait

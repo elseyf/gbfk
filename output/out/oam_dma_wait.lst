@@ -3,26 +3,24 @@ Hexadecimal [32-Bits]
 
 
 
-                                      1 ;OAM DMA Routine, by el_seyf
+                                      1 .module oam_dma_wait
                                       2 
-                                      3 .module oam_dma_wait
-                                      4 
-                                      5 .globl _oam_dma_wait
-                                      6 .globl _oam_dma_wait_end
-                                      7 .globl _oam_dma_wait_size
-                                      8 .globl _obj
-    00000000                          9 _oam_dma_wait:
-    00000000 3E 00                   10     ld a, #(_obj >> 8)          ;Use DMA on OAM Buffer          ; 2 Bytes
-    00000002 E0 46                   11     ldh (0x46), a               ;Transfer takes 160 * 4 Cycles  ; 2 Bytes
-    00000004 3E 28                   12     ld a, #40                   ;Wait for (40 * 16)             ; 2 Bytes
-    00000006                         13     loop:                       ;         + 8 + 16 Cycles
-    00000006 3D                      14         dec a                   ;                               ; 1 Bytes
-    00000007 20 FD                   15         jr nz, loop             ;                               ; 2 Bytes
-    00000009 C9                      16     ret                         ;                               ; 1 Bytes
-                                     17                                 ;                               ; = 10 Bytes
-    0000000A                         18 _oam_dma_wait_end:
-    0000000A                         19 _oam_dma_wait_size:
-    0000000A 0A                      20     .db (_oam_dma_wait_end - _oam_dma_wait)
+                                      3 .globl _oam_dma_wait
+                                      4 .globl _oam_dma_wait_end
+                                      5 .globl _oam_dma_wait_size
+                                      6 .globl _obj
+    00000000                          7 _oam_dma_wait:
+    00000000 3E 00                    8     ld a, #(_obj >> 8)          ;Use DMA on OAM Buffer          ; 2 Bytes
+    00000002 E0 46                    9     ldh (0x46), a               ;Transfer takes 160 * 4 Cycles  ; 2 Bytes
+    00000004 3E 28                   10     ld a, #40                   ;Wait for (40 * 16)             ; 2 Bytes
+    00000006                         11     loop:                       ;         + 8 + 16 Cycles
+    00000006 3D                      12         dec a                   ;                               ; 1 Bytes
+    00000007 20 FD                   13         jr nz, loop             ;                               ; 2 Bytes
+    00000009 C9                      14     ret                         ;                               ; 1 Bytes
+                                     15                                 ;                               ; = 10 Bytes
+    0000000A                         16 _oam_dma_wait_end:
+    0000000A                         17 _oam_dma_wait_size:
+    0000000A 0A                      18     .db (_oam_dma_wait_end - _oam_dma_wait)
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [32-Bits]
 

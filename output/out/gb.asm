@@ -9,6 +9,8 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _vblank_happened
+	.globl _offset_y
+	.globl _offset_x
 	.globl _scroll_y
 	.globl _scroll_x
 	.globl _old_joy0
@@ -23,12 +25,17 @@
 	.globl _serial_isr
 	.globl _joypad_isr
 	.globl _init_gameboy
+	.globl _set_bg_map_select
+	.globl _set_win_map_select
 	.globl _fastcpy
 	.globl _fill
 	.globl _set_bg_chr
 	.globl _set_bg_map
 	.globl _set_bg_map_tile
 	.globl _update_bg_map_tile
+	.globl _set_win_map
+	.globl _set_win_map_tile
+	.globl _update_win_map_tile
 	.globl _set_obj_chr
 	.globl _set_obj
 	.globl _copy_to_oam_obj
@@ -59,6 +66,10 @@ _scroll_x::
 	.ds 1
 _scroll_y::
 	.ds 1
+_offset_x::
+	.ds 1
+_offset_y::
+	.ds 1
 _vblank_happened::
 	.ds 1
 ;--------------------------------------------------------
@@ -81,7 +92,7 @@ _vblank_happened::
 ; code
 ;--------------------------------------------------------
 	.area _CODE
-;src/gb.c:20: void vblank_isr() __interrupt {
+;src/gb.c:17: void vblank_isr() __interrupt {
 ;	---------------------------------
 ; Function vblank_isr
 ; ---------------------------------
@@ -91,7 +102,7 @@ _vblank_isr::
 	push bc
 	push de
 	push hl
-;src/gb.c:50: __endasm;
+;src/gb.c:51: __endasm;
 	di
 	call	0xFF80 ;24 + (160 * 4) cycles = 664 cycles
 	ei
@@ -117,16 +128,20 @@ _vblank_isr::
 	ld	(0xFF43), a
 	ld	a, (_scroll_y)
 	ld	(0xFF42), a
-;src/gb.c:51: vblank_happened = true;
+	ld	a, (_offset_x)
+	ld	(0xFF4B), a
+	ld	a, (_offset_y)
+	ld	(0xFF4A), a
+;src/gb.c:52: vblank_happened = true;
 	ld	hl, #_vblank_happened
 	ld	(hl), #0x01
-;src/gb.c:52: }
+;src/gb.c:53: }
 	pop	hl
 	pop de
 	pop bc
 	pop af
 	ret
-;src/gb.c:53: void lcd_stat_isr() __interrupt {;}
+;src/gb.c:54: void lcd_stat_isr() __interrupt {;}
 ;	---------------------------------
 ; Function lcd_stat_isr
 ; ---------------------------------
@@ -141,7 +156,7 @@ _lcd_stat_isr::
 	pop bc
 	pop af
 	ret
-;src/gb.c:54: void timer_isr() __critical __interrupt {;}
+;src/gb.c:55: void timer_isr() __critical __interrupt {;}
 ;	---------------------------------
 ; Function timer_isr
 ; ---------------------------------
@@ -155,7 +170,7 @@ _timer_isr::
 	pop bc
 	pop af
 	reti
-;src/gb.c:55: void serial_isr() __interrupt {;}
+;src/gb.c:56: void serial_isr() __interrupt {;}
 ;	---------------------------------
 ; Function serial_isr
 ; ---------------------------------
@@ -170,7 +185,7 @@ _serial_isr::
 	pop bc
 	pop af
 	ret
-;src/gb.c:56: void joypad_isr() __interrupt {;}
+;src/gb.c:57: void joypad_isr() __interrupt {;}
 ;	---------------------------------
 ; Function joypad_isr
 ; ---------------------------------
@@ -185,12 +200,12 @@ _joypad_isr::
 	pop bc
 	pop af
 	ret
-;src/gb.c:58: void init_gameboy() __naked {
+;src/gb.c:59: void init_gameboy() __naked {
 ;	---------------------------------
 ; Function init_gameboy
 ; ---------------------------------
 _init_gameboy::
-;src/gb.c:76: __endasm;
+;src/gb.c:77: __endasm;
 	.globl	_main
 	    1$:
 	ld hl, #0xC000 ;clear ((uint8_t*)0xC000) at
@@ -205,13 +220,61 @@ _init_gameboy::
 	jr	nz, 0$
 	ld	sp, #0xE000 ;Stack points to RAM
 	jp	_main ;actual start address
-;src/gb.c:77: }
-;src/gb.c:79: void fastcpy(void* _dst, void* _src, uint16_t _size){
+;src/gb.c:78: }
+;src/gb.c:80: void set_bg_map_select(bool _offset){
+;	---------------------------------
+; Function set_bg_map_select
+; ---------------------------------
+_set_bg_map_select::
+;src/gb.c:81: if(_offset) *reg(REG_LCDC) |= LCDC_BG_MAP_SELECT;
+	ld	de, #0xff40
+	ld	a,(de)
+	ld	c, a
+	ldhl	sp,#2
+	bit	0, (hl)
+	jr	Z,00102$
+	ld	b, #0x00
+	set	3, c
+	ld	hl, #0xff40
+	ld	(hl), c
+	ret
+00102$:
+;src/gb.c:82: else        *reg(REG_LCDC) &= ~LCDC_BG_MAP_SELECT;
+	res	3, c
+	ld	hl, #0xff40
+	ld	(hl), c
+;src/gb.c:83: }
+	ret
+;src/gb.c:84: void set_win_map_select(bool _offset){
+;	---------------------------------
+; Function set_win_map_select
+; ---------------------------------
+_set_win_map_select::
+;src/gb.c:85: if(_offset) *reg(REG_LCDC) |= LCDC_WIN_MAP_SELECT;
+	ld	de, #0xff40
+	ld	a,(de)
+	ld	c, a
+	ldhl	sp,#2
+	bit	0, (hl)
+	jr	Z,00102$
+	ld	b, #0x00
+	set	6, c
+	ld	hl, #0xff40
+	ld	(hl), c
+	ret
+00102$:
+;src/gb.c:86: else        *reg(REG_LCDC) &= ~LCDC_WIN_MAP_SELECT;
+	res	6, c
+	ld	hl, #0xff40
+	ld	(hl), c
+;src/gb.c:87: }
+	ret
+;src/gb.c:90: void fastcpy(void* _dst, void* _src, uint16_t _size){
 ;	---------------------------------
 ; Function fastcpy
 ; ---------------------------------
 _fastcpy::
-;src/gb.c:113: __endasm;
+;src/gb.c:124: __endasm;
 	dst	= 2
 	src	= 4
 	size	= 6
@@ -241,14 +304,14 @@ _fastcpy::
 	or	c
 	jr	nz, 0$
 	        1$:
-;src/gb.c:114: }
+;src/gb.c:125: }
 	ret
-;src/gb.c:116: void fill(void* _dst, uint8_t _val, uint16_t _size){
+;src/gb.c:127: void fill(void* _dst, uint8_t _val, uint16_t _size){
 ;	---------------------------------
 ; Function fill
 ; ---------------------------------
 _fill::
-;src/gb.c:147: __endasm;
+;src/gb.c:158: __endasm;
 	dst	= 2
 	val	= 4
 	size	= 5
@@ -275,15 +338,15 @@ _fill::
 	or	c
 	jr	nz, 0$
 	        1$:
-;src/gb.c:148: }
+;src/gb.c:159: }
 	ret
-;src/gb.c:150: void set_bg_chr(uint8_t* _data, uint16_t _addr, uint16_t _size){
+;src/gb.c:161: void set_bg_chr(uint8_t* _data, uint16_t _addr, uint16_t _size){
 ;	---------------------------------
 ; Function set_bg_chr
 ; ---------------------------------
 _set_bg_chr::
 	add	sp, #-2
-;src/gb.c:151: fastcpy(BG_CHR + _addr, _data, _size);
+;src/gb.c:162: fastcpy(BG_CHR + _addr, _data, _size);
 	ldhl	sp,#4
 	ld	a, (hl+)
 	ld	e, (hl)
@@ -311,16 +374,16 @@ _set_bg_chr::
 	push	bc
 	call	_fastcpy
 	add	sp, #6
-;src/gb.c:152: }
+;src/gb.c:163: }
 	add	sp, #2
 	ret
-;src/gb.c:154: void set_bg_map(uint8_t* _data, uint16_t _addr, uint16_t _size){
+;src/gb.c:165: void set_bg_map(uint8_t* _data, uint16_t _addr, uint16_t _size){
 ;	---------------------------------
 ; Function set_bg_map
 ; ---------------------------------
 _set_bg_map::
 	add	sp, #-2
-;src/gb.c:155: fastcpy(BG_MAP + _addr, _data, _size);
+;src/gb.c:166: fastcpy(BG_MAP + _addr, _data, _size);
 	ldhl	sp,#4
 	ld	a, (hl+)
 	ld	e, (hl)
@@ -348,15 +411,15 @@ _set_bg_map::
 	push	bc
 	call	_fastcpy
 	add	sp, #6
-;src/gb.c:156: }
+;src/gb.c:167: }
 	add	sp, #2
 	ret
-;src/gb.c:158: void set_bg_map_tile(uint16_t _addr, uint8_t _tile){
+;src/gb.c:169: void set_bg_map_tile(uint16_t _addr, uint8_t _tile){
 ;	---------------------------------
 ; Function set_bg_map_tile
 ; ---------------------------------
 _set_bg_map_tile::
-;src/gb.c:159: *reg(BG_MAP + _addr) = _tile;
+;src/gb.c:170: *reg(BG_MAP + _addr) = _tile;
 	ldhl	sp,#(3 - 1)
 	ld	e, (hl)
 	inc	hl
@@ -368,15 +431,15 @@ _set_bg_map_tile::
 	ldhl	sp,#4
 	ld	a, (hl)
 	ld	(bc), a
-;src/gb.c:160: }
+;src/gb.c:171: }
 	ret
-;src/gb.c:162: void update_bg_map_tile(uint16_t _addr, uint8_t _tile){
+;src/gb.c:173: void update_bg_map_tile(uint16_t _addr, uint8_t _tile){
 ;	---------------------------------
 ; Function update_bg_map_tile
 ; ---------------------------------
 _update_bg_map_tile::
 	add	sp, #-2
-;src/gb.c:163: vram_transfer_buffer[(vram_transfer_size << 2) + 0] = (BG_MAP_ADDR + _addr) & 0xFF;
+;src/gb.c:174: vram_transfer_buffer[(vram_transfer_size << 2) + 0] = (BG_MAP_ADDR + _addr) & 0xFF;
 	ld	hl, #_vram_transfer_size
 	ld	a, (hl)
 	add	a, a
@@ -392,7 +455,7 @@ _update_bg_map_tile::
 	ldhl	sp,#4
 	ld	a, (hl)
 	ld	(bc), a
-;src/gb.c:164: vram_transfer_buffer[(vram_transfer_size << 2) + 1] = ((BG_MAP_ADDR + _addr) >> 8) & 0xFF;
+;src/gb.c:175: vram_transfer_buffer[(vram_transfer_size << 2) + 1] = ((BG_MAP_ADDR + _addr) >> 8) & 0xFF;
 	ld	hl, #_vram_transfer_size
 	ld	a, (hl)
 	add	a, a
@@ -420,7 +483,7 @@ _update_bg_map_tile::
 	ld	d, #0x00
 	ld	a, e
 	ld	(bc), a
-;src/gb.c:165: vram_transfer_buffer[(vram_transfer_size << 2) + 2] = 0x00;
+;src/gb.c:176: vram_transfer_buffer[(vram_transfer_size << 2) + 2] = 0x00;
 	ld	hl, #_vram_transfer_size
 	ld	a, (hl)
 	add	a, a
@@ -437,7 +500,7 @@ _update_bg_map_tile::
 	ld	b, h
 	xor	a, a
 	ld	(bc), a
-;src/gb.c:166: vram_transfer_buffer[(vram_transfer_size << 2) + 3] = _tile;
+;src/gb.c:177: vram_transfer_buffer[(vram_transfer_size << 2) + 3] = _tile;
 	ld	hl, #_vram_transfer_size
 	ld	a, (hl)
 	add	a, a
@@ -456,19 +519,167 @@ _update_bg_map_tile::
 	ldhl	sp,#6
 	ld	a, (hl)
 	ld	(bc), a
-;src/gb.c:167: vram_transfer_size++;
+;src/gb.c:178: vram_transfer_size++;
 	ld	hl, #_vram_transfer_size
 	inc	(hl)
-;src/gb.c:168: }
+;src/gb.c:179: }
 	add	sp, #2
 	ret
-;src/gb.c:170: void set_obj_chr(uint8_t* _data, uint16_t _addr, uint16_t _size){
+;src/gb.c:181: void set_win_map(uint8_t* _data, uint16_t _addr, uint16_t _size){
+;	---------------------------------
+; Function set_win_map
+; ---------------------------------
+_set_win_map::
+	add	sp, #-2
+;src/gb.c:182: fastcpy(WIN_MAP + _addr, _data, _size);
+	ldhl	sp,#4
+	ld	a, (hl+)
+	ld	e, (hl)
+	ldhl	sp,#0
+	ld	(hl+), a
+	ld	(hl), e
+	ldhl	sp,#(7 - 1)
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	hl, #0x9c00
+	add	hl, de
+	ld	c, l
+	ld	b, h
+	ldhl	sp,#8
+	ld	a, (hl+)
+	ld	h, (hl)
+	ld	l, a
+	push	hl
+	ldhl	sp,#2
+	ld	a, (hl+)
+	ld	h, (hl)
+	ld	l, a
+	push	hl
+	push	bc
+	call	_fastcpy
+	add	sp, #6
+;src/gb.c:183: }
+	add	sp, #2
+	ret
+;src/gb.c:185: void set_win_map_tile(uint16_t _addr, uint8_t _tile){
+;	---------------------------------
+; Function set_win_map_tile
+; ---------------------------------
+_set_win_map_tile::
+;src/gb.c:186: *reg(WIN_MAP + _addr) = _tile;
+	ldhl	sp,#(3 - 1)
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	hl, #0x9c00
+	add	hl, de
+	ld	c, l
+	ld	b, h
+	ldhl	sp,#4
+	ld	a, (hl)
+	ld	(bc), a
+;src/gb.c:187: }
+	ret
+;src/gb.c:189: void update_win_map_tile(uint16_t _addr, uint8_t _tile){
+;	---------------------------------
+; Function update_win_map_tile
+; ---------------------------------
+_update_win_map_tile::
+	add	sp, #-2
+;src/gb.c:190: vram_transfer_buffer[(vram_transfer_size << 2) + 0] = (WIN_MAP_ADDR + _addr) & 0xFF;
+	ld	hl, #_vram_transfer_size
+	ld	a, (hl)
+	add	a, a
+	add	a, a
+	ld	c, a
+	rla
+	sbc	a, a
+	ld	b, a
+	ld	hl, #_vram_transfer_buffer
+	add	hl, bc
+	ld	c, l
+	ld	b, h
+	ldhl	sp,#4
+	ld	a, (hl)
+	ld	(bc), a
+;src/gb.c:191: vram_transfer_buffer[(vram_transfer_size << 2) + 1] = ((WIN_MAP_ADDR + _addr) >> 8) & 0xFF;
+	ld	hl, #_vram_transfer_size
+	ld	a, (hl)
+	add	a, a
+	add	a, a
+	inc	a
+	ld	c, a
+	rla
+	sbc	a, a
+	ld	b, a
+	ld	hl, #_vram_transfer_buffer
+	add	hl, bc
+	ld	c, l
+	ld	b, h
+	ldhl	sp,#(5 - 1)
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	hl, #0x9c00
+	add	hl, de
+	inc	sp
+	inc	sp
+	push	hl
+	ldhl	sp,#1
+	ld	e, (hl)
+	ld	d, #0x00
+	ld	a, e
+	ld	(bc), a
+;src/gb.c:192: vram_transfer_buffer[(vram_transfer_size << 2) + 2] = 0x00;
+	ld	hl, #_vram_transfer_size
+	ld	a, (hl)
+	add	a, a
+	add	a, a
+	inc	a
+	inc	a
+	ld	c, a
+	rla
+	sbc	a, a
+	ld	b, a
+	ld	hl, #_vram_transfer_buffer
+	add	hl, bc
+	ld	c, l
+	ld	b, h
+	xor	a, a
+	ld	(bc), a
+;src/gb.c:193: vram_transfer_buffer[(vram_transfer_size << 2) + 3] = _tile;
+	ld	hl, #_vram_transfer_size
+	ld	a, (hl)
+	add	a, a
+	add	a, a
+	inc	a
+	inc	a
+	inc	a
+	ld	c, a
+	rla
+	sbc	a, a
+	ld	b, a
+	ld	hl, #_vram_transfer_buffer
+	add	hl, bc
+	ld	c, l
+	ld	b, h
+	ldhl	sp,#6
+	ld	a, (hl)
+	ld	(bc), a
+;src/gb.c:194: vram_transfer_size++;
+	ld	hl, #_vram_transfer_size
+	inc	(hl)
+;src/gb.c:195: }
+	add	sp, #2
+	ret
+;src/gb.c:197: void set_obj_chr(uint8_t* _data, uint16_t _addr, uint16_t _size){
 ;	---------------------------------
 ; Function set_obj_chr
 ; ---------------------------------
 _set_obj_chr::
 	add	sp, #-2
-;src/gb.c:171: fastcpy(OBJ_CHR + _addr, _data, _size);
+;src/gb.c:198: fastcpy(OBJ_CHR + _addr, _data, _size);
 	ldhl	sp,#4
 	ld	a, (hl+)
 	ld	e, (hl)
@@ -496,16 +707,16 @@ _set_obj_chr::
 	push	bc
 	call	_fastcpy
 	add	sp, #6
-;src/gb.c:172: }
+;src/gb.c:199: }
 	add	sp, #2
 	ret
-;src/gb.c:174: void set_obj(obj_t* _obj, uint8_t _x, uint8_t _y, uint8_t _tile, uint8_t _attr){
+;src/gb.c:201: void set_obj(obj_t* _obj, uint8_t _x, uint8_t _y, uint8_t _tile, uint8_t _attr){
 ;	---------------------------------
 ; Function set_obj
 ; ---------------------------------
 _set_obj::
 	add	sp, #-2
-;src/gb.c:175: _obj->x     = _x;
+;src/gb.c:202: _obj->x     = _x;
 	ldhl	sp,#4
 	ld	a, (hl+)
 	ld	e, (hl)
@@ -518,13 +729,13 @@ _set_obj::
 	ldhl	sp,#6
 	ld	a, (hl)
 	ld	(bc), a
-;src/gb.c:176: _obj->y     = _y;
+;src/gb.c:203: _obj->y     = _y;
 	pop	de
 	push	de
 	inc	hl
 	ld	a, (hl)
 	ld	(de), a
-;src/gb.c:177: _obj->tile  = _tile;
+;src/gb.c:204: _obj->tile  = _tile;
 	pop	bc
 	push	bc
 	inc	bc
@@ -532,7 +743,7 @@ _set_obj::
 	inc	hl
 	ld	a, (hl)
 	ld	(bc), a
-;src/gb.c:178: _obj->attr  = _attr;
+;src/gb.c:205: _obj->attr  = _attr;
 	pop	bc
 	push	bc
 	inc	bc
@@ -541,15 +752,15 @@ _set_obj::
 	inc	hl
 	ld	a, (hl)
 	ld	(bc), a
-;src/gb.c:179: }
+;src/gb.c:206: }
 	add	sp, #2
 	ret
-;src/gb.c:181: uint8_t copy_to_oam_obj(obj_t* _obj, uint8_t _slot){
+;src/gb.c:208: uint8_t copy_to_oam_obj(obj_t* _obj, uint8_t _slot){
 ;	---------------------------------
 ; Function copy_to_oam_obj
 ; ---------------------------------
 _copy_to_oam_obj::
-;src/gb.c:217: __endasm;
+;src/gb.c:244: __endasm;
 	obj	= 2
 	slot	= 4
 	ldhl	sp, #obj
@@ -579,14 +790,14 @@ _copy_to_oam_obj::
 	ldhl	sp, #slot
 	ld	e, (hl)
 	inc	e
-;src/gb.c:218: }
+;src/gb.c:245: }
 	ret
-;src/gb.c:220: void read_joypad(){
+;src/gb.c:247: void read_joypad(){
 ;	---------------------------------
 ; Function read_joypad
 ; ---------------------------------
 _read_joypad::
-;src/gb.c:247: __endasm;
+;src/gb.c:274: __endasm;
 	ld	hl, #0xFF00
 	ld	a, (_joy0)
 	ld	(_old_joy0), a
@@ -608,9 +819,9 @@ _read_joypad::
 	ld	(hl), #0x30
 	cpl
 	ld	(_joy0), a
-;src/gb.c:248: }
+;src/gb.c:275: }
 	ret
-;src/gb.c:249: bool key_push(uint8_t _key){return (!(old_joy0 & _key) && (joy0 & _key));}
+;src/gb.c:276: bool key_push(uint8_t _key){return (!(old_joy0 & _key) && (joy0 & _key));}
 ;	---------------------------------
 ; Function key_push
 ; ---------------------------------
@@ -633,7 +844,7 @@ _key_push::
 00105$:
 	ld	e, a
 	ret
-;src/gb.c:250: bool key_hold(uint8_t _key){return (joy0 & _key);}
+;src/gb.c:277: bool key_hold(uint8_t _key){return (joy0 & _key);}
 ;	---------------------------------
 ; Function key_hold
 ; ---------------------------------
@@ -648,7 +859,7 @@ _key_hold::
 	rla
 	ld	e, a
 	ret
-;src/gb.c:251: bool key_release(uint8_t _key){return ((old_joy0 & _key) && !(joy0 & _key));}
+;src/gb.c:278: bool key_release(uint8_t _key){return ((old_joy0 & _key) && !(joy0 & _key));}
 ;	---------------------------------
 ; Function key_release
 ; ---------------------------------

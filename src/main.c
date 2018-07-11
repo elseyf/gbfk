@@ -1,30 +1,3 @@
-/**
- * gbfk - Brainf*ck Interpreter for GameBoy, by el_seyf
- * Allows to program end execute BF programs
- *
- * Instruction Mapping:
- * Hold nothing:
- *      UP:     cursor up
- *    DOWN:     cursor down
- *    LEFT:     cursor left
- *   RIGHT:     cursor right
- *   START:     Execute/Exit Program
- *  SELECT:     Erase Char
- *
- * Put instruction:
- * Hold A:
- *      UP:     +: Cell increase
- *    DOWN:     -: Cell decrease
- *    LEFT:     <: Cell address decrease
- *   RIGHT:     >: Cell address increase
- *
- * Hold B:
- *      UP:     .: Output Cell
- *    DOWN:     ,: Input Char
- *    LEFT:     ]: Bracket left
- *   RIGHT:     [: Bracket right
- *
-*/
 
 //Disable "Constant Overflow"-Warning
 #pragma disable_warning 158
@@ -33,10 +6,18 @@
 #include <stdbool.h>
 #include "gb.h"
 
-const uint8_t palette = 0xE4;
+const uint8_t bg_palette = 0xE4;
+const uint8_t ob0_palette = 0xE4;
+const uint8_t ob1_palette = 0x27;
 
 #define BF_EDITOR_W     20
 #define BF_EDITOR_H     18
+
+#define BF_KEYBOARD_X   1
+#define BF_KEYBOARD_Y   0
+#define BF_KEYBOARD_W   18
+#define BF_KEYBOARD_H   6
+//#define BF_KEYBOARD
 
 #define BF_INSTR_PER_FRAME  10
 
@@ -65,7 +46,8 @@ obj_t cursor_obj;
 
 const uint8_t bf_hello_world[] =
     "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---"
-    ".+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.[]+[]";
+    ".+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++."
+    "[+]+[>,.<]";
 
 void inc_bf_instr_p();
 void dec_bf_instr_p();
@@ -78,6 +60,7 @@ void bf_editor_update_instr(uint8_t _instr);
 void bf_editor_redraw_instr();
 void bf_clear_screen();
 void bf_interpreter();
+uint8_t bf_get_char();
 
 void main(){
     disable_display();
@@ -87,14 +70,30 @@ void main(){
     vblank_happened = false;
     enable_int(VBLANK_INT);
     
-    set_bg_pal(palette);
-    set_obj_pal0(palette);
+    set_bg_pal(bg_palette);
+    set_obj_pal0(ob0_palette);
+    set_obj_pal1(ob1_palette);
     
+    set_bg_map_select(false);
+    set_win_map_select(true);
     set_bg_chr(bg_tiles, 0x0000, sizeof(bg_tiles));
-    fill(BG_MAP, 0x00, 0x0400);
+    fill(BG_MAP, ' ', 0x0400);
+    fill(WIN_MAP, ' ' + 0x80, 0x0400);
+    {   uint8_t _x = 0, _y = 0;
+        for(uint16_t i = 0xA0; i < 0x100; i++){
+            set_win_map_tile_xy(_x + BF_KEYBOARD_X, _y + BF_KEYBOARD_Y, i);
+            if(++_x >= BF_KEYBOARD_W){
+                _x = 0;
+                if(++_y >= BF_KEYBOARD_H)
+                    _y = 0;
+            }
+        }
+    }
     set_bg_scroll(0, 0);
+    set_win_offset(0, 144);
     
     enable_bg();
+    enable_win();
     enable_obj();
     enable_display();
     
@@ -142,8 +141,6 @@ void bf_editor(){
      *    DOWN:     cursor down
      *    LEFT:     cursor left
      *   RIGHT:     cursor right
-     *   START:     Execute/Exit Program
-     *  SELECT:     Erase Char
      *
      * Put instruction:
      * Hold A:
@@ -274,13 +271,13 @@ void bf_interpreter(){
                 inc_bf_pc();
                 break;
             case ',':
-                //Not implemented...
+                bf_cell[bf_cell_p] = bf_get_char();
                 inc_bf_pc();
                 break;
             case '[':
                 inc_bf_pc();
                 if(bf_cell[bf_cell_p] == 0){
-                    for(uint16_t _bracket_c = 1; _bracket_c > 0; inc_bf_pc()){
+                    for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); inc_bf_pc()){
                         if(bf_instr[bf_pc] == '[')      _bracket_c++;
                         else if(bf_instr[bf_pc] == ']') _bracket_c--;
                     }
@@ -290,7 +287,7 @@ void bf_interpreter(){
                 if(bf_cell[bf_cell_p] == 0) inc_bf_pc();
                 else{
                     dec_bf_pc();
-                    for(uint16_t _bracket_c = 1; _bracket_c > 0; dec_bf_pc()){
+                    for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); dec_bf_pc()){
                         if(bf_instr[bf_pc] == ']')      _bracket_c++;
                         else if(bf_instr[bf_pc] == '[') _bracket_c--;
                     }
@@ -306,4 +303,48 @@ void bf_interpreter(){
         }
     }
 }
+
+uint8_t bf_get_char(){
+    uint8_t _cx, _cy, _char;
+    
+    for(uint8_t i = 0; i <= ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8); i += 4){
+        set_win_offset(0, 144 - i);
+        while(!vblank_happened) halt();
+        vblank_happened = false;
+    }
+    set_win_offset(0, 144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8));
+    
+    _cx = 0; _cy = 0; _char = 0;
+    while(1){
+        while(!vblank_happened) halt();
+        vblank_happened = false;
+        obj_slot = 0;
+        read_joypad();
+        
+        if(key_push(KEY_UP))    if(_cy > 0)                                     _cy--;
+        if(key_push(KEY_DOWN))  if((_cy + BF_KEYBOARD_Y) < (BF_KEYBOARD_H - 1)) _cy++;
+        if(key_push(KEY_LEFT))  if(_cx > 0)                                     _cx--;
+        if(key_push(KEY_RIGHT)) if((_cx + BF_KEYBOARD_X) < BF_KEYBOARD_W) _cx++;
+        if(key_push(KEY_A) || key_push(KEY_START))                          break;
+        
+        set_obj(&cursor_obj, (_cx + BF_KEYBOARD_X) * 8, 144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8) + ((_cy + BF_KEYBOARD_Y) * 8), 0x7F, 0x10);
+        obj_slot = copy_to_oam_obj(&cursor_obj, obj_slot);
+        
+        fill((void*)(((uint16_t)obj) + (obj_slot << 2)), 0xFF, sizeof(obj) - (obj_slot << 2));
+    }
+    _char = ' ' + ((_cy * BF_KEYBOARD_W) + _cx);
+    obj_slot = 0;
+    fill((void*)(((uint16_t)obj) + (obj_slot << 2)), 0xFF, sizeof(obj) - (obj_slot << 2));
+    
+    for(uint8_t i = (144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8)); i <= 144; i += 4){
+        set_win_offset(0, i);
+        while(!vblank_happened) halt();
+        vblank_happened = false;
+    }
+    set_win_offset(0, 144);
+    
+    return _char;
+}
+
+
 

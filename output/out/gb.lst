@@ -9,667 +9,878 @@
                                       9 ; Public variables in this module
                                      10 ;--------------------------------------------------------
                                      11 	.globl _vblank_happened
-                                     12 	.globl _scroll_y
-                                     13 	.globl _scroll_x
-                                     14 	.globl _old_joy0
-                                     15 	.globl _joy0
-                                     16 	.globl _obj_slot
-                                     17 	.globl _vram_transfer_buffer
-                                     18 	.globl _vram_transfer_size
-                                     19 	.globl _obj
-                                     20 	.globl _vblank_isr
-                                     21 	.globl _lcd_stat_isr
-                                     22 	.globl _timer_isr
-                                     23 	.globl _serial_isr
-                                     24 	.globl _joypad_isr
-                                     25 	.globl _init_gameboy
-                                     26 	.globl _fastcpy
-                                     27 	.globl _fill
-                                     28 	.globl _set_bg_chr
-                                     29 	.globl _set_bg_map
-                                     30 	.globl _set_bg_map_tile
-                                     31 	.globl _update_bg_map_tile
-                                     32 	.globl _set_obj_chr
-                                     33 	.globl _set_obj
-                                     34 	.globl _copy_to_oam_obj
-                                     35 	.globl _read_joypad
-                                     36 	.globl _key_push
-                                     37 	.globl _key_hold
-                                     38 	.globl _key_release
-                                     39 ;--------------------------------------------------------
-                                     40 ; special function registers
-                                     41 ;--------------------------------------------------------
-                                     42 ;--------------------------------------------------------
-                                     43 ; ram data
-                                     44 ;--------------------------------------------------------
-                                     45 	.area _DATA
-    00000000                         46 _obj::
-    00000000                         47 	.ds 160
-    000000A0                         48 _vram_transfer_size::
-    000000A0                         49 	.ds 1
-    000000A1                         50 _vram_transfer_buffer::
-    000000A1                         51 	.ds 80
-    000000F1                         52 _obj_slot::
-    000000F1                         53 	.ds 1
-    000000F2                         54 _joy0::
-    000000F2                         55 	.ds 1
-    000000F3                         56 _old_joy0::
-    000000F3                         57 	.ds 1
-    000000F4                         58 _scroll_x::
-    000000F4                         59 	.ds 1
-    000000F5                         60 _scroll_y::
-    000000F5                         61 	.ds 1
-    000000F6                         62 _vblank_happened::
-    000000F6                         63 	.ds 1
-                                     64 ;--------------------------------------------------------
-                                     65 ; absolute external ram data
-                                     66 ;--------------------------------------------------------
-                                     67 	.area _DABS (ABS)
-                                     68 ;--------------------------------------------------------
-                                     69 ; global & static initialisations
-                                     70 ;--------------------------------------------------------
-                                     71 	.area _HOME
-                                     72 	.area _GSINIT
-                                     73 	.area _GSFINAL
-                                     74 	.area _GSINIT
+                                     12 	.globl _offset_y
+                                     13 	.globl _offset_x
+                                     14 	.globl _scroll_y
+                                     15 	.globl _scroll_x
+                                     16 	.globl _old_joy0
+                                     17 	.globl _joy0
+                                     18 	.globl _obj_slot
+                                     19 	.globl _vram_transfer_buffer
+                                     20 	.globl _vram_transfer_size
+                                     21 	.globl _obj
+                                     22 	.globl _vblank_isr
+                                     23 	.globl _lcd_stat_isr
+                                     24 	.globl _timer_isr
+                                     25 	.globl _serial_isr
+                                     26 	.globl _joypad_isr
+                                     27 	.globl _init_gameboy
+                                     28 	.globl _set_bg_map_select
+                                     29 	.globl _set_win_map_select
+                                     30 	.globl _fastcpy
+                                     31 	.globl _fill
+                                     32 	.globl _set_bg_chr
+                                     33 	.globl _set_bg_map
+                                     34 	.globl _set_bg_map_tile
+                                     35 	.globl _update_bg_map_tile
+                                     36 	.globl _set_win_map
+                                     37 	.globl _set_win_map_tile
+                                     38 	.globl _update_win_map_tile
+                                     39 	.globl _set_obj_chr
+                                     40 	.globl _set_obj
+                                     41 	.globl _copy_to_oam_obj
+                                     42 	.globl _read_joypad
+                                     43 	.globl _key_push
+                                     44 	.globl _key_hold
+                                     45 	.globl _key_release
+                                     46 ;--------------------------------------------------------
+                                     47 ; special function registers
+                                     48 ;--------------------------------------------------------
+                                     49 ;--------------------------------------------------------
+                                     50 ; ram data
+                                     51 ;--------------------------------------------------------
+                                     52 	.area _DATA
+    00000000                         53 _obj::
+    00000000                         54 	.ds 160
+    000000A0                         55 _vram_transfer_size::
+    000000A0                         56 	.ds 1
+    000000A1                         57 _vram_transfer_buffer::
+    000000A1                         58 	.ds 80
+    000000F1                         59 _obj_slot::
+    000000F1                         60 	.ds 1
+    000000F2                         61 _joy0::
+    000000F2                         62 	.ds 1
+    000000F3                         63 _old_joy0::
+    000000F3                         64 	.ds 1
+    000000F4                         65 _scroll_x::
+    000000F4                         66 	.ds 1
+    000000F5                         67 _scroll_y::
+    000000F5                         68 	.ds 1
+    000000F6                         69 _offset_x::
+    000000F6                         70 	.ds 1
+    000000F7                         71 _offset_y::
+    000000F7                         72 	.ds 1
+    000000F8                         73 _vblank_happened::
+    000000F8                         74 	.ds 1
                                      75 ;--------------------------------------------------------
-                                     76 ; Home
+                                     76 ; absolute external ram data
                                      77 ;--------------------------------------------------------
-                                     78 	.area _HOME
-                                     79 	.area _HOME
-                                     80 ;--------------------------------------------------------
-                                     81 ; code
-                                     82 ;--------------------------------------------------------
-                                     83 	.area _CODE
-                                     84 ;src/gb.c:20: void vblank_isr() __interrupt {
-                                     85 ;	---------------------------------
-                                     86 ; Function vblank_isr
-                                     87 ; ---------------------------------
-    00000000                         88 _vblank_isr::
-    00000000 FB                      89 	ei
-    00000001 F5                      90 	push	af
-    00000002 C5                      91 	push bc
-    00000003 D5                      92 	push de
-    00000004 E5                      93 	push hl
-                                     94 ;src/gb.c:50: __endasm;
-    00000005 F3                      95 	di
-    00000006 CD 80 FF                96 	call	0xFF80 ;24 + (160 * 4) cycles = 664 cycles
-    00000009 FB                      97 	ei
-    0000000A FArA0r00                98 	ld	a, (_vram_transfer_size) ;48 + (100 * 20) cycles
-    0000000D B7                      99 	or	a ;= 1648 max (16 Bytes)
-    0000000E 28 12                  100 	jr	z, 0$
-    00000010 5F                     101 	ld	e, a
-    00000011 21rA1r00               102 	ld	hl, #_vram_transfer_buffer ;48
-    00000014                        103 	        1$:
-    00000014 2A                     104 	ld a, (hl+)
-    00000015 4F                     105 	ld	c, a
-    00000016 2A                     106 	ld	a, (hl+)
-    00000017 47                     107 	ld	b, a
-    00000018 2A                     108 	ld	a, (hl+)
-    00000019 2A                     109 	ld	a, (hl+)
-    0000001A 02                     110 	ld	(bc), a
-    0000001B 1D                     111 	dec	e
-    0000001C 20 F6                  112 	jr	nz, 1$
-    0000001E AF                     113 	xor	a
-    0000001F EArA0r00               114 	ld	(_vram_transfer_size), a ;100 * 20
-    00000022                        115 	    0$:
-    00000022 FArF4r00               116 	ld a, (_scroll_x)
-    00000025 EA 43 FF               117 	ld	(0xFF43), a
-    00000028 FArF5r00               118 	ld	a, (_scroll_y)
-    0000002B EA 42 FF               119 	ld	(0xFF42), a
-                                    120 ;src/gb.c:51: vblank_happened = true;
-    0000002E 21rF6r00               121 	ld	hl, #_vblank_happened
-    00000031 36 01                  122 	ld	(hl), #0x01
-                                    123 ;src/gb.c:52: }
-    00000033 E1                     124 	pop	hl
-    00000034 D1                     125 	pop de
-    00000035 C1                     126 	pop bc
-    00000036 F1                     127 	pop af
-    00000037 C9                     128 	ret
-                                    129 ;src/gb.c:53: void lcd_stat_isr() __interrupt {;}
-                                    130 ;	---------------------------------
-                                    131 ; Function lcd_stat_isr
-                                    132 ; ---------------------------------
-    00000038                        133 _lcd_stat_isr::
-    00000038 FB                     134 	ei
-    00000039 F5                     135 	push	af
-    0000003A C5                     136 	push bc
-    0000003B D5                     137 	push de
-    0000003C E5                     138 	push hl
-    0000003D E1                     139 	pop	hl
-    0000003E D1                     140 	pop de
-    0000003F C1                     141 	pop bc
-    00000040 F1                     142 	pop af
-    00000041 C9                     143 	ret
-                                    144 ;src/gb.c:54: void timer_isr() __critical __interrupt {;}
+                                     78 	.area _DABS (ABS)
+                                     79 ;--------------------------------------------------------
+                                     80 ; global & static initialisations
+                                     81 ;--------------------------------------------------------
+                                     82 	.area _HOME
+                                     83 	.area _GSINIT
+                                     84 	.area _GSFINAL
+                                     85 	.area _GSINIT
+                                     86 ;--------------------------------------------------------
+                                     87 ; Home
+                                     88 ;--------------------------------------------------------
+                                     89 	.area _HOME
+                                     90 	.area _HOME
+                                     91 ;--------------------------------------------------------
+                                     92 ; code
+                                     93 ;--------------------------------------------------------
+                                     94 	.area _CODE
+                                     95 ;src/gb.c:17: void vblank_isr() __interrupt {
+                                     96 ;	---------------------------------
+                                     97 ; Function vblank_isr
+                                     98 ; ---------------------------------
+    00000000                         99 _vblank_isr::
+    00000000 FB                     100 	ei
+    00000001 F5                     101 	push	af
+    00000002 C5                     102 	push bc
+    00000003 D5                     103 	push de
+    00000004 E5                     104 	push hl
+                                    105 ;src/gb.c:51: __endasm;
+    00000005 F3                     106 	di
+    00000006 CD 80 FF               107 	call	0xFF80 ;24 + (160 * 4) cycles = 664 cycles
+    00000009 FB                     108 	ei
+    0000000A FArA0r00               109 	ld	a, (_vram_transfer_size) ;48 + (100 * 20) cycles
+    0000000D B7                     110 	or	a ;= 1648 max (16 Bytes)
+    0000000E 28 12                  111 	jr	z, 0$
+    00000010 5F                     112 	ld	e, a
+    00000011 21rA1r00               113 	ld	hl, #_vram_transfer_buffer ;48
+    00000014                        114 	        1$:
+    00000014 2A                     115 	ld a, (hl+)
+    00000015 4F                     116 	ld	c, a
+    00000016 2A                     117 	ld	a, (hl+)
+    00000017 47                     118 	ld	b, a
+    00000018 2A                     119 	ld	a, (hl+)
+    00000019 2A                     120 	ld	a, (hl+)
+    0000001A 02                     121 	ld	(bc), a
+    0000001B 1D                     122 	dec	e
+    0000001C 20 F6                  123 	jr	nz, 1$
+    0000001E AF                     124 	xor	a
+    0000001F EArA0r00               125 	ld	(_vram_transfer_size), a ;100 * 20
+    00000022                        126 	    0$:
+    00000022 FArF4r00               127 	ld a, (_scroll_x)
+    00000025 EA 43 FF               128 	ld	(0xFF43), a
+    00000028 FArF5r00               129 	ld	a, (_scroll_y)
+    0000002B EA 42 FF               130 	ld	(0xFF42), a
+    0000002E FArF6r00               131 	ld	a, (_offset_x)
+    00000031 EA 4B FF               132 	ld	(0xFF4B), a
+    00000034 FArF7r00               133 	ld	a, (_offset_y)
+    00000037 EA 4A FF               134 	ld	(0xFF4A), a
+                                    135 ;src/gb.c:52: vblank_happened = true;
+    0000003A 21rF8r00               136 	ld	hl, #_vblank_happened
+    0000003D 36 01                  137 	ld	(hl), #0x01
+                                    138 ;src/gb.c:53: }
+    0000003F E1                     139 	pop	hl
+    00000040 D1                     140 	pop de
+    00000041 C1                     141 	pop bc
+    00000042 F1                     142 	pop af
+    00000043 C9                     143 	ret
+                                    144 ;src/gb.c:54: void lcd_stat_isr() __interrupt {;}
                                     145 ;	---------------------------------
-                                    146 ; Function timer_isr
+                                    146 ; Function lcd_stat_isr
                                     147 ; ---------------------------------
-    00000042                        148 _timer_isr::
-    00000042 F5                     149 	push	af
-    00000043 C5                     150 	push bc
-    00000044 D5                     151 	push de
-    00000045 E5                     152 	push hl
-    00000046 E1                     153 	pop	hl
-    00000047 D1                     154 	pop de
-    00000048 C1                     155 	pop bc
-    00000049 F1                     156 	pop af
-    0000004A D9                     157 	reti
-                                    158 ;src/gb.c:55: void serial_isr() __interrupt {;}
-                                    159 ;	---------------------------------
-                                    160 ; Function serial_isr
-                                    161 ; ---------------------------------
-    0000004B                        162 _serial_isr::
-    0000004B FB                     163 	ei
-    0000004C F5                     164 	push	af
-    0000004D C5                     165 	push bc
-    0000004E D5                     166 	push de
-    0000004F E5                     167 	push hl
-    00000050 E1                     168 	pop	hl
-    00000051 D1                     169 	pop de
-    00000052 C1                     170 	pop bc
-    00000053 F1                     171 	pop af
-    00000054 C9                     172 	ret
-                                    173 ;src/gb.c:56: void joypad_isr() __interrupt {;}
+    00000044                        148 _lcd_stat_isr::
+    00000044 FB                     149 	ei
+    00000045 F5                     150 	push	af
+    00000046 C5                     151 	push bc
+    00000047 D5                     152 	push de
+    00000048 E5                     153 	push hl
+    00000049 E1                     154 	pop	hl
+    0000004A D1                     155 	pop de
+    0000004B C1                     156 	pop bc
+    0000004C F1                     157 	pop af
+    0000004D C9                     158 	ret
+                                    159 ;src/gb.c:55: void timer_isr() __critical __interrupt {;}
+                                    160 ;	---------------------------------
+                                    161 ; Function timer_isr
+                                    162 ; ---------------------------------
+    0000004E                        163 _timer_isr::
+    0000004E F5                     164 	push	af
+    0000004F C5                     165 	push bc
+    00000050 D5                     166 	push de
+    00000051 E5                     167 	push hl
+    00000052 E1                     168 	pop	hl
+    00000053 D1                     169 	pop de
+    00000054 C1                     170 	pop bc
+    00000055 F1                     171 	pop af
+    00000056 D9                     172 	reti
+                                    173 ;src/gb.c:56: void serial_isr() __interrupt {;}
                                     174 ;	---------------------------------
-                                    175 ; Function joypad_isr
+                                    175 ; Function serial_isr
                                     176 ; ---------------------------------
-    00000055                        177 _joypad_isr::
-    00000055 FB                     178 	ei
-    00000056 F5                     179 	push	af
-    00000057 C5                     180 	push bc
-    00000058 D5                     181 	push de
-    00000059 E5                     182 	push hl
-    0000005A E1                     183 	pop	hl
-    0000005B D1                     184 	pop de
-    0000005C C1                     185 	pop bc
-    0000005D F1                     186 	pop af
-    0000005E C9                     187 	ret
-                                    188 ;src/gb.c:58: void init_gameboy() __naked {
+    00000057                        177 _serial_isr::
+    00000057 FB                     178 	ei
+    00000058 F5                     179 	push	af
+    00000059 C5                     180 	push bc
+    0000005A D5                     181 	push de
+    0000005B E5                     182 	push hl
+    0000005C E1                     183 	pop	hl
+    0000005D D1                     184 	pop de
+    0000005E C1                     185 	pop bc
+    0000005F F1                     186 	pop af
+    00000060 C9                     187 	ret
+                                    188 ;src/gb.c:57: void joypad_isr() __interrupt {;}
                                     189 ;	---------------------------------
-                                    190 ; Function init_gameboy
+                                    190 ; Function joypad_isr
                                     191 ; ---------------------------------
-    0000005F                        192 _init_gameboy::
-                                    193 ;src/gb.c:76: __endasm;
-                                    194 	.globl	_main
-    0000005F                        195 	    1$:
-    0000005F 21 00 C0               196 	ld hl, #0xC000 ;clear ((uint8_t*)0xC000) at
-    00000062 11 00 20               197 	ld	de, #0x2000 ;0xC000 - 0xDFFF
-    00000065 AF                     198 	xor	a
-    00000066                        199 	    0$:
-    00000066 22                     200 	ld (hl+), a
-    00000067 1B                     201 	dec	de
-    00000068 BB                     202 	cp	e
-    00000069 20 FB                  203 	jr	nz, 0$
-    0000006B BA                     204 	cp	d
-    0000006C 20 F8                  205 	jr	nz, 0$
-    0000006E 31 00 E0               206 	ld	sp, #0xE000 ;Stack points to RAM
-    00000071 C3r00r00               207 	jp	_main ;actual start address
-                                    208 ;src/gb.c:77: }
-                                    209 ;src/gb.c:79: void fastcpy(void* _dst, void* _src, uint16_t _size){
-                                    210 ;	---------------------------------
-                                    211 ; Function fastcpy
-                                    212 ; ---------------------------------
-    00000074                        213 _fastcpy::
-                                    214 ;src/gb.c:113: __endasm;
-                         00000002   215 	dst	= 2
-                         00000004   216 	src	= 4
-                         00000006   217 	size	= 6
-    00000074 F8 06                  218 	ldhl	sp, #size ;bc = _size
-    00000076 2A                     219 	ld	a, (hl+)
-    00000077 46                     220 	ld	b, (hl)
-    00000078 4F                     221 	ld	c, a
-    00000079 AF                     222 	xor	a
-    0000007A B0                     223 	or	b
-    0000007B B1                     224 	or	c
-    0000007C 28 13                  225 	jr	z, 1$
-    0000007E F8 04                  226 	ldhl	sp, #src ;de = _src
-    00000080 2A                     227 	ld	a, (hl+)
-    00000081 56                     228 	ld	d, (hl)
-    00000082 5F                     229 	ld	e, a
-    00000083 F8 02                  230 	ldhl	sp, #dst ;hl = _dst
-    00000085 2A                     231 	ld	a, (hl+)
-    00000086 66                     232 	ld	h, (hl)
-    00000087 6F                     233 	ld	l, a
-    00000088                        234 	        0$:
-    00000088 1A                     235 	ld a, (de) ;for(;bc > 0; bc--) *(hl++) = *(de++)
-    00000089 22                     236 	ld	(hl+), a
-    0000008A 13                     237 	inc	de
-    0000008B 0B                     238 	dec	bc
-    0000008C AF                     239 	xor	a
-    0000008D B0                     240 	or	b
-    0000008E B1                     241 	or	c
-    0000008F 20 F7                  242 	jr	nz, 0$
-    00000091                        243 	        1$:
-                                    244 ;src/gb.c:114: }
-    00000091 C9                     245 	ret
-                                    246 ;src/gb.c:116: void fill(void* _dst, uint8_t _val, uint16_t _size){
-                                    247 ;	---------------------------------
-                                    248 ; Function fill
-                                    249 ; ---------------------------------
-    00000092                        250 _fill::
-                                    251 ;src/gb.c:147: __endasm;
-                         00000002   252 	dst	= 2
-                         00000004   253 	val	= 4
-                         00000005   254 	size	= 5
-    00000092 F8 05                  255 	ldhl	sp, #size ;bc = size
-    00000094 2A                     256 	ld	a, (hl+)
-    00000095 46                     257 	ld	b, (hl)
-    00000096 4F                     258 	ld	c, a
-    00000097 AF                     259 	xor	a
-    00000098 B0                     260 	or	b
-    00000099 B1                     261 	or	c
-    0000009A 28 10                  262 	jr	z, 1$
-    0000009C F8 04                  263 	ldhl	sp, #val ;e = val
-    0000009E 5E                     264 	ld	e, (hl)
-    0000009F F8 02                  265 	ldhl	sp, #dst ;hl = dst
-    000000A1 2A                     266 	ld	a, (hl+)
-    000000A2 66                     267 	ld	h, (hl)
-    000000A3 6F                     268 	ld	l, a
-    000000A4                        269 	        0$:
-    000000A4 7B                     270 	ld a, e ;for() *(hl++) = e
-    000000A5 22                     271 	ld	(hl+), a
-    000000A6 0B                     272 	dec	bc
-    000000A7 AF                     273 	xor	a
-    000000A8 B0                     274 	or	b
-    000000A9 B1                     275 	or	c
-    000000AA 20 F8                  276 	jr	nz, 0$
-    000000AC                        277 	        1$:
-                                    278 ;src/gb.c:148: }
-    000000AC C9                     279 	ret
-                                    280 ;src/gb.c:150: void set_bg_chr(uint8_t* _data, uint16_t _addr, uint16_t _size){
-                                    281 ;	---------------------------------
-                                    282 ; Function set_bg_chr
-                                    283 ; ---------------------------------
-    000000AD                        284 _set_bg_chr::
-    000000AD E8 FE                  285 	add	sp, #-2
-                                    286 ;src/gb.c:151: fastcpy(BG_CHR + _addr, _data, _size);
-    000000AF F8 04                  287 	ldhl	sp,#4
-    000000B1 2A                     288 	ld	a, (hl+)
-    000000B2 5E                     289 	ld	e, (hl)
-    000000B3 F8 00                  290 	ldhl	sp,#0
-    000000B5 22                     291 	ld	(hl+), a
-    000000B6 73                     292 	ld	(hl), e
-    000000B7 F8 06                  293 	ldhl	sp,#(7 - 1)
-    000000B9 5E                     294 	ld	e, (hl)
-    000000BA 23                     295 	inc	hl
-    000000BB 56                     296 	ld	d, (hl)
-    000000BC 21 00 80               297 	ld	hl, #0x8000
-    000000BF 19                     298 	add	hl, de
-    000000C0 4D                     299 	ld	c, l
-    000000C1 44                     300 	ld	b, h
-    000000C2 F8 08                  301 	ldhl	sp,#8
-    000000C4 2A                     302 	ld	a, (hl+)
-    000000C5 66                     303 	ld	h, (hl)
-    000000C6 6F                     304 	ld	l, a
-    000000C7 E5                     305 	push	hl
-    000000C8 F8 02                  306 	ldhl	sp,#2
-    000000CA 2A                     307 	ld	a, (hl+)
-    000000CB 66                     308 	ld	h, (hl)
-    000000CC 6F                     309 	ld	l, a
-    000000CD E5                     310 	push	hl
-    000000CE C5                     311 	push	bc
-    000000CF CDr74r00               312 	call	_fastcpy
-    000000D2 E8 06                  313 	add	sp, #6
-                                    314 ;src/gb.c:152: }
-    000000D4 E8 02                  315 	add	sp, #2
-    000000D6 C9                     316 	ret
-                                    317 ;src/gb.c:154: void set_bg_map(uint8_t* _data, uint16_t _addr, uint16_t _size){
-                                    318 ;	---------------------------------
-                                    319 ; Function set_bg_map
-                                    320 ; ---------------------------------
-    000000D7                        321 _set_bg_map::
-    000000D7 E8 FE                  322 	add	sp, #-2
-                                    323 ;src/gb.c:155: fastcpy(BG_MAP + _addr, _data, _size);
-    000000D9 F8 04                  324 	ldhl	sp,#4
-    000000DB 2A                     325 	ld	a, (hl+)
-    000000DC 5E                     326 	ld	e, (hl)
-    000000DD F8 00                  327 	ldhl	sp,#0
-    000000DF 22                     328 	ld	(hl+), a
-    000000E0 73                     329 	ld	(hl), e
-    000000E1 F8 06                  330 	ldhl	sp,#(7 - 1)
-    000000E3 5E                     331 	ld	e, (hl)
-    000000E4 23                     332 	inc	hl
-    000000E5 56                     333 	ld	d, (hl)
-    000000E6 21 00 98               334 	ld	hl, #0x9800
-    000000E9 19                     335 	add	hl, de
-    000000EA 4D                     336 	ld	c, l
-    000000EB 44                     337 	ld	b, h
-    000000EC F8 08                  338 	ldhl	sp,#8
-    000000EE 2A                     339 	ld	a, (hl+)
-    000000EF 66                     340 	ld	h, (hl)
-    000000F0 6F                     341 	ld	l, a
-    000000F1 E5                     342 	push	hl
-    000000F2 F8 02                  343 	ldhl	sp,#2
-    000000F4 2A                     344 	ld	a, (hl+)
-    000000F5 66                     345 	ld	h, (hl)
-    000000F6 6F                     346 	ld	l, a
-    000000F7 E5                     347 	push	hl
-    000000F8 C5                     348 	push	bc
-    000000F9 CDr74r00               349 	call	_fastcpy
-    000000FC E8 06                  350 	add	sp, #6
-                                    351 ;src/gb.c:156: }
-    000000FE E8 02                  352 	add	sp, #2
-    00000100 C9                     353 	ret
-                                    354 ;src/gb.c:158: void set_bg_map_tile(uint16_t _addr, uint8_t _tile){
-                                    355 ;	---------------------------------
-                                    356 ; Function set_bg_map_tile
-                                    357 ; ---------------------------------
-    00000101                        358 _set_bg_map_tile::
-                                    359 ;src/gb.c:159: *reg(BG_MAP + _addr) = _tile;
-    00000101 F8 02                  360 	ldhl	sp,#(3 - 1)
-    00000103 5E                     361 	ld	e, (hl)
-    00000104 23                     362 	inc	hl
-    00000105 56                     363 	ld	d, (hl)
-    00000106 21 00 98               364 	ld	hl, #0x9800
-    00000109 19                     365 	add	hl, de
-    0000010A 4D                     366 	ld	c, l
-    0000010B 44                     367 	ld	b, h
-    0000010C F8 04                  368 	ldhl	sp,#4
-    0000010E 7E                     369 	ld	a, (hl)
-    0000010F 02                     370 	ld	(bc), a
-                                    371 ;src/gb.c:160: }
-    00000110 C9                     372 	ret
-                                    373 ;src/gb.c:162: void update_bg_map_tile(uint16_t _addr, uint8_t _tile){
-                                    374 ;	---------------------------------
-                                    375 ; Function update_bg_map_tile
-                                    376 ; ---------------------------------
-    00000111                        377 _update_bg_map_tile::
-    00000111 E8 FE                  378 	add	sp, #-2
-                                    379 ;src/gb.c:163: vram_transfer_buffer[(vram_transfer_size << 2) + 0] = (BG_MAP_ADDR + _addr) & 0xFF;
-    00000113 21rA0r00               380 	ld	hl, #_vram_transfer_size
-    00000116 7E                     381 	ld	a, (hl)
-    00000117 87                     382 	add	a, a
-    00000118 87                     383 	add	a, a
-    00000119 4F                     384 	ld	c, a
-    0000011A 17                     385 	rla
-    0000011B 9F                     386 	sbc	a, a
-    0000011C 47                     387 	ld	b, a
-    0000011D 21rA1r00               388 	ld	hl, #_vram_transfer_buffer
-    00000120 09                     389 	add	hl, bc
-    00000121 4D                     390 	ld	c, l
-    00000122 44                     391 	ld	b, h
-    00000123 F8 04                  392 	ldhl	sp,#4
-    00000125 7E                     393 	ld	a, (hl)
-    00000126 02                     394 	ld	(bc), a
-                                    395 ;src/gb.c:164: vram_transfer_buffer[(vram_transfer_size << 2) + 1] = ((BG_MAP_ADDR + _addr) >> 8) & 0xFF;
-    00000127 21rA0r00               396 	ld	hl, #_vram_transfer_size
-    0000012A 7E                     397 	ld	a, (hl)
-    0000012B 87                     398 	add	a, a
-    0000012C 87                     399 	add	a, a
-    0000012D 3C                     400 	inc	a
-    0000012E 4F                     401 	ld	c, a
-    0000012F 17                     402 	rla
-    00000130 9F                     403 	sbc	a, a
-    00000131 47                     404 	ld	b, a
-    00000132 21rA1r00               405 	ld	hl, #_vram_transfer_buffer
-    00000135 09                     406 	add	hl, bc
-    00000136 4D                     407 	ld	c, l
-    00000137 44                     408 	ld	b, h
-    00000138 F8 04                  409 	ldhl	sp,#(5 - 1)
-    0000013A 5E                     410 	ld	e, (hl)
-    0000013B 23                     411 	inc	hl
-    0000013C 56                     412 	ld	d, (hl)
-    0000013D 21 00 98               413 	ld	hl, #0x9800
-    00000140 19                     414 	add	hl, de
-    00000141 33                     415 	inc	sp
-    00000142 33                     416 	inc	sp
-    00000143 E5                     417 	push	hl
-    00000144 F8 01                  418 	ldhl	sp,#1
-    00000146 5E                     419 	ld	e, (hl)
-    00000147 16 00                  420 	ld	d, #0x00
-    00000149 7B                     421 	ld	a, e
-    0000014A 02                     422 	ld	(bc), a
-                                    423 ;src/gb.c:165: vram_transfer_buffer[(vram_transfer_size << 2) + 2] = 0x00;
-    0000014B 21rA0r00               424 	ld	hl, #_vram_transfer_size
-    0000014E 7E                     425 	ld	a, (hl)
-    0000014F 87                     426 	add	a, a
-    00000150 87                     427 	add	a, a
-    00000151 3C                     428 	inc	a
-    00000152 3C                     429 	inc	a
-    00000153 4F                     430 	ld	c, a
-    00000154 17                     431 	rla
-    00000155 9F                     432 	sbc	a, a
-    00000156 47                     433 	ld	b, a
-    00000157 21rA1r00               434 	ld	hl, #_vram_transfer_buffer
-    0000015A 09                     435 	add	hl, bc
-    0000015B 4D                     436 	ld	c, l
-    0000015C 44                     437 	ld	b, h
-    0000015D AF                     438 	xor	a, a
-    0000015E 02                     439 	ld	(bc), a
-                                    440 ;src/gb.c:166: vram_transfer_buffer[(vram_transfer_size << 2) + 3] = _tile;
-    0000015F 21rA0r00               441 	ld	hl, #_vram_transfer_size
-    00000162 7E                     442 	ld	a, (hl)
-    00000163 87                     443 	add	a, a
-    00000164 87                     444 	add	a, a
-    00000165 3C                     445 	inc	a
-    00000166 3C                     446 	inc	a
-    00000167 3C                     447 	inc	a
-    00000168 4F                     448 	ld	c, a
-    00000169 17                     449 	rla
-    0000016A 9F                     450 	sbc	a, a
-    0000016B 47                     451 	ld	b, a
-    0000016C 21rA1r00               452 	ld	hl, #_vram_transfer_buffer
-    0000016F 09                     453 	add	hl, bc
-    00000170 4D                     454 	ld	c, l
-    00000171 44                     455 	ld	b, h
-    00000172 F8 06                  456 	ldhl	sp,#6
-    00000174 7E                     457 	ld	a, (hl)
-    00000175 02                     458 	ld	(bc), a
-                                    459 ;src/gb.c:167: vram_transfer_size++;
-    00000176 21rA0r00               460 	ld	hl, #_vram_transfer_size
-    00000179 34                     461 	inc	(hl)
-                                    462 ;src/gb.c:168: }
-    0000017A E8 02                  463 	add	sp, #2
-    0000017C C9                     464 	ret
-                                    465 ;src/gb.c:170: void set_obj_chr(uint8_t* _data, uint16_t _addr, uint16_t _size){
-                                    466 ;	---------------------------------
-                                    467 ; Function set_obj_chr
-                                    468 ; ---------------------------------
-    0000017D                        469 _set_obj_chr::
-    0000017D E8 FE                  470 	add	sp, #-2
-                                    471 ;src/gb.c:171: fastcpy(OBJ_CHR + _addr, _data, _size);
-    0000017F F8 04                  472 	ldhl	sp,#4
-    00000181 2A                     473 	ld	a, (hl+)
-    00000182 5E                     474 	ld	e, (hl)
-    00000183 F8 00                  475 	ldhl	sp,#0
-    00000185 22                     476 	ld	(hl+), a
-    00000186 73                     477 	ld	(hl), e
-    00000187 F8 06                  478 	ldhl	sp,#(7 - 1)
-    00000189 5E                     479 	ld	e, (hl)
-    0000018A 23                     480 	inc	hl
-    0000018B 56                     481 	ld	d, (hl)
-    0000018C 21 00 80               482 	ld	hl, #0x8000
-    0000018F 19                     483 	add	hl, de
-    00000190 4D                     484 	ld	c, l
-    00000191 44                     485 	ld	b, h
-    00000192 F8 08                  486 	ldhl	sp,#8
-    00000194 2A                     487 	ld	a, (hl+)
-    00000195 66                     488 	ld	h, (hl)
-    00000196 6F                     489 	ld	l, a
-    00000197 E5                     490 	push	hl
-    00000198 F8 02                  491 	ldhl	sp,#2
-    0000019A 2A                     492 	ld	a, (hl+)
-    0000019B 66                     493 	ld	h, (hl)
-    0000019C 6F                     494 	ld	l, a
-    0000019D E5                     495 	push	hl
-    0000019E C5                     496 	push	bc
-    0000019F CDr74r00               497 	call	_fastcpy
-    000001A2 E8 06                  498 	add	sp, #6
-                                    499 ;src/gb.c:172: }
-    000001A4 E8 02                  500 	add	sp, #2
-    000001A6 C9                     501 	ret
-                                    502 ;src/gb.c:174: void set_obj(obj_t* _obj, uint8_t _x, uint8_t _y, uint8_t _tile, uint8_t _attr){
-                                    503 ;	---------------------------------
-                                    504 ; Function set_obj
-                                    505 ; ---------------------------------
-    000001A7                        506 _set_obj::
-    000001A7 E8 FE                  507 	add	sp, #-2
-                                    508 ;src/gb.c:175: _obj->x     = _x;
-    000001A9 F8 04                  509 	ldhl	sp,#4
-    000001AB 2A                     510 	ld	a, (hl+)
-    000001AC 5E                     511 	ld	e, (hl)
-    000001AD F8 00                  512 	ldhl	sp,#0
-    000001AF 22                     513 	ld	(hl+), a
-    000001B0 73                     514 	ld	(hl), e
-    000001B1 C1                     515 	pop	bc
-    000001B2 C5                     516 	push	bc
-    000001B3 03                     517 	inc	bc
-    000001B4 F8 06                  518 	ldhl	sp,#6
-    000001B6 7E                     519 	ld	a, (hl)
-    000001B7 02                     520 	ld	(bc), a
-                                    521 ;src/gb.c:176: _obj->y     = _y;
-    000001B8 D1                     522 	pop	de
-    000001B9 D5                     523 	push	de
-    000001BA 23                     524 	inc	hl
-    000001BB 7E                     525 	ld	a, (hl)
-    000001BC 12                     526 	ld	(de), a
-                                    527 ;src/gb.c:177: _obj->tile  = _tile;
-    000001BD C1                     528 	pop	bc
-    000001BE C5                     529 	push	bc
-    000001BF 03                     530 	inc	bc
-    000001C0 03                     531 	inc	bc
-    000001C1 23                     532 	inc	hl
-    000001C2 7E                     533 	ld	a, (hl)
-    000001C3 02                     534 	ld	(bc), a
-                                    535 ;src/gb.c:178: _obj->attr  = _attr;
-    000001C4 C1                     536 	pop	bc
-    000001C5 C5                     537 	push	bc
-    000001C6 03                     538 	inc	bc
-    000001C7 03                     539 	inc	bc
-    000001C8 03                     540 	inc	bc
-    000001C9 23                     541 	inc	hl
-    000001CA 7E                     542 	ld	a, (hl)
-    000001CB 02                     543 	ld	(bc), a
-                                    544 ;src/gb.c:179: }
-    000001CC E8 02                  545 	add	sp, #2
-    000001CE C9                     546 	ret
-                                    547 ;src/gb.c:181: uint8_t copy_to_oam_obj(obj_t* _obj, uint8_t _slot){
-                                    548 ;	---------------------------------
-                                    549 ; Function copy_to_oam_obj
-                                    550 ; ---------------------------------
-    000001CF                        551 _copy_to_oam_obj::
-                                    552 ;src/gb.c:217: __endasm;
-                         00000002   553 	obj	= 2
-                         00000004   554 	slot	= 4
-    000001CF F8 02                  555 	ldhl	sp, #obj
-    000001D1 2A                     556 	ld	a, (hl+)
-    000001D2 56                     557 	ld	d, (hl)
-    000001D3 5F                     558 	ld	e, a
-    000001D4 F8 04                  559 	ldhl	sp, #slot
-    000001D6 6E                     560 	ld	l, (hl)
-    000001D7 26 00                  561 	ld	h, #0
-    000001D9 29                     562 	add	hl, hl
-    000001DA 29                     563 	add	hl, hl
-    000001DB 01r00r00               564 	ld	bc, #_obj
-    000001DE 09                     565 	add	hl, bc
-    000001DF 1A                     566 	ld	a, (de) ;copy Y
-    000001E0 13                     567 	inc	de
-    000001E1 C6 10                  568 	add	#16
-    000001E3 22                     569 	ld	(hl+), a
-    000001E4 1A                     570 	ld	a, (de) ;copy X
-    000001E5 13                     571 	inc	de
-    000001E6 C6 08                  572 	add	#8
-    000001E8 22                     573 	ld	(hl+), a
-    000001E9 1A                     574 	ld	a, (de) ;copy Tile
-    000001EA 13                     575 	inc	de
-    000001EB 22                     576 	ld	(hl+), a
-    000001EC 1A                     577 	ld	a, (de) ;copy Attr
-    000001ED 77                     578 	ld	(hl), a
-    000001EE F8 04                  579 	ldhl	sp, #slot
-    000001F0 5E                     580 	ld	e, (hl)
-    000001F1 1C                     581 	inc	e
-                                    582 ;src/gb.c:218: }
-    000001F2 C9                     583 	ret
-                                    584 ;src/gb.c:220: void read_joypad(){
+    00000061                        192 _joypad_isr::
+    00000061 FB                     193 	ei
+    00000062 F5                     194 	push	af
+    00000063 C5                     195 	push bc
+    00000064 D5                     196 	push de
+    00000065 E5                     197 	push hl
+    00000066 E1                     198 	pop	hl
+    00000067 D1                     199 	pop de
+    00000068 C1                     200 	pop bc
+    00000069 F1                     201 	pop af
+    0000006A C9                     202 	ret
+                                    203 ;src/gb.c:59: void init_gameboy() __naked {
+                                    204 ;	---------------------------------
+                                    205 ; Function init_gameboy
+                                    206 ; ---------------------------------
+    0000006B                        207 _init_gameboy::
+                                    208 ;src/gb.c:77: __endasm;
+                                    209 	.globl	_main
+    0000006B                        210 	    1$:
+    0000006B 21 00 C0               211 	ld hl, #0xC000 ;clear ((uint8_t*)0xC000) at
+    0000006E 11 00 20               212 	ld	de, #0x2000 ;0xC000 - 0xDFFF
+    00000071 AF                     213 	xor	a
+    00000072                        214 	    0$:
+    00000072 22                     215 	ld (hl+), a
+    00000073 1B                     216 	dec	de
+    00000074 BB                     217 	cp	e
+    00000075 20 FB                  218 	jr	nz, 0$
+    00000077 BA                     219 	cp	d
+    00000078 20 F8                  220 	jr	nz, 0$
+    0000007A 31 00 E0               221 	ld	sp, #0xE000 ;Stack points to RAM
+    0000007D C3r00r00               222 	jp	_main ;actual start address
+                                    223 ;src/gb.c:78: }
+                                    224 ;src/gb.c:80: void set_bg_map_select(bool _offset){
+                                    225 ;	---------------------------------
+                                    226 ; Function set_bg_map_select
+                                    227 ; ---------------------------------
+    00000080                        228 _set_bg_map_select::
+                                    229 ;src/gb.c:81: if(_offset) *reg(REG_LCDC) |= LCDC_BG_MAP_SELECT;
+    00000080 11 40 FF               230 	ld	de, #0xff40
+    00000083 1A                     231 	ld	a,(de)
+    00000084 4F                     232 	ld	c, a
+    00000085 F8 02                  233 	ldhl	sp,#2
+    00000087 CB 46                  234 	bit	0, (hl)
+    00000089 28 09                  235 	jr	Z,00102$
+    0000008B 06 00                  236 	ld	b, #0x00
+    0000008D CB D9                  237 	set	3, c
+    0000008F 21 40 FF               238 	ld	hl, #0xff40
+    00000092 71                     239 	ld	(hl), c
+    00000093 C9                     240 	ret
+    00000094                        241 00102$:
+                                    242 ;src/gb.c:82: else        *reg(REG_LCDC) &= ~LCDC_BG_MAP_SELECT;
+    00000094 CB 99                  243 	res	3, c
+    00000096 21 40 FF               244 	ld	hl, #0xff40
+    00000099 71                     245 	ld	(hl), c
+                                    246 ;src/gb.c:83: }
+    0000009A C9                     247 	ret
+                                    248 ;src/gb.c:84: void set_win_map_select(bool _offset){
+                                    249 ;	---------------------------------
+                                    250 ; Function set_win_map_select
+                                    251 ; ---------------------------------
+    0000009B                        252 _set_win_map_select::
+                                    253 ;src/gb.c:85: if(_offset) *reg(REG_LCDC) |= LCDC_WIN_MAP_SELECT;
+    0000009B 11 40 FF               254 	ld	de, #0xff40
+    0000009E 1A                     255 	ld	a,(de)
+    0000009F 4F                     256 	ld	c, a
+    000000A0 F8 02                  257 	ldhl	sp,#2
+    000000A2 CB 46                  258 	bit	0, (hl)
+    000000A4 28 09                  259 	jr	Z,00102$
+    000000A6 06 00                  260 	ld	b, #0x00
+    000000A8 CB F1                  261 	set	6, c
+    000000AA 21 40 FF               262 	ld	hl, #0xff40
+    000000AD 71                     263 	ld	(hl), c
+    000000AE C9                     264 	ret
+    000000AF                        265 00102$:
+                                    266 ;src/gb.c:86: else        *reg(REG_LCDC) &= ~LCDC_WIN_MAP_SELECT;
+    000000AF CB B1                  267 	res	6, c
+    000000B1 21 40 FF               268 	ld	hl, #0xff40
+    000000B4 71                     269 	ld	(hl), c
+                                    270 ;src/gb.c:87: }
+    000000B5 C9                     271 	ret
+                                    272 ;src/gb.c:90: void fastcpy(void* _dst, void* _src, uint16_t _size){
+                                    273 ;	---------------------------------
+                                    274 ; Function fastcpy
+                                    275 ; ---------------------------------
+    000000B6                        276 _fastcpy::
+                                    277 ;src/gb.c:124: __endasm;
+                         00000002   278 	dst	= 2
+                         00000004   279 	src	= 4
+                         00000006   280 	size	= 6
+    000000B6 F8 06                  281 	ldhl	sp, #size ;bc = _size
+    000000B8 2A                     282 	ld	a, (hl+)
+    000000B9 46                     283 	ld	b, (hl)
+    000000BA 4F                     284 	ld	c, a
+    000000BB AF                     285 	xor	a
+    000000BC B0                     286 	or	b
+    000000BD B1                     287 	or	c
+    000000BE 28 13                  288 	jr	z, 1$
+    000000C0 F8 04                  289 	ldhl	sp, #src ;de = _src
+    000000C2 2A                     290 	ld	a, (hl+)
+    000000C3 56                     291 	ld	d, (hl)
+    000000C4 5F                     292 	ld	e, a
+    000000C5 F8 02                  293 	ldhl	sp, #dst ;hl = _dst
+    000000C7 2A                     294 	ld	a, (hl+)
+    000000C8 66                     295 	ld	h, (hl)
+    000000C9 6F                     296 	ld	l, a
+    000000CA                        297 	        0$:
+    000000CA 1A                     298 	ld a, (de) ;for(;bc > 0; bc--) *(hl++) = *(de++)
+    000000CB 22                     299 	ld	(hl+), a
+    000000CC 13                     300 	inc	de
+    000000CD 0B                     301 	dec	bc
+    000000CE AF                     302 	xor	a
+    000000CF B0                     303 	or	b
+    000000D0 B1                     304 	or	c
+    000000D1 20 F7                  305 	jr	nz, 0$
+    000000D3                        306 	        1$:
+                                    307 ;src/gb.c:125: }
+    000000D3 C9                     308 	ret
+                                    309 ;src/gb.c:127: void fill(void* _dst, uint8_t _val, uint16_t _size){
+                                    310 ;	---------------------------------
+                                    311 ; Function fill
+                                    312 ; ---------------------------------
+    000000D4                        313 _fill::
+                                    314 ;src/gb.c:158: __endasm;
+                         00000002   315 	dst	= 2
+                         00000004   316 	val	= 4
+                         00000005   317 	size	= 5
+    000000D4 F8 05                  318 	ldhl	sp, #size ;bc = size
+    000000D6 2A                     319 	ld	a, (hl+)
+    000000D7 46                     320 	ld	b, (hl)
+    000000D8 4F                     321 	ld	c, a
+    000000D9 AF                     322 	xor	a
+    000000DA B0                     323 	or	b
+    000000DB B1                     324 	or	c
+    000000DC 28 10                  325 	jr	z, 1$
+    000000DE F8 04                  326 	ldhl	sp, #val ;e = val
+    000000E0 5E                     327 	ld	e, (hl)
+    000000E1 F8 02                  328 	ldhl	sp, #dst ;hl = dst
+    000000E3 2A                     329 	ld	a, (hl+)
+    000000E4 66                     330 	ld	h, (hl)
+    000000E5 6F                     331 	ld	l, a
+    000000E6                        332 	        0$:
+    000000E6 7B                     333 	ld a, e ;for() *(hl++) = e
+    000000E7 22                     334 	ld	(hl+), a
+    000000E8 0B                     335 	dec	bc
+    000000E9 AF                     336 	xor	a
+    000000EA B0                     337 	or	b
+    000000EB B1                     338 	or	c
+    000000EC 20 F8                  339 	jr	nz, 0$
+    000000EE                        340 	        1$:
+                                    341 ;src/gb.c:159: }
+    000000EE C9                     342 	ret
+                                    343 ;src/gb.c:161: void set_bg_chr(uint8_t* _data, uint16_t _addr, uint16_t _size){
+                                    344 ;	---------------------------------
+                                    345 ; Function set_bg_chr
+                                    346 ; ---------------------------------
+    000000EF                        347 _set_bg_chr::
+    000000EF E8 FE                  348 	add	sp, #-2
+                                    349 ;src/gb.c:162: fastcpy(BG_CHR + _addr, _data, _size);
+    000000F1 F8 04                  350 	ldhl	sp,#4
+    000000F3 2A                     351 	ld	a, (hl+)
+    000000F4 5E                     352 	ld	e, (hl)
+    000000F5 F8 00                  353 	ldhl	sp,#0
+    000000F7 22                     354 	ld	(hl+), a
+    000000F8 73                     355 	ld	(hl), e
+    000000F9 F8 06                  356 	ldhl	sp,#(7 - 1)
+    000000FB 5E                     357 	ld	e, (hl)
+    000000FC 23                     358 	inc	hl
+    000000FD 56                     359 	ld	d, (hl)
+    000000FE 21 00 80               360 	ld	hl, #0x8000
+    00000101 19                     361 	add	hl, de
+    00000102 4D                     362 	ld	c, l
+    00000103 44                     363 	ld	b, h
+    00000104 F8 08                  364 	ldhl	sp,#8
+    00000106 2A                     365 	ld	a, (hl+)
+    00000107 66                     366 	ld	h, (hl)
+    00000108 6F                     367 	ld	l, a
+    00000109 E5                     368 	push	hl
+    0000010A F8 02                  369 	ldhl	sp,#2
+    0000010C 2A                     370 	ld	a, (hl+)
+    0000010D 66                     371 	ld	h, (hl)
+    0000010E 6F                     372 	ld	l, a
+    0000010F E5                     373 	push	hl
+    00000110 C5                     374 	push	bc
+    00000111 CDrB6r00               375 	call	_fastcpy
+    00000114 E8 06                  376 	add	sp, #6
+                                    377 ;src/gb.c:163: }
+    00000116 E8 02                  378 	add	sp, #2
+    00000118 C9                     379 	ret
+                                    380 ;src/gb.c:165: void set_bg_map(uint8_t* _data, uint16_t _addr, uint16_t _size){
+                                    381 ;	---------------------------------
+                                    382 ; Function set_bg_map
+                                    383 ; ---------------------------------
+    00000119                        384 _set_bg_map::
+    00000119 E8 FE                  385 	add	sp, #-2
+                                    386 ;src/gb.c:166: fastcpy(BG_MAP + _addr, _data, _size);
+    0000011B F8 04                  387 	ldhl	sp,#4
+    0000011D 2A                     388 	ld	a, (hl+)
+    0000011E 5E                     389 	ld	e, (hl)
+    0000011F F8 00                  390 	ldhl	sp,#0
+    00000121 22                     391 	ld	(hl+), a
+    00000122 73                     392 	ld	(hl), e
+    00000123 F8 06                  393 	ldhl	sp,#(7 - 1)
+    00000125 5E                     394 	ld	e, (hl)
+    00000126 23                     395 	inc	hl
+    00000127 56                     396 	ld	d, (hl)
+    00000128 21 00 98               397 	ld	hl, #0x9800
+    0000012B 19                     398 	add	hl, de
+    0000012C 4D                     399 	ld	c, l
+    0000012D 44                     400 	ld	b, h
+    0000012E F8 08                  401 	ldhl	sp,#8
+    00000130 2A                     402 	ld	a, (hl+)
+    00000131 66                     403 	ld	h, (hl)
+    00000132 6F                     404 	ld	l, a
+    00000133 E5                     405 	push	hl
+    00000134 F8 02                  406 	ldhl	sp,#2
+    00000136 2A                     407 	ld	a, (hl+)
+    00000137 66                     408 	ld	h, (hl)
+    00000138 6F                     409 	ld	l, a
+    00000139 E5                     410 	push	hl
+    0000013A C5                     411 	push	bc
+    0000013B CDrB6r00               412 	call	_fastcpy
+    0000013E E8 06                  413 	add	sp, #6
+                                    414 ;src/gb.c:167: }
+    00000140 E8 02                  415 	add	sp, #2
+    00000142 C9                     416 	ret
+                                    417 ;src/gb.c:169: void set_bg_map_tile(uint16_t _addr, uint8_t _tile){
+                                    418 ;	---------------------------------
+                                    419 ; Function set_bg_map_tile
+                                    420 ; ---------------------------------
+    00000143                        421 _set_bg_map_tile::
+                                    422 ;src/gb.c:170: *reg(BG_MAP + _addr) = _tile;
+    00000143 F8 02                  423 	ldhl	sp,#(3 - 1)
+    00000145 5E                     424 	ld	e, (hl)
+    00000146 23                     425 	inc	hl
+    00000147 56                     426 	ld	d, (hl)
+    00000148 21 00 98               427 	ld	hl, #0x9800
+    0000014B 19                     428 	add	hl, de
+    0000014C 4D                     429 	ld	c, l
+    0000014D 44                     430 	ld	b, h
+    0000014E F8 04                  431 	ldhl	sp,#4
+    00000150 7E                     432 	ld	a, (hl)
+    00000151 02                     433 	ld	(bc), a
+                                    434 ;src/gb.c:171: }
+    00000152 C9                     435 	ret
+                                    436 ;src/gb.c:173: void update_bg_map_tile(uint16_t _addr, uint8_t _tile){
+                                    437 ;	---------------------------------
+                                    438 ; Function update_bg_map_tile
+                                    439 ; ---------------------------------
+    00000153                        440 _update_bg_map_tile::
+    00000153 E8 FE                  441 	add	sp, #-2
+                                    442 ;src/gb.c:174: vram_transfer_buffer[(vram_transfer_size << 2) + 0] = (BG_MAP_ADDR + _addr) & 0xFF;
+    00000155 21rA0r00               443 	ld	hl, #_vram_transfer_size
+    00000158 7E                     444 	ld	a, (hl)
+    00000159 87                     445 	add	a, a
+    0000015A 87                     446 	add	a, a
+    0000015B 4F                     447 	ld	c, a
+    0000015C 17                     448 	rla
+    0000015D 9F                     449 	sbc	a, a
+    0000015E 47                     450 	ld	b, a
+    0000015F 21rA1r00               451 	ld	hl, #_vram_transfer_buffer
+    00000162 09                     452 	add	hl, bc
+    00000163 4D                     453 	ld	c, l
+    00000164 44                     454 	ld	b, h
+    00000165 F8 04                  455 	ldhl	sp,#4
+    00000167 7E                     456 	ld	a, (hl)
+    00000168 02                     457 	ld	(bc), a
+                                    458 ;src/gb.c:175: vram_transfer_buffer[(vram_transfer_size << 2) + 1] = ((BG_MAP_ADDR + _addr) >> 8) & 0xFF;
+    00000169 21rA0r00               459 	ld	hl, #_vram_transfer_size
+    0000016C 7E                     460 	ld	a, (hl)
+    0000016D 87                     461 	add	a, a
+    0000016E 87                     462 	add	a, a
+    0000016F 3C                     463 	inc	a
+    00000170 4F                     464 	ld	c, a
+    00000171 17                     465 	rla
+    00000172 9F                     466 	sbc	a, a
+    00000173 47                     467 	ld	b, a
+    00000174 21rA1r00               468 	ld	hl, #_vram_transfer_buffer
+    00000177 09                     469 	add	hl, bc
+    00000178 4D                     470 	ld	c, l
+    00000179 44                     471 	ld	b, h
+    0000017A F8 04                  472 	ldhl	sp,#(5 - 1)
+    0000017C 5E                     473 	ld	e, (hl)
+    0000017D 23                     474 	inc	hl
+    0000017E 56                     475 	ld	d, (hl)
+    0000017F 21 00 98               476 	ld	hl, #0x9800
+    00000182 19                     477 	add	hl, de
+    00000183 33                     478 	inc	sp
+    00000184 33                     479 	inc	sp
+    00000185 E5                     480 	push	hl
+    00000186 F8 01                  481 	ldhl	sp,#1
+    00000188 5E                     482 	ld	e, (hl)
+    00000189 16 00                  483 	ld	d, #0x00
+    0000018B 7B                     484 	ld	a, e
+    0000018C 02                     485 	ld	(bc), a
+                                    486 ;src/gb.c:176: vram_transfer_buffer[(vram_transfer_size << 2) + 2] = 0x00;
+    0000018D 21rA0r00               487 	ld	hl, #_vram_transfer_size
+    00000190 7E                     488 	ld	a, (hl)
+    00000191 87                     489 	add	a, a
+    00000192 87                     490 	add	a, a
+    00000193 3C                     491 	inc	a
+    00000194 3C                     492 	inc	a
+    00000195 4F                     493 	ld	c, a
+    00000196 17                     494 	rla
+    00000197 9F                     495 	sbc	a, a
+    00000198 47                     496 	ld	b, a
+    00000199 21rA1r00               497 	ld	hl, #_vram_transfer_buffer
+    0000019C 09                     498 	add	hl, bc
+    0000019D 4D                     499 	ld	c, l
+    0000019E 44                     500 	ld	b, h
+    0000019F AF                     501 	xor	a, a
+    000001A0 02                     502 	ld	(bc), a
+                                    503 ;src/gb.c:177: vram_transfer_buffer[(vram_transfer_size << 2) + 3] = _tile;
+    000001A1 21rA0r00               504 	ld	hl, #_vram_transfer_size
+    000001A4 7E                     505 	ld	a, (hl)
+    000001A5 87                     506 	add	a, a
+    000001A6 87                     507 	add	a, a
+    000001A7 3C                     508 	inc	a
+    000001A8 3C                     509 	inc	a
+    000001A9 3C                     510 	inc	a
+    000001AA 4F                     511 	ld	c, a
+    000001AB 17                     512 	rla
+    000001AC 9F                     513 	sbc	a, a
+    000001AD 47                     514 	ld	b, a
+    000001AE 21rA1r00               515 	ld	hl, #_vram_transfer_buffer
+    000001B1 09                     516 	add	hl, bc
+    000001B2 4D                     517 	ld	c, l
+    000001B3 44                     518 	ld	b, h
+    000001B4 F8 06                  519 	ldhl	sp,#6
+    000001B6 7E                     520 	ld	a, (hl)
+    000001B7 02                     521 	ld	(bc), a
+                                    522 ;src/gb.c:178: vram_transfer_size++;
+    000001B8 21rA0r00               523 	ld	hl, #_vram_transfer_size
+    000001BB 34                     524 	inc	(hl)
+                                    525 ;src/gb.c:179: }
+    000001BC E8 02                  526 	add	sp, #2
+    000001BE C9                     527 	ret
+                                    528 ;src/gb.c:181: void set_win_map(uint8_t* _data, uint16_t _addr, uint16_t _size){
+                                    529 ;	---------------------------------
+                                    530 ; Function set_win_map
+                                    531 ; ---------------------------------
+    000001BF                        532 _set_win_map::
+    000001BF E8 FE                  533 	add	sp, #-2
+                                    534 ;src/gb.c:182: fastcpy(WIN_MAP + _addr, _data, _size);
+    000001C1 F8 04                  535 	ldhl	sp,#4
+    000001C3 2A                     536 	ld	a, (hl+)
+    000001C4 5E                     537 	ld	e, (hl)
+    000001C5 F8 00                  538 	ldhl	sp,#0
+    000001C7 22                     539 	ld	(hl+), a
+    000001C8 73                     540 	ld	(hl), e
+    000001C9 F8 06                  541 	ldhl	sp,#(7 - 1)
+    000001CB 5E                     542 	ld	e, (hl)
+    000001CC 23                     543 	inc	hl
+    000001CD 56                     544 	ld	d, (hl)
+    000001CE 21 00 9C               545 	ld	hl, #0x9c00
+    000001D1 19                     546 	add	hl, de
+    000001D2 4D                     547 	ld	c, l
+    000001D3 44                     548 	ld	b, h
+    000001D4 F8 08                  549 	ldhl	sp,#8
+    000001D6 2A                     550 	ld	a, (hl+)
+    000001D7 66                     551 	ld	h, (hl)
+    000001D8 6F                     552 	ld	l, a
+    000001D9 E5                     553 	push	hl
+    000001DA F8 02                  554 	ldhl	sp,#2
+    000001DC 2A                     555 	ld	a, (hl+)
+    000001DD 66                     556 	ld	h, (hl)
+    000001DE 6F                     557 	ld	l, a
+    000001DF E5                     558 	push	hl
+    000001E0 C5                     559 	push	bc
+    000001E1 CDrB6r00               560 	call	_fastcpy
+    000001E4 E8 06                  561 	add	sp, #6
+                                    562 ;src/gb.c:183: }
+    000001E6 E8 02                  563 	add	sp, #2
+    000001E8 C9                     564 	ret
+                                    565 ;src/gb.c:185: void set_win_map_tile(uint16_t _addr, uint8_t _tile){
+                                    566 ;	---------------------------------
+                                    567 ; Function set_win_map_tile
+                                    568 ; ---------------------------------
+    000001E9                        569 _set_win_map_tile::
+                                    570 ;src/gb.c:186: *reg(WIN_MAP + _addr) = _tile;
+    000001E9 F8 02                  571 	ldhl	sp,#(3 - 1)
+    000001EB 5E                     572 	ld	e, (hl)
+    000001EC 23                     573 	inc	hl
+    000001ED 56                     574 	ld	d, (hl)
+    000001EE 21 00 9C               575 	ld	hl, #0x9c00
+    000001F1 19                     576 	add	hl, de
+    000001F2 4D                     577 	ld	c, l
+    000001F3 44                     578 	ld	b, h
+    000001F4 F8 04                  579 	ldhl	sp,#4
+    000001F6 7E                     580 	ld	a, (hl)
+    000001F7 02                     581 	ld	(bc), a
+                                    582 ;src/gb.c:187: }
+    000001F8 C9                     583 	ret
+                                    584 ;src/gb.c:189: void update_win_map_tile(uint16_t _addr, uint8_t _tile){
                                     585 ;	---------------------------------
-                                    586 ; Function read_joypad
+                                    586 ; Function update_win_map_tile
                                     587 ; ---------------------------------
-    000001F3                        588 _read_joypad::
-                                    589 ;src/gb.c:247: __endasm;
-    000001F3 21 00 FF               590 	ld	hl, #0xFF00
-    000001F6 FArF2r00               591 	ld	a, (_joy0)
-    000001F9 EArF3r00               592 	ld	(_old_joy0), a
-    000001FC 36 20                  593 	ld	(hl), #0x20
-    000001FE 4E                     594 	ld	c, (hl)
-    000001FF 4E                     595 	ld	c, (hl)
-    00000200 4E                     596 	ld	c, (hl)
-    00000201 7E                     597 	ld	a, (hl)
-    00000202 CB 37                  598 	swap	a
-    00000204 E6 F0                  599 	and	#0xF0
-    00000206 47                     600 	ld	b, a
-    00000207 36 10                  601 	ld	(hl), #0x10
-    00000209 4E                     602 	ld	c, (hl)
-    0000020A 4E                     603 	ld	c, (hl)
-    0000020B 4E                     604 	ld	c, (hl)
-    0000020C 7E                     605 	ld	a, (hl)
-    0000020D E6 0F                  606 	and	#0x0F
-    0000020F B0                     607 	or	b
-    00000210 36 30                  608 	ld	(hl), #0x30
-    00000212 2F                     609 	cpl
-    00000213 EArF2r00               610 	ld	(_joy0), a
-                                    611 ;src/gb.c:248: }
-    00000216 C9                     612 	ret
-                                    613 ;src/gb.c:249: bool key_push(uint8_t _key){return (!(old_joy0 & _key) && (joy0 & _key));}
-                                    614 ;	---------------------------------
-                                    615 ; Function key_push
-                                    616 ; ---------------------------------
-    00000217                        617 _key_push::
-    00000217 21rF3r00               618 	ld	hl, #_old_joy0
-    0000021A 7E                     619 	ld	a, (hl)
-    0000021B F8 02                  620 	ldhl	sp,#2
-    0000021D A6                     621 	and	a,(hl)
-    0000021E 20 09                  622 	jr	NZ,00103$
-    00000220 21rF2r00               623 	ld	hl, #_joy0
-    00000223 7E                     624 	ld	a, (hl)
-    00000224 F8 02                  625 	ldhl	sp,#2
-    00000226 A6                     626 	and	a,(hl)
-    00000227 20 03                  627 	jr	NZ,00104$
-    00000229                        628 00103$:
-    00000229 AF                     629 	xor	a, a
-    0000022A 18 02                  630 	jr	00105$
-    0000022C                        631 00104$:
-    0000022C 3E 01                  632 	ld	a, #0x01
-    0000022E                        633 00105$:
-    0000022E 5F                     634 	ld	e, a
-    0000022F C9                     635 	ret
-                                    636 ;src/gb.c:250: bool key_hold(uint8_t _key){return (joy0 & _key);}
-                                    637 ;	---------------------------------
-                                    638 ; Function key_hold
-                                    639 ; ---------------------------------
-    00000230                        640 _key_hold::
-    00000230 21rF2r00               641 	ld	hl, #_joy0
-    00000233 7E                     642 	ld	a, (hl)
-    00000234 F8 02                  643 	ldhl	sp,#2
-    00000236 A6                     644 	and	a, (hl)
-    00000237 4F                     645 	ld	c, a
-    00000238 AF                     646 	xor	a, a
-    00000239 B9                     647 	cp	a, c
-    0000023A 17                     648 	rla
-    0000023B 5F                     649 	ld	e, a
-    0000023C C9                     650 	ret
-                                    651 ;src/gb.c:251: bool key_release(uint8_t _key){return ((old_joy0 & _key) && !(joy0 & _key));}
-                                    652 ;	---------------------------------
-                                    653 ; Function key_release
-                                    654 ; ---------------------------------
-    0000023D                        655 _key_release::
-    0000023D 21rF3r00               656 	ld	hl, #_old_joy0
-    00000240 7E                     657 	ld	a, (hl)
-    00000241 F8 02                  658 	ldhl	sp,#2
-    00000243 A6                     659 	and	a,(hl)
-    00000244 28 09                  660 	jr	Z,00103$
-    00000246 21rF2r00               661 	ld	hl, #_joy0
-    00000249 7E                     662 	ld	a, (hl)
-    0000024A F8 02                  663 	ldhl	sp,#2
-    0000024C A6                     664 	and	a,(hl)
-    0000024D 28 03                  665 	jr	Z,00104$
-    0000024F                        666 00103$:
-    0000024F AF                     667 	xor	a, a
-    00000250 18 02                  668 	jr	00105$
-    00000252                        669 00104$:
-    00000252 3E 01                  670 	ld	a, #0x01
-    00000254                        671 00105$:
-    00000254 5F                     672 	ld	e, a
-    00000255 C9                     673 	ret
-                                    674 	.area _CODE
-                                    675 	.area _CABS (ABS)
+    000001F9                        588 _update_win_map_tile::
+    000001F9 E8 FE                  589 	add	sp, #-2
+                                    590 ;src/gb.c:190: vram_transfer_buffer[(vram_transfer_size << 2) + 0] = (WIN_MAP_ADDR + _addr) & 0xFF;
+    000001FB 21rA0r00               591 	ld	hl, #_vram_transfer_size
+    000001FE 7E                     592 	ld	a, (hl)
+    000001FF 87                     593 	add	a, a
+    00000200 87                     594 	add	a, a
+    00000201 4F                     595 	ld	c, a
+    00000202 17                     596 	rla
+    00000203 9F                     597 	sbc	a, a
+    00000204 47                     598 	ld	b, a
+    00000205 21rA1r00               599 	ld	hl, #_vram_transfer_buffer
+    00000208 09                     600 	add	hl, bc
+    00000209 4D                     601 	ld	c, l
+    0000020A 44                     602 	ld	b, h
+    0000020B F8 04                  603 	ldhl	sp,#4
+    0000020D 7E                     604 	ld	a, (hl)
+    0000020E 02                     605 	ld	(bc), a
+                                    606 ;src/gb.c:191: vram_transfer_buffer[(vram_transfer_size << 2) + 1] = ((WIN_MAP_ADDR + _addr) >> 8) & 0xFF;
+    0000020F 21rA0r00               607 	ld	hl, #_vram_transfer_size
+    00000212 7E                     608 	ld	a, (hl)
+    00000213 87                     609 	add	a, a
+    00000214 87                     610 	add	a, a
+    00000215 3C                     611 	inc	a
+    00000216 4F                     612 	ld	c, a
+    00000217 17                     613 	rla
+    00000218 9F                     614 	sbc	a, a
+    00000219 47                     615 	ld	b, a
+    0000021A 21rA1r00               616 	ld	hl, #_vram_transfer_buffer
+    0000021D 09                     617 	add	hl, bc
+    0000021E 4D                     618 	ld	c, l
+    0000021F 44                     619 	ld	b, h
+    00000220 F8 04                  620 	ldhl	sp,#(5 - 1)
+    00000222 5E                     621 	ld	e, (hl)
+    00000223 23                     622 	inc	hl
+    00000224 56                     623 	ld	d, (hl)
+    00000225 21 00 9C               624 	ld	hl, #0x9c00
+    00000228 19                     625 	add	hl, de
+    00000229 33                     626 	inc	sp
+    0000022A 33                     627 	inc	sp
+    0000022B E5                     628 	push	hl
+    0000022C F8 01                  629 	ldhl	sp,#1
+    0000022E 5E                     630 	ld	e, (hl)
+    0000022F 16 00                  631 	ld	d, #0x00
+    00000231 7B                     632 	ld	a, e
+    00000232 02                     633 	ld	(bc), a
+                                    634 ;src/gb.c:192: vram_transfer_buffer[(vram_transfer_size << 2) + 2] = 0x00;
+    00000233 21rA0r00               635 	ld	hl, #_vram_transfer_size
+    00000236 7E                     636 	ld	a, (hl)
+    00000237 87                     637 	add	a, a
+    00000238 87                     638 	add	a, a
+    00000239 3C                     639 	inc	a
+    0000023A 3C                     640 	inc	a
+    0000023B 4F                     641 	ld	c, a
+    0000023C 17                     642 	rla
+    0000023D 9F                     643 	sbc	a, a
+    0000023E 47                     644 	ld	b, a
+    0000023F 21rA1r00               645 	ld	hl, #_vram_transfer_buffer
+    00000242 09                     646 	add	hl, bc
+    00000243 4D                     647 	ld	c, l
+    00000244 44                     648 	ld	b, h
+    00000245 AF                     649 	xor	a, a
+    00000246 02                     650 	ld	(bc), a
+                                    651 ;src/gb.c:193: vram_transfer_buffer[(vram_transfer_size << 2) + 3] = _tile;
+    00000247 21rA0r00               652 	ld	hl, #_vram_transfer_size
+    0000024A 7E                     653 	ld	a, (hl)
+    0000024B 87                     654 	add	a, a
+    0000024C 87                     655 	add	a, a
+    0000024D 3C                     656 	inc	a
+    0000024E 3C                     657 	inc	a
+    0000024F 3C                     658 	inc	a
+    00000250 4F                     659 	ld	c, a
+    00000251 17                     660 	rla
+    00000252 9F                     661 	sbc	a, a
+    00000253 47                     662 	ld	b, a
+    00000254 21rA1r00               663 	ld	hl, #_vram_transfer_buffer
+    00000257 09                     664 	add	hl, bc
+    00000258 4D                     665 	ld	c, l
+    00000259 44                     666 	ld	b, h
+    0000025A F8 06                  667 	ldhl	sp,#6
+    0000025C 7E                     668 	ld	a, (hl)
+    0000025D 02                     669 	ld	(bc), a
+                                    670 ;src/gb.c:194: vram_transfer_size++;
+    0000025E 21rA0r00               671 	ld	hl, #_vram_transfer_size
+    00000261 34                     672 	inc	(hl)
+                                    673 ;src/gb.c:195: }
+    00000262 E8 02                  674 	add	sp, #2
+    00000264 C9                     675 	ret
+                                    676 ;src/gb.c:197: void set_obj_chr(uint8_t* _data, uint16_t _addr, uint16_t _size){
+                                    677 ;	---------------------------------
+                                    678 ; Function set_obj_chr
+                                    679 ; ---------------------------------
+    00000265                        680 _set_obj_chr::
+    00000265 E8 FE                  681 	add	sp, #-2
+                                    682 ;src/gb.c:198: fastcpy(OBJ_CHR + _addr, _data, _size);
+    00000267 F8 04                  683 	ldhl	sp,#4
+    00000269 2A                     684 	ld	a, (hl+)
+    0000026A 5E                     685 	ld	e, (hl)
+    0000026B F8 00                  686 	ldhl	sp,#0
+    0000026D 22                     687 	ld	(hl+), a
+    0000026E 73                     688 	ld	(hl), e
+    0000026F F8 06                  689 	ldhl	sp,#(7 - 1)
+    00000271 5E                     690 	ld	e, (hl)
+    00000272 23                     691 	inc	hl
+    00000273 56                     692 	ld	d, (hl)
+    00000274 21 00 80               693 	ld	hl, #0x8000
+    00000277 19                     694 	add	hl, de
+    00000278 4D                     695 	ld	c, l
+    00000279 44                     696 	ld	b, h
+    0000027A F8 08                  697 	ldhl	sp,#8
+    0000027C 2A                     698 	ld	a, (hl+)
+    0000027D 66                     699 	ld	h, (hl)
+    0000027E 6F                     700 	ld	l, a
+    0000027F E5                     701 	push	hl
+    00000280 F8 02                  702 	ldhl	sp,#2
+    00000282 2A                     703 	ld	a, (hl+)
+    00000283 66                     704 	ld	h, (hl)
+    00000284 6F                     705 	ld	l, a
+    00000285 E5                     706 	push	hl
+    00000286 C5                     707 	push	bc
+    00000287 CDrB6r00               708 	call	_fastcpy
+    0000028A E8 06                  709 	add	sp, #6
+                                    710 ;src/gb.c:199: }
+    0000028C E8 02                  711 	add	sp, #2
+    0000028E C9                     712 	ret
+                                    713 ;src/gb.c:201: void set_obj(obj_t* _obj, uint8_t _x, uint8_t _y, uint8_t _tile, uint8_t _attr){
+                                    714 ;	---------------------------------
+                                    715 ; Function set_obj
+                                    716 ; ---------------------------------
+    0000028F                        717 _set_obj::
+    0000028F E8 FE                  718 	add	sp, #-2
+                                    719 ;src/gb.c:202: _obj->x     = _x;
+    00000291 F8 04                  720 	ldhl	sp,#4
+    00000293 2A                     721 	ld	a, (hl+)
+    00000294 5E                     722 	ld	e, (hl)
+    00000295 F8 00                  723 	ldhl	sp,#0
+    00000297 22                     724 	ld	(hl+), a
+    00000298 73                     725 	ld	(hl), e
+    00000299 C1                     726 	pop	bc
+    0000029A C5                     727 	push	bc
+    0000029B 03                     728 	inc	bc
+    0000029C F8 06                  729 	ldhl	sp,#6
+    0000029E 7E                     730 	ld	a, (hl)
+    0000029F 02                     731 	ld	(bc), a
+                                    732 ;src/gb.c:203: _obj->y     = _y;
+    000002A0 D1                     733 	pop	de
+    000002A1 D5                     734 	push	de
+    000002A2 23                     735 	inc	hl
+    000002A3 7E                     736 	ld	a, (hl)
+    000002A4 12                     737 	ld	(de), a
+                                    738 ;src/gb.c:204: _obj->tile  = _tile;
+    000002A5 C1                     739 	pop	bc
+    000002A6 C5                     740 	push	bc
+    000002A7 03                     741 	inc	bc
+    000002A8 03                     742 	inc	bc
+    000002A9 23                     743 	inc	hl
+    000002AA 7E                     744 	ld	a, (hl)
+    000002AB 02                     745 	ld	(bc), a
+                                    746 ;src/gb.c:205: _obj->attr  = _attr;
+    000002AC C1                     747 	pop	bc
+    000002AD C5                     748 	push	bc
+    000002AE 03                     749 	inc	bc
+    000002AF 03                     750 	inc	bc
+    000002B0 03                     751 	inc	bc
+    000002B1 23                     752 	inc	hl
+    000002B2 7E                     753 	ld	a, (hl)
+    000002B3 02                     754 	ld	(bc), a
+                                    755 ;src/gb.c:206: }
+    000002B4 E8 02                  756 	add	sp, #2
+    000002B6 C9                     757 	ret
+                                    758 ;src/gb.c:208: uint8_t copy_to_oam_obj(obj_t* _obj, uint8_t _slot){
+                                    759 ;	---------------------------------
+                                    760 ; Function copy_to_oam_obj
+                                    761 ; ---------------------------------
+    000002B7                        762 _copy_to_oam_obj::
+                                    763 ;src/gb.c:244: __endasm;
+                         00000002   764 	obj	= 2
+                         00000004   765 	slot	= 4
+    000002B7 F8 02                  766 	ldhl	sp, #obj
+    000002B9 2A                     767 	ld	a, (hl+)
+    000002BA 56                     768 	ld	d, (hl)
+    000002BB 5F                     769 	ld	e, a
+    000002BC F8 04                  770 	ldhl	sp, #slot
+    000002BE 6E                     771 	ld	l, (hl)
+    000002BF 26 00                  772 	ld	h, #0
+    000002C1 29                     773 	add	hl, hl
+    000002C2 29                     774 	add	hl, hl
+    000002C3 01r00r00               775 	ld	bc, #_obj
+    000002C6 09                     776 	add	hl, bc
+    000002C7 1A                     777 	ld	a, (de) ;copy Y
+    000002C8 13                     778 	inc	de
+    000002C9 C6 10                  779 	add	#16
+    000002CB 22                     780 	ld	(hl+), a
+    000002CC 1A                     781 	ld	a, (de) ;copy X
+    000002CD 13                     782 	inc	de
+    000002CE C6 08                  783 	add	#8
+    000002D0 22                     784 	ld	(hl+), a
+    000002D1 1A                     785 	ld	a, (de) ;copy Tile
+    000002D2 13                     786 	inc	de
+    000002D3 22                     787 	ld	(hl+), a
+    000002D4 1A                     788 	ld	a, (de) ;copy Attr
+    000002D5 77                     789 	ld	(hl), a
+    000002D6 F8 04                  790 	ldhl	sp, #slot
+    000002D8 5E                     791 	ld	e, (hl)
+    000002D9 1C                     792 	inc	e
+                                    793 ;src/gb.c:245: }
+    000002DA C9                     794 	ret
+                                    795 ;src/gb.c:247: void read_joypad(){
+                                    796 ;	---------------------------------
+                                    797 ; Function read_joypad
+                                    798 ; ---------------------------------
+    000002DB                        799 _read_joypad::
+                                    800 ;src/gb.c:274: __endasm;
+    000002DB 21 00 FF               801 	ld	hl, #0xFF00
+    000002DE FArF2r00               802 	ld	a, (_joy0)
+    000002E1 EArF3r00               803 	ld	(_old_joy0), a
+    000002E4 36 20                  804 	ld	(hl), #0x20
+    000002E6 4E                     805 	ld	c, (hl)
+    000002E7 4E                     806 	ld	c, (hl)
+    000002E8 4E                     807 	ld	c, (hl)
+    000002E9 7E                     808 	ld	a, (hl)
+    000002EA CB 37                  809 	swap	a
+    000002EC E6 F0                  810 	and	#0xF0
+    000002EE 47                     811 	ld	b, a
+    000002EF 36 10                  812 	ld	(hl), #0x10
+    000002F1 4E                     813 	ld	c, (hl)
+    000002F2 4E                     814 	ld	c, (hl)
+    000002F3 4E                     815 	ld	c, (hl)
+    000002F4 7E                     816 	ld	a, (hl)
+    000002F5 E6 0F                  817 	and	#0x0F
+    000002F7 B0                     818 	or	b
+    000002F8 36 30                  819 	ld	(hl), #0x30
+    000002FA 2F                     820 	cpl
+    000002FB EArF2r00               821 	ld	(_joy0), a
+                                    822 ;src/gb.c:275: }
+    000002FE C9                     823 	ret
+                                    824 ;src/gb.c:276: bool key_push(uint8_t _key){return (!(old_joy0 & _key) && (joy0 & _key));}
+                                    825 ;	---------------------------------
+                                    826 ; Function key_push
+                                    827 ; ---------------------------------
+    000002FF                        828 _key_push::
+    000002FF 21rF3r00               829 	ld	hl, #_old_joy0
+    00000302 7E                     830 	ld	a, (hl)
+    00000303 F8 02                  831 	ldhl	sp,#2
+    00000305 A6                     832 	and	a,(hl)
+    00000306 20 09                  833 	jr	NZ,00103$
+    00000308 21rF2r00               834 	ld	hl, #_joy0
+    0000030B 7E                     835 	ld	a, (hl)
+    0000030C F8 02                  836 	ldhl	sp,#2
+    0000030E A6                     837 	and	a,(hl)
+    0000030F 20 03                  838 	jr	NZ,00104$
+    00000311                        839 00103$:
+    00000311 AF                     840 	xor	a, a
+    00000312 18 02                  841 	jr	00105$
+    00000314                        842 00104$:
+    00000314 3E 01                  843 	ld	a, #0x01
+    00000316                        844 00105$:
+    00000316 5F                     845 	ld	e, a
+    00000317 C9                     846 	ret
+                                    847 ;src/gb.c:277: bool key_hold(uint8_t _key){return (joy0 & _key);}
+                                    848 ;	---------------------------------
+                                    849 ; Function key_hold
+                                    850 ; ---------------------------------
+    00000318                        851 _key_hold::
+    00000318 21rF2r00               852 	ld	hl, #_joy0
+    0000031B 7E                     853 	ld	a, (hl)
+    0000031C F8 02                  854 	ldhl	sp,#2
+    0000031E A6                     855 	and	a, (hl)
+    0000031F 4F                     856 	ld	c, a
+    00000320 AF                     857 	xor	a, a
+    00000321 B9                     858 	cp	a, c
+    00000322 17                     859 	rla
+    00000323 5F                     860 	ld	e, a
+    00000324 C9                     861 	ret
+                                    862 ;src/gb.c:278: bool key_release(uint8_t _key){return ((old_joy0 & _key) && !(joy0 & _key));}
+                                    863 ;	---------------------------------
+                                    864 ; Function key_release
+                                    865 ; ---------------------------------
+    00000325                        866 _key_release::
+    00000325 21rF3r00               867 	ld	hl, #_old_joy0
+    00000328 7E                     868 	ld	a, (hl)
+    00000329 F8 02                  869 	ldhl	sp,#2
+    0000032B A6                     870 	and	a,(hl)
+    0000032C 28 09                  871 	jr	Z,00103$
+    0000032E 21rF2r00               872 	ld	hl, #_joy0
+    00000331 7E                     873 	ld	a, (hl)
+    00000332 F8 02                  874 	ldhl	sp,#2
+    00000334 A6                     875 	and	a,(hl)
+    00000335 28 03                  876 	jr	Z,00104$
+    00000337                        877 00103$:
+    00000337 AF                     878 	xor	a, a
+    00000338 18 02                  879 	jr	00105$
+    0000033A                        880 00104$:
+    0000033A 3E 01                  881 	ld	a, #0x01
+    0000033C                        882 00105$:
+    0000033C 5F                     883 	ld	e, a
+    0000033D C9                     884 	ret
+                                    885 	.area _CODE
+                                    886 	.area _CABS (ABS)

@@ -1,7 +1,3 @@
-/**
- * GameBoy Hardware Abstraction Layer, by el_seyf
- * Contains functions and defines for GameBoy Hardware
-*/
 
 #ifndef GB_H
 #define GB_H
@@ -27,9 +23,11 @@
 #define OBJ_CHR_ADDR    0x8000
 #define BG_CHR_ADDR     0x8000
 #define BG_MAP_ADDR     0x9800
+#define WIN_MAP_ADDR    0x9C00
 #define OBJ_CHR         ((uint8_t*)OBJ_CHR_ADDR)
 #define BG_CHR          ((uint8_t*)BG_CHR_ADDR)
 #define BG_MAP          ((uint8_t*)BG_MAP_ADDR)
+#define WIN_MAP         ((uint8_t*)WIN_MAP_ADDR)
 
 #define WRAM            ((uint8_t*)0xC000)
 #define HRAM            ((uint8_t*)0xFF80)
@@ -72,6 +70,8 @@
 
 #define REG_BG_SCY          0xFF42
 #define REG_BG_SCX          0xFF43
+#define REG_WY              0xFF4A
+#define REG_WX              0xFF4B
 
 #define REG_OAM_DMA         0xFF46
 
@@ -113,6 +113,7 @@ extern uint8_t vram_transfer_buffer[4 * MAX_BYTES_PER_VBLANK];
 extern uint8_t obj_slot;
 extern uint8_t joy0, old_joy0;
 extern uint8_t scroll_x, scroll_y;
+extern uint8_t offset_x, offset_y;
 extern volatile bool vblank_happened;
 
 void vblank_isr() __interrupt;
@@ -130,9 +131,13 @@ inline void enable_display(){*reg(REG_LCDC) |= LCDC_DISPLAY_ENABLE;}
 inline void disable_display(){while((*reg(REG_LCD_STAT) & LCD_STAT_MODE_FLAG) != 1); *reg(REG_LCDC) &= ~LCDC_DISPLAY_ENABLE;}
 inline void enable_bg(){*reg(REG_LCDC) |= LCDC_BG_ENABLE;}
 inline void disable_bg(){*reg(REG_LCDC) &= ~LCDC_BG_ENABLE;}
+inline void enable_win(){*reg(REG_LCDC) |= LCDC_WIN_ENABLE;}
+inline void disable_win(){*reg(REG_LCDC) &= ~LCDC_WIN_ENABLE;}
 inline void enable_obj(){*reg(REG_LCDC) |= LCDC_OBJ_ENABLE;}
 inline void disable_obj(){*reg(REG_LCDC) &= ~LCDC_OBJ_ENABLE;}
-void set_bg_win_tile_offset(bool _flag);
+void set_bg_map_select(bool _offset);
+void set_win_map_select(bool _offset);
+
 inline bool display_state(){return (*reg(REG_LCDC) & LCDC_DISPLAY_ENABLE);}
 inline bool bg_state(){return (*reg(REG_LCDC) & LCDC_BG_ENABLE);}
 inline bool obj_state(){return (*reg(REG_LCDC) & LCDC_OBJ_ENABLE);}
@@ -151,11 +156,18 @@ inline void set_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){set_bg_map
 void update_bg_map_tile(uint16_t _addr, uint8_t _tile);
 inline void update_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){update_bg_map_tile((_y << 5) + _x, _tile);}
 
+void set_win_map(uint8_t* _data, uint16_t _addr, uint16_t _size);
+void set_win_map_tile(uint16_t _addr, uint8_t _tile);
+inline void set_win_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){set_win_map_tile((_y << 5) + _x, _tile);}
+void update_win_map_tile(uint16_t _addr, uint8_t _tile);
+inline void update_win_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){update_win_map_tile((_y << 5) + _x, _tile);}
+
 void set_obj_chr(uint8_t* _data, uint16_t _addr, uint16_t _size);
 void set_obj(obj_t* _obj, uint8_t _x, uint8_t _y, uint8_t _tile, uint8_t _attr);
 uint8_t copy_to_oam_obj(obj_t* _obj, uint8_t _slot);
 
 inline void set_bg_scroll(uint8_t _sx, uint8_t _sy){scroll_x = _sx; scroll_y = _sy;}
+inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
 
 void read_joypad();
 bool key_push(uint8_t _key);

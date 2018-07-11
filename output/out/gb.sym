@@ -7,32 +7,39 @@ Symbol Table
     .__.ABS.                                                    =   00000000 G
     .__.CPU.                                                    =   00000000 L
     .__.H$L.                                                    =   00000000 L
-  0 _copy_to_oam_obj                                                000001CF GR
-  0 _fastcpy                                                        00000074 GR
-  0 _fill                                                           00000092 GR
-  0 _init_gameboy                                                   0000005F GR
+  0 _copy_to_oam_obj                                                000002B7 GR
+  0 _fastcpy                                                        000000B6 GR
+  0 _fill                                                           000000D4 GR
+  0 _init_gameboy                                                   0000006B GR
   1 _joy0                                                           000000F2 GR
-  0 _joypad_isr                                                     00000055 GR
-  0 _key_hold                                                       00000230 GR
-  0 _key_push                                                       00000217 GR
-  0 _key_release                                                    0000023D GR
-  0 _lcd_stat_isr                                                   00000038 GR
+  0 _joypad_isr                                                     00000061 GR
+  0 _key_hold                                                       00000318 GR
+  0 _key_push                                                       000002FF GR
+  0 _key_release                                                    00000325 GR
+  0 _lcd_stat_isr                                                   00000044 GR
     _main                                                           ******** GX
   1 _obj                                                            00000000 GR
   1 _obj_slot                                                       000000F1 GR
+  1 _offset_x                                                       000000F6 GR
+  1 _offset_y                                                       000000F7 GR
   1 _old_joy0                                                       000000F3 GR
-  0 _read_joypad                                                    000001F3 GR
+  0 _read_joypad                                                    000002DB GR
   1 _scroll_x                                                       000000F4 GR
   1 _scroll_y                                                       000000F5 GR
-  0 _serial_isr                                                     0000004B GR
-  0 _set_bg_chr                                                     000000AD GR
-  0 _set_bg_map                                                     000000D7 GR
-  0 _set_bg_map_tile                                                00000101 GR
-  0 _set_obj                                                        000001A7 GR
-  0 _set_obj_chr                                                    0000017D GR
-  0 _timer_isr                                                      00000042 GR
-  0 _update_bg_map_tile                                             00000111 GR
-  1 _vblank_happened                                                000000F6 GR
+  0 _serial_isr                                                     00000057 GR
+  0 _set_bg_chr                                                     000000EF GR
+  0 _set_bg_map                                                     00000119 GR
+  0 _set_bg_map_select                                              00000080 GR
+  0 _set_bg_map_tile                                                00000143 GR
+  0 _set_obj                                                        0000028F GR
+  0 _set_obj_chr                                                    00000265 GR
+  0 _set_win_map                                                    000001BF GR
+  0 _set_win_map_select                                             0000009B GR
+  0 _set_win_map_tile                                               000001E9 GR
+  0 _timer_isr                                                      0000004E GR
+  0 _update_bg_map_tile                                             00000153 GR
+  0 _update_win_map_tile                                            000001F9 GR
+  1 _vblank_happened                                                000000F8 GR
   0 _vblank_isr                                                     00000000 GR
   1 _vram_transfer_buffer                                           000000A1 GR
   1 _vram_transfer_size                                             000000A0 GR
@@ -43,13 +50,14 @@ Symbol Table
     src                                                         =   00000004 
     val                                                         =   00000004 
 
+
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
 Hexadecimal [32-Bits]
 
 Area Table
 
-   0 _CODE                                      size      256   flags    0
-   1 _DATA                                      size       F7   flags    0
+   0 _CODE                                      size      33E   flags    0
+   1 _DATA                                      size       F9   flags    0
    2 _DABS                                      size        0   flags    8
    3 _HOME                                      size        0   flags    0
    4 _GSINIT                                    size        0   flags    0

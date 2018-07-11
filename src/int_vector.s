@@ -1,5 +1,3 @@
-;Vector Table, by el_seyf
-
 .module int_vector
 
 .area _INTERRUPT(ABS)
