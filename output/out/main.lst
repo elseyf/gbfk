@@ -93,13 +93,13 @@
                                      93 ; code
                                      94 ;--------------------------------------------------------
                                      95 	.area _CODE
-                                     96 ;src/main.c:65: void main(){
+                                     96 ;src/main.c:92: void main(){
                                      97 ;	---------------------------------
                                      98 ; Function main
                                      99 ; ---------------------------------
     00000000                        100 _main::
     00000000 E8 F8                  101 	add	sp, #-8
-                                    102 ;src/gb.h:131: inline void disable_display(){while((*reg(REG_LCD_STAT) & LCD_STAT_MODE_FLAG) != 1); *reg(REG_LCDC) &= ~LCDC_DISPLAY_ENABLE;}
+                                    102 ;src/gb.h:135: inline void disable_display(){while((*reg(REG_LCD_STAT) & LCD_STAT_MODE_FLAG) != 1); *reg(REG_LCDC) &= ~LCDC_DISPLAY_ENABLE;}
     00000002                        103 00118$:
     00000002 11 41 FF               104 	ld	de, #0xff41
     00000005 1A                     105 	ld	a,(de)
@@ -118,9 +118,9 @@
     00000018 CB BF                  118 	res	7, a
     0000001A 21 40 FF               119 	ld	hl, #0xff40
     0000001D 77                     120 	ld	(hl), a
-                                    121 ;src/main.c:67: ei();
+                                    121 ;src/main.c:94: ei();
     0000001E FB                     122 	ei
-                                    123 ;src/main.c:68: fastcpy(HRAM, oam_dma_wait, oam_dma_wait_size);
+                                    123 ;src/main.c:95: fastcpy(HRAM, oam_dma_wait, oam_dma_wait_size);
     0000001F 21r00r00               124 	ld	hl, #_oam_dma_wait_size
     00000022 4E                     125 	ld	c, (hl)
     00000023 06 00                  126 	ld	b, #0x00
@@ -131,46 +131,46 @@
     0000002D E5                     131 	push	hl
     0000002E CDr00r00               132 	call	_fastcpy
     00000031 E8 06                  133 	add	sp, #6
-                                    134 ;src/main.c:70: vblank_happened = false;
+                                    134 ;src/main.c:97: vblank_happened = false;
     00000033 21r00r00               135 	ld	hl, #_vblank_happened
     00000036 36 00                  136 	ld	(hl), #0x00
-                                    137 ;src/gb.h:125: inline void enable_int(uint8_t _int){*reg(REG_INT) |= _int;}
+                                    137 ;src/gb.h:129: inline void enable_int(uint8_t _int){*reg(REG_INT) |= _int;}
     00000038 11 FF FF               138 	ld	de, #0xffff
     0000003B 1A                     139 	ld	a,(de)
     0000003C CB C7                  140 	set	0, a
     0000003E 21 FF FF               141 	ld	hl, #0xffff
     00000041 77                     142 	ld	(hl), a
-                                    143 ;src/main.c:73: set_bg_pal(bg_palette);
+                                    143 ;src/main.c:100: set_bg_pal(bg_palette);
     00000042 21r4Dr02               144 	ld	hl, #_bg_palette
     00000045 7E                     145 	ld	a, (hl)
-                                    146 ;src/gb.h:148: inline void set_bg_pal(uint8_t _data){*reg(REG_BGP) = _data;}
+                                    146 ;src/gb.h:152: inline void set_bg_pal(uint8_t _data){*reg(REG_BGP) = _data;}
     00000046 21 47 FF               147 	ld	hl, #0xff47
     00000049 77                     148 	ld	(hl), a
-                                    149 ;src/main.c:74: set_obj_pal0(ob0_palette);
+                                    149 ;src/main.c:101: set_obj_pal0(ob0_palette);
     0000004A 21r4Er02               150 	ld	hl, #_ob0_palette
     0000004D 7E                     151 	ld	a, (hl)
-                                    152 ;src/gb.h:149: inline void set_obj_pal0(uint8_t _data){*reg(REG_OBP0) = _data;}
+                                    152 ;src/gb.h:153: inline void set_obj_pal0(uint8_t _data){*reg(REG_OBP0) = _data;}
     0000004E 21 48 FF               153 	ld	hl, #0xff48
     00000051 77                     154 	ld	(hl), a
-                                    155 ;src/main.c:75: set_obj_pal1(ob1_palette);
+                                    155 ;src/main.c:102: set_obj_pal1(ob1_palette);
     00000052 21r4Fr02               156 	ld	hl, #_ob1_palette
     00000055 7E                     157 	ld	a, (hl)
-                                    158 ;src/gb.h:150: inline void set_obj_pal1(uint8_t _data){*reg(REG_OBP1) = _data;}
+                                    158 ;src/gb.h:154: inline void set_obj_pal1(uint8_t _data){*reg(REG_OBP1) = _data;}
     00000056 21 49 FF               159 	ld	hl, #0xff49
     00000059 77                     160 	ld	(hl), a
-                                    161 ;src/main.c:77: set_bg_map_select(false);
+                                    161 ;src/main.c:104: set_bg_map_select(false);
     0000005A AF                     162 	xor	a, a
     0000005B F5                     163 	push	af
     0000005C 33                     164 	inc	sp
     0000005D CDr00r00               165 	call	_set_bg_map_select
     00000060 33                     166 	inc	sp
-                                    167 ;src/main.c:78: set_win_map_select(true);
+                                    167 ;src/main.c:105: set_win_map_select(true);
     00000061 3E 01                  168 	ld	a, #0x01
     00000063 F5                     169 	push	af
     00000064 33                     170 	inc	sp
     00000065 CDr00r00               171 	call	_set_win_map_select
     00000068 33                     172 	inc	sp
-                                    173 ;src/main.c:79: set_bg_chr(bg_tiles, 0x0000, sizeof(bg_tiles));
+                                    173 ;src/main.c:106: set_bg_chr(bg_tiles, 0x0000, sizeof(bg_tiles));
     00000069 21 00 10               174 	ld	hl, #0x1000
     0000006C E5                     175 	push	hl
     0000006D 26 00                  176 	ld	h, #0x00
@@ -179,7 +179,7 @@
     00000073 E5                     179 	push	hl
     00000074 CDr00r00               180 	call	_set_bg_chr
     00000077 E8 06                  181 	add	sp, #6
-                                    182 ;src/main.c:80: fill(BG_MAP, ' ', 0x0400);
+                                    182 ;src/main.c:107: fill(BG_MAP, ' ', 0x0400);
     00000079 21 00 04               183 	ld	hl, #0x0400
     0000007C E5                     184 	push	hl
     0000007D 3E 20                  185 	ld	a, #0x20
@@ -189,7 +189,7 @@
     00000083 E5                     189 	push	hl
     00000084 CDr00r00               190 	call	_fill
     00000087 E8 05                  191 	add	sp, #5
-                                    192 ;src/main.c:81: fill(WIN_MAP, ' ' + 0x80, 0x0400);
+                                    192 ;src/main.c:108: fill(WIN_MAP, ' ' + 0x80, 0x0400);
     00000089 21 00 04               193 	ld	hl, #0x0400
     0000008C E5                     194 	push	hl
     0000008D 3E A0                  195 	ld	a, #0xa0
@@ -199,11 +199,11 @@
     00000093 E5                     199 	push	hl
     00000094 CDr00r00               200 	call	_fill
     00000097 E8 05                  201 	add	sp, #5
-                                    202 ;src/main.c:82: {   uint8_t _x = 0, _y = 0;
+                                    202 ;src/main.c:109: {   uint8_t _x = 0, _y = 0;
     00000099 0E 00                  203 	ld	c, #0x00
     0000009B F8 07                  204 	ldhl	sp,#7
     0000009D 36 00                  205 	ld	(hl), #0x00
-                                    206 ;src/main.c:83: for(uint16_t i = 0xA0; i < 0x100; i++){
+                                    206 ;src/main.c:110: for(uint16_t i = 0xA0; i < 0x100; i++){
     0000009F 2B                     207 	dec	hl
     000000A0 2B                     208 	dec	hl
     000000A1 36 A0                  209 	ld	(hl), #0xa0
@@ -217,14 +217,14 @@
     000000AC 7E                     217 	ld	a, (hl)
     000000AD DE 01                  218 	sbc	a, #0x01
     000000AF D2r14r01               219 	jp	NC, 00105$
-                                    220 ;src/main.c:84: set_win_map_tile_xy(_x + BF_KEYBOARD_X, _y + BF_KEYBOARD_Y, i);
+                                    220 ;src/main.c:111: set_win_map_tile_xy(_x + BF_KEYBOARD_X, _y + BF_KEYBOARD_Y, i);
     000000B2 F8 05                  221 	ldhl	sp,#5
     000000B4 46                     222 	ld	b, (hl)
     000000B5 79                     223 	ld	a, c
     000000B6 3C                     224 	inc	a
     000000B7 2B                     225 	dec	hl
     000000B8 77                     226 	ld	(hl), a
-                                    227 ;src/gb.h:161: inline void set_win_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){set_win_map_tile((_y << 5) + _x, _tile);}
+                                    227 ;src/gb.h:165: inline void set_win_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){set_win_map_tile((_y << 5) + _x, _tile);}
     000000B9 F8 07                  228 	ldhl	sp,#7
     000000BB 5E                     229 	ld	e, (hl)
     000000BC 16 00                  230 	ld	d, #0x00
@@ -269,23 +269,23 @@
     000000F1 CDr00r00               269 	call	_set_win_map_tile
     000000F4 E8 03                  270 	add	sp, #3
     000000F6 C1                     271 	pop	bc
-                                    272 ;src/main.c:85: if(++_x >= BF_KEYBOARD_W){
+                                    272 ;src/main.c:112: if(++_x >= BF_KEYBOARD_W){
     000000F7 0C                     273 	inc	c
     000000F8 79                     274 	ld	a, c
     000000F9 D6 12                  275 	sub	a, #0x12
     000000FB 38 0C                  276 	jr	C,00135$
-                                    277 ;src/main.c:86: _x = 0;
+                                    277 ;src/main.c:113: _x = 0;
     000000FD 0E 00                  278 	ld	c, #0x00
-                                    279 ;src/main.c:87: if(++_y >= BF_KEYBOARD_H)
+                                    279 ;src/main.c:114: if(++_y >= BF_KEYBOARD_H)
     000000FF F8 07                  280 	ldhl	sp,#7
     00000101 34                     281 	inc	(hl)
     00000102 7E                     282 	ld	a, (hl)
     00000103 D6 06                  283 	sub	a, #0x06
     00000105 38 02                  284 	jr	C,00135$
-                                    285 ;src/main.c:88: _y = 0;
+                                    285 ;src/main.c:115: _y = 0;
     00000107 36 00                  286 	ld	(hl), #0x00
     00000109                        287 00135$:
-                                    288 ;src/main.c:83: for(uint16_t i = 0xA0; i < 0x100; i++){
+                                    288 ;src/main.c:110: for(uint16_t i = 0xA0; i < 0x100; i++){
     00000109 F8 05                  289 	ldhl	sp,#5
     0000010B 34                     290 	inc	(hl)
     0000010C C2rA6r00               291 	jp	NZ,00134$
@@ -293,17 +293,17 @@
     00000110 34                     293 	inc	(hl)
     00000111 C3rA6r00               294 	jp	00134$
     00000114                        295 00105$:
-                                    296 ;src/gb.h:169: inline void set_bg_scroll(uint8_t _sx, uint8_t _sy){scroll_x = _sx; scroll_y = _sy;}
+                                    296 ;src/gb.h:173: inline void set_bg_scroll(uint8_t _sx, uint8_t _sy){scroll_x = _sx; scroll_y = _sy;}
     00000114 21r00r00               297 	ld	hl, #_scroll_x
     00000117 36 00                  298 	ld	(hl), #0x00
     00000119 21r00r00               299 	ld	hl, #_scroll_y
     0000011C 36 00                  300 	ld	(hl), #0x00
-                                    301 ;src/gb.h:170: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
+                                    301 ;src/gb.h:174: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
     0000011E 21r00r00               302 	ld	hl, #_offset_x
     00000121 36 07                  303 	ld	(hl), #0x07
     00000123 21r00r00               304 	ld	hl, #_offset_y
     00000126 36 90                  305 	ld	(hl), #0x90
-                                    306 ;src/gb.h:132: inline void enable_bg(){*reg(REG_LCDC) |= LCDC_BG_ENABLE;}
+                                    306 ;src/gb.h:136: inline void enable_bg(){*reg(REG_LCDC) |= LCDC_BG_ENABLE;}
     00000128 11 40 FF               307 	ld	de, #0xff40
     0000012B 1A                     308 	ld	a,(de)
     0000012C 4F                     309 	ld	c, a
@@ -311,7 +311,7 @@
     0000012F CB C1                  311 	set	0, c
     00000131 21 40 FF               312 	ld	hl, #0xff40
     00000134 71                     313 	ld	(hl), c
-                                    314 ;src/gb.h:134: inline void enable_win(){*reg(REG_LCDC) |= LCDC_WIN_ENABLE;}
+                                    314 ;src/gb.h:138: inline void enable_win(){*reg(REG_LCDC) |= LCDC_WIN_ENABLE;}
     00000135 11 40 FF               315 	ld	de, #0xff40
     00000138 1A                     316 	ld	a,(de)
     00000139 4F                     317 	ld	c, a
@@ -319,7 +319,7 @@
     0000013C CB E9                  319 	set	5, c
     0000013E 2E 40                  320 	ld	l, #0x40
     00000140 71                     321 	ld	(hl), c
-                                    322 ;src/gb.h:136: inline void enable_obj(){*reg(REG_LCDC) |= LCDC_OBJ_ENABLE;}
+                                    322 ;src/gb.h:140: inline void enable_obj(){*reg(REG_LCDC) |= LCDC_OBJ_ENABLE;}
     00000141 11 40 FF               323 	ld	de, #0xff40
     00000144 1A                     324 	ld	a,(de)
     00000145 4F                     325 	ld	c, a
@@ -327,7 +327,7 @@
     00000148 CB C9                  327 	set	1, c
     0000014A 2E 40                  328 	ld	l, #0x40
     0000014C 71                     329 	ld	(hl), c
-                                    330 ;src/gb.h:130: inline void enable_display(){*reg(REG_LCDC) |= LCDC_DISPLAY_ENABLE;}
+                                    330 ;src/gb.h:134: inline void enable_display(){*reg(REG_LCDC) |= LCDC_DISPLAY_ENABLE;}
     0000014D 11 40 FF               331 	ld	de, #0xff40
     00000150 1A                     332 	ld	a,(de)
     00000151 4F                     333 	ld	c, a
@@ -335,12 +335,12 @@
     00000154 CB F9                  335 	set	7, c
     00000156 2E 40                  336 	ld	l, #0x40
     00000158 71                     337 	ld	(hl), c
-                                    338 ;src/main.c:100: bf_instr_p = 0;
+                                    338 ;src/main.c:127: bf_instr_p = 0;
     00000159 21r01r00               339 	ld	hl, #_bf_instr_p
     0000015C 36 00                  340 	ld	(hl), #0x00
     0000015E 23                     341 	inc	hl
     0000015F 36 00                  342 	ld	(hl), #0x00
-                                    343 ;src/main.c:101: for(uint16_t i = 0;i < sizeof(bf_instr); i++) bf_instr[i] = 0;
+                                    343 ;src/main.c:128: for(uint16_t i = 0;i < sizeof(bf_instr); i++) bf_instr[i] = 0;
     00000161 01 00 00               344 	ld	bc, #0x0000
     00000164                        345 00137$:
     00000164 78                     346 	ld	a, b
@@ -361,17 +361,17 @@
     00000179 03                     361 	inc	bc
     0000017A 18 E8                  362 	jr	00137$
     0000017C                        363 00106$:
-                                    364 ;src/main.c:102: bf_pc = 0;
+                                    364 ;src/main.c:129: bf_pc = 0;
     0000017C 21r03r08               365 	ld	hl, #_bf_pc
     0000017F 36 00                  366 	ld	(hl), #0x00
     00000181 23                     367 	inc	hl
     00000182 36 00                  368 	ld	(hl), #0x00
-                                    369 ;src/main.c:103: bf_cell_p = 0;
+                                    369 ;src/main.c:130: bf_cell_p = 0;
     00000184 21r05r08               370 	ld	hl, #_bf_cell_p
     00000187 36 00                  371 	ld	(hl), #0x00
     00000189 23                     372 	inc	hl
     0000018A 36 00                  373 	ld	(hl), #0x00
-                                    374 ;src/main.c:104: for(uint16_t i = 0;i < sizeof(bf_cell); i++) bf_cell[i] = 0;
+                                    374 ;src/main.c:131: for(uint16_t i = 0;i < sizeof(bf_cell); i++) bf_cell[i] = 0;
     0000018C 01 00 00               375 	ld	bc, #0x0000
     0000018F                        376 00140$:
     0000018F 78                     377 	ld	a, b
@@ -392,16 +392,16 @@
     000001A4 03                     392 	inc	bc
     000001A5 18 E8                  393 	jr	00140$
     000001A7                        394 00107$:
-                                    395 ;src/main.c:105: bf_screen_out_x = 0;
+                                    395 ;src/main.c:132: bf_screen_out_x = 0;
     000001A7 21r07r10               396 	ld	hl, #_bf_screen_out_x
     000001AA 36 00                  397 	ld	(hl), #0x00
-                                    398 ;src/main.c:106: bf_screen_out_y = 0;
+                                    398 ;src/main.c:133: bf_screen_out_y = 0;
     000001AC 21r08r10               399 	ld	hl, #_bf_screen_out_y
     000001AF 36 00                  400 	ld	(hl), #0x00
-                                    401 ;src/main.c:107: run_interpreter = false;
+                                    401 ;src/main.c:134: run_interpreter = false;
     000001B1 21r00r00               402 	ld	hl, #_run_interpreter
     000001B4 36 00                  403 	ld	(hl), #0x00
-                                    404 ;src/main.c:109: fastcpy(&bf_instr, &bf_hello_world, sizeof(bf_hello_world));
+                                    404 ;src/main.c:136: fastcpy(&bf_instr, &bf_hello_world, sizeof(bf_hello_world));
     000001B6 21 75 00               405 	ld	hl, #0x0075
     000001B9 E5                     406 	push	hl
     000001BA 21r59r02               407 	ld	hl, #_bf_hello_world
@@ -410,9 +410,9 @@
     000001C1 E5                     410 	push	hl
     000001C2 CDr00r00               411 	call	_fastcpy
     000001C5 E8 06                  412 	add	sp, #6
-                                    413 ;src/main.c:110: bf_editor_redraw_instr();
+                                    413 ;src/main.c:137: bf_editor_redraw_instr();
     000001C7 CDr26r06               414 	call	_bf_editor_redraw_instr
-                                    415 ;src/main.c:112: set_obj(&cursor_obj, 0, 0, 0x7F, 0);
+                                    415 ;src/main.c:139: set_obj(&cursor_obj, 0, 0, 0x7F, 0);
     000001CA 21 7F 00               416 	ld	hl, #0x007f
     000001CD E5                     417 	push	hl
     000001CE 2E 00                  418 	ld	l, #0x00
@@ -421,7 +421,7 @@
     000001D4 E5                     421 	push	hl
     000001D5 CDr00r00               422 	call	_set_obj
     000001D8 E8 06                  423 	add	sp, #6
-                                    424 ;src/main.c:115: while(!vblank_happened) halt();
+                                    424 ;src/main.c:142: while(!vblank_happened) halt();
     000001DA                        425 00108$:
     000001DA 21r00r00               426 	ld	hl, #_vblank_happened
     000001DD CB 46                  427 	bit	0, (hl)
@@ -429,19 +429,19 @@
     000001E1 76                     429 	halt
     000001E2 18 F6                  430 	jr	00108$
     000001E4                        431 00110$:
-                                    432 ;src/main.c:116: vblank_happened = false;
+                                    432 ;src/main.c:143: vblank_happened = false;
     000001E4 21r00r00               433 	ld	hl, #_vblank_happened
     000001E7 36 00                  434 	ld	(hl), #0x00
-                                    435 ;src/main.c:117: obj_slot = 0;
+                                    435 ;src/main.c:144: obj_slot = 0;
     000001E9 21r00r00               436 	ld	hl, #_obj_slot
     000001EC 36 00                  437 	ld	(hl), #0x00
-                                    438 ;src/main.c:119: read_joypad();
+                                    438 ;src/main.c:146: read_joypad();
     000001EE CDr00r00               439 	call	_read_joypad
-                                    440 ;src/main.c:121: if(run_interpreter)
+                                    440 ;src/main.c:148: if(run_interpreter)
     000001F1 21r00r00               441 	ld	hl, #_run_interpreter
     000001F4 CB 46                  442 	bit	0, (hl)
     000001F6 28 16                  443 	jr	Z,00113$
-                                    444 ;src/main.c:122: for(uint8_t i = 0; run_interpreter && (i < BF_INSTR_PER_FRAME); i++) bf_interpreter();
+                                    444 ;src/main.c:149: for(uint8_t i = 0; run_interpreter && (i < BF_INSTR_PER_FRAME); i++) bf_interpreter();
     000001F8 0E 00                  445 	ld	c, #0x00
     000001FA                        446 00144$:
     000001FA 21r00r00               447 	ld	hl, #_run_interpreter
@@ -451,15 +451,15 @@
     00000202 D6 0A                  451 	sub	a, #0x0a
     00000204 30 0B                  452 	jr	NC,00114$
     00000206 C5                     453 	push	bc
-    00000207 CDr4Ar07               454 	call	_bf_interpreter
+    00000207 CDr49r07               454 	call	_bf_interpreter
     0000020A C1                     455 	pop	bc
     0000020B 0C                     456 	inc	c
     0000020C 18 EC                  457 	jr	00144$
     0000020E                        458 00113$:
-                                    459 ;src/main.c:124: bf_editor();
+                                    459 ;src/main.c:151: bf_editor();
     0000020E CDr54r03               460 	call	_bf_editor
     00000211                        461 00114$:
-                                    462 ;src/main.c:126: fill((void*)(((uint16_t)obj) + (obj_slot << 2)), 0xFF, sizeof(obj) - (obj_slot << 2));
+                                    462 ;src/main.c:153: fill((void*)(((uint16_t)obj) + (obj_slot << 2)), 0xFF, sizeof(obj) - (obj_slot << 2));
     00000211 21r00r00               463 	ld	hl, #_obj_slot
     00000214 4E                     464 	ld	c, (hl)
     00000215 06 00                  465 	ld	b, #0x00
@@ -498,7 +498,7 @@
     00000242 CDr00r00               498 	call	_fill
     00000245 E8 05                  499 	add	sp, #5
     00000247 C3rDAr01               500 	jp	00108$
-                                    501 ;src/main.c:128: }
+                                    501 ;src/main.c:155: }
     0000024A E8 08                  502 	add	sp, #8
     0000024C C9                     503 	ret
     0000024D                        504 _bg_palette:
@@ -536,7 +536,7 @@
              3E 2B 2B 2E 5B 2B 5D
              2B 5B 3E 2C 2E 3C 5D
     000002CD 00                     523 	.db 0x00
-                                    524 ;src/main.c:130: void inc_bf_instr_p(){if(bf_instr_p < (sizeof(bf_instr) - 1)) bf_instr_p++;}
+                                    524 ;src/main.c:157: void inc_bf_instr_p(){if(bf_instr_p < (sizeof(bf_instr) - 1)) bf_instr_p++;}
                                     525 ;	---------------------------------
                                     526 ; Function inc_bf_instr_p
                                     527 ; ---------------------------------
@@ -554,7 +554,7 @@
     000002DE 23                     539 	inc	hl
     000002DF 34                     540 	inc	(hl)
     000002E0 C9                     541 	ret
-                                    542 ;src/main.c:131: void dec_bf_instr_p(){if(bf_instr_p > 0) bf_instr_p--;}
+                                    542 ;src/main.c:158: void dec_bf_instr_p(){if(bf_instr_p > 0) bf_instr_p--;}
                                     543 ;	---------------------------------
                                     544 ; Function dec_bf_instr_p
                                     545 ; ---------------------------------
@@ -572,7 +572,7 @@
     000002ED 23                     557 	inc	hl
     000002EE 72                     558 	ld	(hl), d
     000002EF C9                     559 	ret
-                                    560 ;src/main.c:132: void inc_bf_cell_p(){bf_cell_p = (bf_cell_p + 1) % (sizeof(bf_cell) - 1);}
+                                    560 ;src/main.c:159: void inc_bf_cell_p(){bf_cell_p = (bf_cell_p + 1) % (sizeof(bf_cell) - 1);}
                                     561 ;	---------------------------------
                                     562 ; Function inc_bf_cell_p
                                     563 ; ---------------------------------
@@ -593,7 +593,7 @@
     00000306 23                     578 	inc	hl
     00000307 72                     579 	ld	(hl), d
     00000308 C9                     580 	ret
-                                    581 ;src/main.c:133: void dec_bf_cell_p(){bf_cell_p = (bf_cell_p - 1) % (sizeof(bf_cell) - 1);}
+                                    581 ;src/main.c:160: void dec_bf_cell_p(){bf_cell_p = (bf_cell_p - 1) % (sizeof(bf_cell) - 1);}
                                     582 ;	---------------------------------
                                     583 ; Function dec_bf_cell_p
                                     584 ; ---------------------------------
@@ -614,7 +614,7 @@
     0000031F 23                     599 	inc	hl
     00000320 72                     600 	ld	(hl), d
     00000321 C9                     601 	ret
-                                    602 ;src/main.c:134: void inc_bf_pc(){bf_pc = (bf_pc + 1) % (sizeof(bf_instr) - 1);}
+                                    602 ;src/main.c:161: void inc_bf_pc(){bf_pc = (bf_pc + 1) % (sizeof(bf_instr) - 1);}
                                     603 ;	---------------------------------
                                     604 ; Function inc_bf_pc
                                     605 ; ---------------------------------
@@ -635,7 +635,7 @@
     00000338 23                     620 	inc	hl
     00000339 72                     621 	ld	(hl), d
     0000033A C9                     622 	ret
-                                    623 ;src/main.c:135: void dec_bf_pc(){bf_pc = (bf_pc - 1) % (sizeof(bf_instr) - 1);}
+                                    623 ;src/main.c:162: void dec_bf_pc(){bf_pc = (bf_pc - 1) % (sizeof(bf_instr) - 1);}
                                     624 ;	---------------------------------
                                     625 ; Function dec_bf_pc
                                     626 ; ---------------------------------
@@ -656,13 +656,13 @@
     00000351 23                     641 	inc	hl
     00000352 72                     642 	ld	(hl), d
     00000353 C9                     643 	ret
-                                    644 ;src/main.c:137: void bf_editor(){
+                                    644 ;src/main.c:164: void bf_editor(){
                                     645 ;	---------------------------------
                                     646 ; Function bf_editor
                                     647 ; ---------------------------------
     00000354                        648 _bf_editor::
     00000354 E8 FD                  649 	add	sp, #-3
-                                    650 ;src/main.c:159: if(!(key_hold(KEY_A) || key_hold(KEY_B))){
+                                    650 ;src/main.c:186: if(!(key_hold(KEY_A) || key_hold(KEY_B))){
     00000356 3E 01                  651 	ld	a, #0x01
     00000358 F5                     652 	push	af
     00000359 33                     653 	inc	sp
@@ -677,7 +677,7 @@
     0000036A 33                     662 	inc	sp
     0000036B CB 43                  663 	bit	0, e
     0000036D C2r8Ar04               664 	jp	NZ, 00149$
-                                    665 ;src/main.c:160: if(key_push(KEY_UP))            for(uint8_t i = 0; i < BF_EDITOR_W; i++) dec_bf_instr_p();
+                                    665 ;src/main.c:187: if(key_push(KEY_UP))            for(uint8_t i = 0; i < BF_EDITOR_W; i++) dec_bf_instr_p();
     00000370 3E 40                  666 	ld	a, #0x40
     00000372 F5                     667 	push	af
     00000373 33                     668 	inc	sp
@@ -696,7 +696,7 @@
     00000389 0C                     681 	inc	c
     0000038A 18 F2                  682 	jr	00154$
     0000038C                        683 00119$:
-                                    684 ;src/main.c:161: else if(key_push(KEY_DOWN))     for(uint8_t i = 0; i < BF_EDITOR_W; i++) inc_bf_instr_p();
+                                    684 ;src/main.c:188: else if(key_push(KEY_DOWN))     for(uint8_t i = 0; i < BF_EDITOR_W; i++) inc_bf_instr_p();
     0000038C 3E 80                  685 	ld	a, #0x80
     0000038E F5                     686 	push	af
     0000038F 33                     687 	inc	sp
@@ -715,7 +715,7 @@
     000003A5 0C                     700 	inc	c
     000003A6 18 F2                  701 	jr	00157$
     000003A8                        702 00116$:
-                                    703 ;src/main.c:162: else if(key_push(KEY_LEFT))     dec_bf_instr_p();
+                                    703 ;src/main.c:189: else if(key_push(KEY_LEFT))     dec_bf_instr_p();
     000003A8 3E 20                  704 	ld	a, #0x20
     000003AA F5                     705 	push	af
     000003AB 33                     706 	inc	sp
@@ -726,7 +726,7 @@
     000003B4 CDrE1r02               711 	call	_dec_bf_instr_p
     000003B7 C3r57r05               712 	jp	00150$
     000003BA                        713 00113$:
-                                    714 ;src/main.c:163: else if(key_push(KEY_RIGHT))    inc_bf_instr_p();
+                                    714 ;src/main.c:190: else if(key_push(KEY_RIGHT))    inc_bf_instr_p();
     000003BA 3E 10                  715 	ld	a, #0x10
     000003BC F5                     716 	push	af
     000003BD 33                     717 	inc	sp
@@ -737,7 +737,7 @@
     000003C6 CDrCEr02               722 	call	_inc_bf_instr_p
     000003C9 C3r57r05               723 	jp	00150$
     000003CC                        724 00110$:
-                                    725 ;src/main.c:164: else if(key_push(KEY_START)){
+                                    725 ;src/main.c:191: else if(key_push(KEY_START)){
     000003CC 3E 08                  726 	ld	a, #0x08
     000003CE F5                     727 	push	af
     000003CF 33                     728 	inc	sp
@@ -745,20 +745,20 @@
     000003D3 33                     730 	inc	sp
     000003D4 CB 43                  731 	bit	0, e
     000003D6 28 3B                  732 	jr	Z,00107$
-                                    733 ;src/main.c:165: run_interpreter = true;
+                                    733 ;src/main.c:192: run_interpreter = true;
     000003D8 21r00r00               734 	ld	hl, #_run_interpreter
     000003DB 36 01                  735 	ld	(hl), #0x01
-                                    736 ;src/main.c:166: bf_pc = 0;
+                                    736 ;src/main.c:193: bf_pc = 0;
     000003DD 21r03r08               737 	ld	hl, #_bf_pc
     000003E0 36 00                  738 	ld	(hl), #0x00
     000003E2 23                     739 	inc	hl
     000003E3 36 00                  740 	ld	(hl), #0x00
-                                    741 ;src/main.c:167: bf_cell_p = 0;
+                                    741 ;src/main.c:194: bf_cell_p = 0;
     000003E5 21r05r08               742 	ld	hl, #_bf_cell_p
     000003E8 36 00                  743 	ld	(hl), #0x00
     000003EA 23                     744 	inc	hl
     000003EB 36 00                  745 	ld	(hl), #0x00
-                                    746 ;src/main.c:168: for(uint16_t i = 0;i < sizeof(bf_cell); i++) bf_cell[i] = 0;
+                                    746 ;src/main.c:195: for(uint16_t i = 0;i < sizeof(bf_cell); i++) bf_cell[i] = 0;
     000003ED 01 00 00               747 	ld	bc, #0x0000
     000003F0                        748 00160$:
     000003F0 78                     749 	ld	a, b
@@ -775,17 +775,17 @@
     00000400 03                     760 	inc	bc
     00000401 18 ED                  761 	jr	00160$
     00000403                        762 00103$:
-                                    763 ;src/main.c:169: bf_screen_out_x = 0;
+                                    763 ;src/main.c:196: bf_screen_out_x = 0;
     00000403 21r07r10               764 	ld	hl, #_bf_screen_out_x
     00000406 36 00                  765 	ld	(hl), #0x00
-                                    766 ;src/main.c:170: bf_screen_out_y = 0;
+                                    766 ;src/main.c:197: bf_screen_out_y = 0;
     00000408 21r08r10               767 	ld	hl, #_bf_screen_out_y
     0000040B 36 00                  768 	ld	(hl), #0x00
-                                    769 ;src/main.c:171: bf_clear_screen();
-    0000040D CDrCAr06               770 	call	_bf_clear_screen
+                                    769 ;src/main.c:198: bf_clear_screen();
+    0000040D CDrCBr06               770 	call	_bf_clear_screen
     00000410 C3r57r05               771 	jp	00150$
     00000413                        772 00107$:
-                                    773 ;src/main.c:173: else if(key_push(KEY_SELECT)){
+                                    773 ;src/main.c:200: else if(key_push(KEY_SELECT)){
     00000413 3E 04                  774 	ld	a, #0x04
     00000415 F5                     775 	push	af
     00000416 33                     776 	inc	sp
@@ -793,7 +793,7 @@
     0000041A 33                     778 	inc	sp
     0000041B CB 43                  779 	bit	0, e
     0000041D CAr57r05               780 	jp	Z, 00150$
-                                    781 ;src/main.c:174: bf_instr[bf_instr_p] = bf_instruction_char[BF_NOP];
+                                    781 ;src/main.c:201: bf_instr[bf_instr_p] = bf_instruction_char[BF_NOP];
     00000420 3Er03                  782 	ld	a, #<(_bf_instr)
     00000422 21r01r00               783 	ld	hl, #_bf_instr_p
     00000425 86                     784 	add	a, (hl)
@@ -805,7 +805,7 @@
     0000042C 11r58r02               790 	ld	de, #_bf_instruction_char+8
     0000042F 1A                     791 	ld	a, (de)
     00000430 02                     792 	ld	(bc), a
-                                    793 ;src/main.c:175: update_bg_map_tile_xy(bf_instr_p % BF_EDITOR_W, bf_instr_p / BF_EDITOR_W, bf_instruction_char[BF_NOP]);
+                                    793 ;src/main.c:202: update_bg_map_tile_xy(bf_instr_p % BF_EDITOR_W, bf_instr_p / BF_EDITOR_W, bf_instruction_char[BF_NOP]);
     00000431 1A                     794 	ld	a, (de)
     00000432 F8 02                  795 	ldhl	sp,#2
     00000434 77                     796 	ld	(hl), a
@@ -830,7 +830,7 @@
     00000452 CDr00r00               815 	call	__moduint
     00000455 E8 04                  816 	add	sp, #4
     00000457 C1                     817 	pop	bc
-                                    818 ;src/gb.h:157: inline void update_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){update_bg_map_tile((_y << 5) + _x, _tile);}
+                                    818 ;src/gb.h:161: inline void update_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){update_bg_map_tile((_y << 5) + _x, _tile);}
     00000458 06 00                  819 	ld	b, #0x00
     0000045A CB 21                  820 	sla	c
     0000045C CB 10                  821 	rl	b
@@ -858,11 +858,11 @@
     0000047E C5                     843 	push	bc
     0000047F CDr00r00               844 	call	_update_bg_map_tile
     00000482 E8 03                  845 	add	sp, #3
-                                    846 ;src/main.c:176: dec_bf_instr_p();
+                                    846 ;src/main.c:203: dec_bf_instr_p();
     00000484 CDrE1r02               847 	call	_dec_bf_instr_p
     00000487 C3r57r05               848 	jp	00150$
     0000048A                        849 00149$:
-                                    850 ;src/main.c:179: else if(key_hold(KEY_A)){
+                                    850 ;src/main.c:206: else if(key_hold(KEY_A)){
     0000048A 3E 01                  851 	ld	a, #0x01
     0000048C F5                     852 	push	af
     0000048D 33                     853 	inc	sp
@@ -870,7 +870,7 @@
     00000491 33                     855 	inc	sp
     00000492 CB 43                  856 	bit	0, e
     00000494 CArF3r04               857 	jp	Z, 00146$
-                                    858 ;src/main.c:180: if(key_push(KEY_UP)){
+                                    858 ;src/main.c:207: if(key_push(KEY_UP)){
     00000497 3E 40                  859 	ld	a, #0x40
     00000499 F5                     860 	push	af
     0000049A 33                     861 	inc	sp
@@ -878,7 +878,7 @@
     0000049E 33                     863 	inc	sp
     0000049F CB 43                  864 	bit	0, e
     000004A1 28 0B                  865 	jr	Z,00130$
-                                    866 ;src/main.c:181: bf_editor_update_instr(BF_PLUS);
+                                    866 ;src/main.c:208: bf_editor_update_instr(BF_PLUS);
     000004A3 3E 02                  867 	ld	a, #0x02
     000004A5 F5                     868 	push	af
     000004A6 33                     869 	inc	sp
@@ -886,7 +886,7 @@
     000004AA 33                     871 	inc	sp
     000004AB C3r57r05               872 	jp	00150$
     000004AE                        873 00130$:
-                                    874 ;src/main.c:183: else if(key_push(KEY_DOWN)){
+                                    874 ;src/main.c:210: else if(key_push(KEY_DOWN)){
     000004AE 3E 80                  875 	ld	a, #0x80
     000004B0 F5                     876 	push	af
     000004B1 33                     877 	inc	sp
@@ -894,7 +894,7 @@
     000004B5 33                     879 	inc	sp
     000004B6 CB 43                  880 	bit	0, e
     000004B8 28 0B                  881 	jr	Z,00127$
-                                    882 ;src/main.c:184: bf_editor_update_instr(BF_MINUS);
+                                    882 ;src/main.c:211: bf_editor_update_instr(BF_MINUS);
     000004BA 3E 03                  883 	ld	a, #0x03
     000004BC F5                     884 	push	af
     000004BD 33                     885 	inc	sp
@@ -902,7 +902,7 @@
     000004C1 33                     887 	inc	sp
     000004C2 C3r57r05               888 	jp	00150$
     000004C5                        889 00127$:
-                                    890 ;src/main.c:186: else if(key_push(KEY_LEFT)){
+                                    890 ;src/main.c:213: else if(key_push(KEY_LEFT)){
     000004C5 3E 20                  891 	ld	a, #0x20
     000004C7 F5                     892 	push	af
     000004C8 33                     893 	inc	sp
@@ -910,7 +910,7 @@
     000004CC 33                     895 	inc	sp
     000004CD CB 43                  896 	bit	0, e
     000004CF 28 0B                  897 	jr	Z,00124$
-                                    898 ;src/main.c:187: bf_editor_update_instr(BF_LEFT);
+                                    898 ;src/main.c:214: bf_editor_update_instr(BF_LEFT);
     000004D1 3E 01                  899 	ld	a, #0x01
     000004D3 F5                     900 	push	af
     000004D4 33                     901 	inc	sp
@@ -918,7 +918,7 @@
     000004D8 33                     903 	inc	sp
     000004D9 C3r57r05               904 	jp	00150$
     000004DC                        905 00124$:
-                                    906 ;src/main.c:189: else if(key_push(KEY_RIGHT)){
+                                    906 ;src/main.c:216: else if(key_push(KEY_RIGHT)){
     000004DC 3E 10                  907 	ld	a, #0x10
     000004DE F5                     908 	push	af
     000004DF 33                     909 	inc	sp
@@ -926,7 +926,7 @@
     000004E3 33                     911 	inc	sp
     000004E4 CB 43                  912 	bit	0, e
     000004E6 CAr57r05               913 	jp	Z, 00150$
-                                    914 ;src/main.c:190: bf_editor_update_instr(BF_RIGHT);
+                                    914 ;src/main.c:217: bf_editor_update_instr(BF_RIGHT);
     000004E9 AF                     915 	xor	a, a
     000004EA F5                     916 	push	af
     000004EB 33                     917 	inc	sp
@@ -934,7 +934,7 @@
     000004EF 33                     919 	inc	sp
     000004F0 C3r57r05               920 	jp	00150$
     000004F3                        921 00146$:
-                                    922 ;src/main.c:193: else if(key_hold(KEY_B)){
+                                    922 ;src/main.c:220: else if(key_hold(KEY_B)){
     000004F3 3E 02                  923 	ld	a, #0x02
     000004F5 F5                     924 	push	af
     000004F6 33                     925 	inc	sp
@@ -942,7 +942,7 @@
     000004FA 33                     927 	inc	sp
     000004FB CB 43                  928 	bit	0, e
     000004FD CAr57r05               929 	jp	Z, 00150$
-                                    930 ;src/main.c:194: if(key_push(KEY_UP)){
+                                    930 ;src/main.c:221: if(key_push(KEY_UP)){
     00000500 3E 40                  931 	ld	a, #0x40
     00000502 F5                     932 	push	af
     00000503 33                     933 	inc	sp
@@ -950,7 +950,7 @@
     00000507 33                     935 	inc	sp
     00000508 CB 43                  936 	bit	0, e
     0000050A 28 0B                  937 	jr	Z,00141$
-                                    938 ;src/main.c:195: bf_editor_update_instr(BF_DOT);
+                                    938 ;src/main.c:222: bf_editor_update_instr(BF_DOT);
     0000050C 3E 04                  939 	ld	a, #0x04
     0000050E F5                     940 	push	af
     0000050F 33                     941 	inc	sp
@@ -958,7 +958,7 @@
     00000513 33                     943 	inc	sp
     00000514 C3r57r05               944 	jp	00150$
     00000517                        945 00141$:
-                                    946 ;src/main.c:197: else if(key_push(KEY_DOWN)){
+                                    946 ;src/main.c:224: else if(key_push(KEY_DOWN)){
     00000517 3E 80                  947 	ld	a, #0x80
     00000519 F5                     948 	push	af
     0000051A 33                     949 	inc	sp
@@ -966,7 +966,7 @@
     0000051E 33                     951 	inc	sp
     0000051F CB 43                  952 	bit	0, e
     00000521 28 0A                  953 	jr	Z,00138$
-                                    954 ;src/main.c:198: bf_editor_update_instr(BF_COMMA);
+                                    954 ;src/main.c:225: bf_editor_update_instr(BF_COMMA);
     00000523 3E 05                  955 	ld	a, #0x05
     00000525 F5                     956 	push	af
     00000526 33                     957 	inc	sp
@@ -974,7 +974,7 @@
     0000052A 33                     959 	inc	sp
     0000052B 18 2A                  960 	jr	00150$
     0000052D                        961 00138$:
-                                    962 ;src/main.c:200: else if(key_push(KEY_LEFT)){
+                                    962 ;src/main.c:227: else if(key_push(KEY_LEFT)){
     0000052D 3E 20                  963 	ld	a, #0x20
     0000052F F5                     964 	push	af
     00000530 33                     965 	inc	sp
@@ -982,7 +982,7 @@
     00000534 33                     967 	inc	sp
     00000535 CB 43                  968 	bit	0, e
     00000537 28 0A                  969 	jr	Z,00135$
-                                    970 ;src/main.c:201: bf_editor_update_instr(BF_BRACKET_LEFT);
+                                    970 ;src/main.c:228: bf_editor_update_instr(BF_BRACKET_LEFT);
     00000539 3E 06                  971 	ld	a, #0x06
     0000053B F5                     972 	push	af
     0000053C 33                     973 	inc	sp
@@ -990,7 +990,7 @@
     00000540 33                     975 	inc	sp
     00000541 18 14                  976 	jr	00150$
     00000543                        977 00135$:
-                                    978 ;src/main.c:203: else if(key_push(KEY_RIGHT)){
+                                    978 ;src/main.c:230: else if(key_push(KEY_RIGHT)){
     00000543 3E 10                  979 	ld	a, #0x10
     00000545 F5                     980 	push	af
     00000546 33                     981 	inc	sp
@@ -998,14 +998,14 @@
     0000054A 33                     983 	inc	sp
     0000054B CB 43                  984 	bit	0, e
     0000054D 28 08                  985 	jr	Z,00150$
-                                    986 ;src/main.c:204: bf_editor_update_instr(BF_BRACKET_RIGHT);
+                                    986 ;src/main.c:231: bf_editor_update_instr(BF_BRACKET_RIGHT);
     0000054F 3E 07                  987 	ld	a, #0x07
     00000551 F5                     988 	push	af
     00000552 33                     989 	inc	sp
     00000553 CDrAAr05               990 	call	_bf_editor_update_instr
     00000556 33                     991 	inc	sp
     00000557                        992 00150$:
-                                    993 ;src/main.c:208: set_obj(&cursor_obj, (bf_instr_p % BF_EDITOR_W) * 8, (bf_instr_p / BF_EDITOR_W) * 8, 0x7F, 0);
+                                    993 ;src/main.c:235: set_obj(&cursor_obj, (bf_instr_p % BF_EDITOR_W) * 8, (bf_instr_p / BF_EDITOR_W) * 8, 0x7F, 0);
     00000557 21 14 00               994 	ld	hl, #0x0014
     0000055A E5                     995 	push	hl
     0000055B 21r01r00               996 	ld	hl, #_bf_instr_p
@@ -1046,7 +1046,7 @@
     0000058E E5                    1031 	push	hl
     0000058F CDr00r00              1032 	call	_set_obj
     00000592 E8 06                 1033 	add	sp, #6
-                                   1034 ;src/main.c:209: obj_slot = copy_to_oam_obj(&cursor_obj, obj_slot);
+                                   1034 ;src/main.c:236: obj_slot = copy_to_oam_obj(&cursor_obj, obj_slot);
     00000594 21r00r00              1035 	ld	hl, #_obj_slot
     00000597 7E                    1036 	ld	a, (hl)
     00000598 F5                    1037 	push	af
@@ -1057,16 +1057,16 @@
     000005A1 E8 03                 1042 	add	sp, #3
     000005A3 21r00r00              1043 	ld	hl, #_obj_slot
     000005A6 73                    1044 	ld	(hl), e
-                                   1045 ;src/main.c:210: }
+                                   1045 ;src/main.c:237: }
     000005A7 E8 03                 1046 	add	sp, #3
     000005A9 C9                    1047 	ret
-                                   1048 ;src/main.c:212: void bf_editor_update_instr(uint8_t _instr){
+                                   1048 ;src/main.c:239: void bf_editor_update_instr(uint8_t _instr){
                                    1049 ;	---------------------------------
                                    1050 ; Function bf_editor_update_instr
                                    1051 ; ---------------------------------
     000005AA                       1052 _bf_editor_update_instr::
     000005AA E8 FD                 1053 	add	sp, #-3
-                                   1054 ;src/main.c:213: bf_instr[bf_instr_p] = bf_instruction_char[_instr];
+                                   1054 ;src/main.c:240: bf_instr[bf_instr_p] = bf_instruction_char[_instr];
     000005AC 11r03r00              1055 	ld	de, #_bf_instr
     000005AF 21r01r00              1056 	ld	hl, #_bf_instr_p
     000005B2 2A                    1057 	ld	a, (hl+)
@@ -1087,7 +1087,7 @@
     000005C5 E1                    1072 	pop	hl
     000005C6 E5                    1073 	push	hl
     000005C7 77                    1074 	ld	(hl), a
-                                   1075 ;src/main.c:214: update_bg_map_tile_xy(bf_instr_p % BF_EDITOR_W, bf_instr_p / BF_EDITOR_W, bf_instruction_char[_instr]);
+                                   1075 ;src/main.c:241: update_bg_map_tile_xy(bf_instr_p % BF_EDITOR_W, bf_instr_p / BF_EDITOR_W, bf_instruction_char[_instr]);
     000005C8 0A                    1076 	ld	a, (bc)
     000005C9 F8 02                 1077 	ldhl	sp,#2
     000005CB 77                    1078 	ld	(hl), a
@@ -1112,7 +1112,7 @@
     000005E9 CDr00r00              1097 	call	__moduint
     000005EC E8 04                 1098 	add	sp, #4
     000005EE C1                    1099 	pop	bc
-                                   1100 ;src/gb.h:157: inline void update_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){update_bg_map_tile((_y << 5) + _x, _tile);}
+                                   1100 ;src/gb.h:161: inline void update_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){update_bg_map_tile((_y << 5) + _x, _tile);}
     000005EF 06 00                 1101 	ld	b, #0x00
     000005F1 CB 21                 1102 	sla	c
     000005F3 CB 10                 1103 	rl	b
@@ -1140,23 +1140,23 @@
     00000615 C5                    1125 	push	bc
     00000616 CDr00r00              1126 	call	_update_bg_map_tile
     00000619 E8 03                 1127 	add	sp, #3
-                                   1128 ;src/main.c:215: bf_instr_p++;
+                                   1128 ;src/main.c:242: bf_instr_p++;
     0000061B 21r01r00              1129 	ld	hl, #_bf_instr_p
     0000061E 34                    1130 	inc	(hl)
     0000061F 20 02                 1131 	jr	NZ,00106$
     00000621 23                    1132 	inc	hl
     00000622 34                    1133 	inc	(hl)
     00000623                       1134 00106$:
-                                   1135 ;src/main.c:216: }
+                                   1135 ;src/main.c:243: }
     00000623 E8 03                 1136 	add	sp, #3
     00000625 C9                    1137 	ret
-                                   1138 ;src/main.c:218: void bf_editor_redraw_instr(){
+                                   1138 ;src/main.c:245: void bf_editor_redraw_instr(){
                                    1139 ;	---------------------------------
                                    1140 ; Function bf_editor_redraw_instr
                                    1141 ; ---------------------------------
     00000626                       1142 _bf_editor_redraw_instr::
     00000626 E8 F9                 1143 	add	sp, #-7
-                                   1144 ;src/gb.h:131: inline void disable_display(){while((*reg(REG_LCD_STAT) & LCD_STAT_MODE_FLAG) != 1); *reg(REG_LCDC) &= ~LCDC_DISPLAY_ENABLE;}
+                                   1144 ;src/gb.h:135: inline void disable_display(){while((*reg(REG_LCD_STAT) & LCD_STAT_MODE_FLAG) != 1); *reg(REG_LCDC) &= ~LCDC_DISPLAY_ENABLE;}
     00000628                       1145 00103$:
     00000628 11 41 FF              1146 	ld	de, #0xff41
     0000062B 1A                    1147 	ld	a,(de)
@@ -1175,48 +1175,48 @@
     0000063E CB BF                 1160 	res	7, a
     00000640 21 40 FF              1161 	ld	hl, #0xff40
     00000643 77                    1162 	ld	(hl), a
-                                   1163 ;src/main.c:220: for(uint8_t i = 0; i < BF_EDITOR_H; i++){
+                                   1163 ;src/main.c:247: for(uint8_t i = 0; i < BF_EDITOR_H; i++){
     00000644 F8 06                 1164 	ldhl	sp,#6
     00000646 36 00                 1165 	ld	(hl), #0x00
     00000648                       1166 00113$:
     00000648 F8 06                 1167 	ldhl	sp,#6
     0000064A 7E                    1168 	ld	a, (hl)
     0000064B D6 12                 1169 	sub	a, #0x12
-    0000064D D2rBAr06              1170 	jp	NC, 00102$
-                                   1171 ;src/main.c:221: for(uint8_t j = 0; j < BF_EDITOR_W; j++){
+    0000064D D2rBBr06              1170 	jp	NC, 00102$
+                                   1171 ;src/main.c:248: for(uint8_t j = 0; j < BF_EDITOR_W; j++){
     00000650 2B                    1172 	dec	hl
     00000651 36 00                 1173 	ld	(hl), #0x00
     00000653                       1174 00110$:
     00000653 F8 05                 1175 	ldhl	sp,#5
     00000655 7E                    1176 	ld	a, (hl)
     00000656 D6 14                 1177 	sub	a, #0x14
-    00000658 D2rB4r06              1178 	jp	NC, 00114$
-                                   1179 ;src/main.c:222: set_bg_map_tile_xy(j, i, bf_instr[(i * BF_EDITOR_W) + j]);
+    00000658 D2rB5r06              1178 	jp	NC, 00114$
+                                   1179 ;src/main.c:249: set_bg_map_tile_xy(j, i, bf_instr[(i * BF_EDITOR_W) + j]);
     0000065B 23                    1180 	inc	hl
     0000065C 7E                    1181 	ld	a, (hl)
-    0000065D F8 02                 1182 	ldhl	sp,#2
+    0000065D F8 00                 1182 	ldhl	sp,#0
     0000065F 22                    1183 	ld	(hl+), a
     00000660 36 00                 1184 	ld	(hl), #0x00
-    00000662 2B                    1185 	dec	hl
-    00000663 4E                    1186 	ld	c, (hl)
-    00000664 23                    1187 	inc	hl
-    00000665 46                    1188 	ld	b, (hl)
-    00000666 69                    1189 	ld	l, c
-    00000667 60                    1190 	ld	h, b
-    00000668 29                    1191 	add	hl, hl
+    00000662 C1                    1185 	pop	bc
+    00000663 C5                    1186 	push	bc
+    00000664 69                    1187 	ld	l, c
+    00000665 60                    1188 	ld	h, b
+    00000666 29                    1189 	add	hl, hl
+    00000667 29                    1190 	add	hl, hl
+    00000668 09                    1191 	add	hl, bc
     00000669 29                    1192 	add	hl, hl
-    0000066A 09                    1193 	add	hl, bc
-    0000066B 29                    1194 	add	hl, hl
-    0000066C 29                    1195 	add	hl, hl
-    0000066D 4D                    1196 	ld	c, l
-    0000066E 44                    1197 	ld	b, h
-    0000066F F8 05                 1198 	ldhl	sp,#5
-    00000671 7E                    1199 	ld	a, (hl)
-    00000672 F8 00                 1200 	ldhl	sp,#0
-    00000674 22                    1201 	ld	(hl+), a
-    00000675 36 00                 1202 	ld	(hl), #0x00
-    00000677 E1                    1203 	pop	hl
-    00000678 E5                    1204 	push	hl
+    0000066A 29                    1193 	add	hl, hl
+    0000066B 4D                    1194 	ld	c, l
+    0000066C 44                    1195 	ld	b, h
+    0000066D F8 05                 1196 	ldhl	sp,#5
+    0000066F 7E                    1197 	ld	a, (hl)
+    00000670 F8 02                 1198 	ldhl	sp,#2
+    00000672 22                    1199 	ld	(hl+), a
+    00000673 36 00                 1200 	ld	(hl), #0x00
+    00000675 2B                    1201 	dec	hl
+    00000676 2A                    1202 	ld	a, (hl+)
+    00000677 66                    1203 	ld	h, (hl)
+    00000678 6F                    1204 	ld	l, a
     00000679 09                    1205 	add	hl, bc
     0000067A 4D                    1206 	ld	c, l
     0000067B 44                    1207 	ld	b, h
@@ -1226,772 +1226,771 @@
     00000681 44                    1211 	ld	b, h
     00000682 0A                    1212 	ld	a, (bc)
     00000683 F8 04                 1213 	ldhl	sp,#4
-                                   1214 ;src/gb.h:155: inline void set_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){set_bg_map_tile((_y << 5) + _x, _tile);}
-    00000685 32                    1215 	ld	(hl-), a
-    00000686 2B                    1216 	dec	hl
-    00000687 4E                    1217 	ld	c, (hl)
-    00000688 23                    1218 	inc	hl
-    00000689 46                    1219 	ld	b, (hl)
-    0000068A CB 21                 1220 	sla	c
-    0000068C CB 10                 1221 	rl	b
-    0000068E CB 21                 1222 	sla	c
-    00000690 CB 10                 1223 	rl	b
-    00000692 CB 21                 1224 	sla	c
-    00000694 CB 10                 1225 	rl	b
-    00000696 CB 21                 1226 	sla	c
-    00000698 CB 10                 1227 	rl	b
-    0000069A CB 21                 1228 	sla	c
-    0000069C CB 10                 1229 	rl	b
-    0000069E E1                    1230 	pop	hl
-    0000069F E5                    1231 	push	hl
-    000006A0 09                    1232 	add	hl, bc
-    000006A1 4D                    1233 	ld	c, l
-    000006A2 44                    1234 	ld	b, h
-    000006A3 F8 04                 1235 	ldhl	sp,#4
-    000006A5 7E                    1236 	ld	a, (hl)
-    000006A6 F5                    1237 	push	af
-    000006A7 33                    1238 	inc	sp
-    000006A8 C5                    1239 	push	bc
-    000006A9 CDr00r00              1240 	call	_set_bg_map_tile
-    000006AC E8 03                 1241 	add	sp, #3
-                                   1242 ;src/main.c:221: for(uint8_t j = 0; j < BF_EDITOR_W; j++){
-    000006AE F8 05                 1243 	ldhl	sp,#5
-    000006B0 34                    1244 	inc	(hl)
-    000006B1 C3r53r06              1245 	jp	00110$
-    000006B4                       1246 00114$:
-                                   1247 ;src/main.c:220: for(uint8_t i = 0; i < BF_EDITOR_H; i++){
-    000006B4 F8 06                 1248 	ldhl	sp,#6
-    000006B6 34                    1249 	inc	(hl)
-    000006B7 C3r48r06              1250 	jp	00113$
-    000006BA                       1251 00102$:
-                                   1252 ;src/gb.h:130: inline void enable_display(){*reg(REG_LCDC) |= LCDC_DISPLAY_ENABLE;}
-    000006BA 11 40 FF              1253 	ld	de, #0xff40
-    000006BD 1A                    1254 	ld	a,(de)
-    000006BE 4F                    1255 	ld	c, a
-    000006BF 06 00                 1256 	ld	b, #0x00
-    000006C1 CB F9                 1257 	set	7, c
-    000006C3 21 40 FF              1258 	ld	hl, #0xff40
-    000006C6 71                    1259 	ld	(hl), c
-                                   1260 ;src/main.c:225: enable_display();
-                                   1261 ;src/main.c:226: }
-    000006C7 E8 07                 1262 	add	sp, #7
-    000006C9 C9                    1263 	ret
-                                   1264 ;src/main.c:228: void bf_clear_screen(){
-                                   1265 ;	---------------------------------
-                                   1266 ; Function bf_clear_screen
-                                   1267 ; ---------------------------------
-    000006CA                       1268 _bf_clear_screen::
-    000006CA E8 FC                 1269 	add	sp, #-4
-                                   1270 ;src/gb.h:131: inline void disable_display(){while((*reg(REG_LCD_STAT) & LCD_STAT_MODE_FLAG) != 1); *reg(REG_LCDC) &= ~LCDC_DISPLAY_ENABLE;}
-    000006CC                       1271 00103$:
-    000006CC 11 41 FF              1272 	ld	de, #0xff41
-    000006CF 1A                    1273 	ld	a,(de)
-    000006D0 4F                    1274 	ld	c, a
-    000006D1 06 00                 1275 	ld	b, #0x00
-    000006D3 79                    1276 	ld	a, c
-    000006D4 E6 03                 1277 	and	a, #0x03
-    000006D6 4F                    1278 	ld	c, a
-    000006D7 06 00                 1279 	ld	b, #0x00
-    000006D9 79                    1280 	ld	a, c
-    000006DA 3D                    1281 	dec	a
-    000006DB B0                    1282 	or	a, b
-    000006DC 20 EE                 1283 	jr	NZ,00103$
-    000006DE 11 40 FF              1284 	ld	de, #0xff40
-    000006E1 1A                    1285 	ld	a,(de)
-    000006E2 CB BF                 1286 	res	7, a
-    000006E4 21 40 FF              1287 	ld	hl, #0xff40
-    000006E7 77                    1288 	ld	(hl), a
-                                   1289 ;src/main.c:230: for(uint8_t i = 0; i < BF_EDITOR_H; i++){
-    000006E8 F8 01                 1290 	ldhl	sp,#1
-    000006EA 36 00                 1291 	ld	(hl), #0x00
-    000006EC                       1292 00113$:
-    000006EC F8 01                 1293 	ldhl	sp,#1
-    000006EE 7E                    1294 	ld	a, (hl)
-    000006EF D6 12                 1295 	sub	a, #0x12
-    000006F1 D2r3Ar07              1296 	jp	NC, 00102$
-                                   1297 ;src/main.c:231: for(uint8_t j = 0; j < BF_EDITOR_W; j++){
-    000006F4 2B                    1298 	dec	hl
-    000006F5 36 00                 1299 	ld	(hl), #0x00
-    000006F7                       1300 00110$:
-    000006F7 F8 00                 1301 	ldhl	sp,#0
-    000006F9 7E                    1302 	ld	a, (hl)
-    000006FA D6 14                 1303 	sub	a, #0x14
-    000006FC D2r34r07              1304 	jp	NC, 00114$
-                                   1305 ;src/gb.h:155: inline void set_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){set_bg_map_tile((_y << 5) + _x, _tile);}
-    000006FF 23                    1306 	inc	hl
-    00000700 4E                    1307 	ld	c, (hl)
-    00000701 06 00                 1308 	ld	b, #0x00
-    00000703 CB 21                 1309 	sla	c
-    00000705 CB 10                 1310 	rl	b
-    00000707 CB 21                 1311 	sla	c
-    00000709 CB 10                 1312 	rl	b
-    0000070B CB 21                 1313 	sla	c
-    0000070D CB 10                 1314 	rl	b
-    0000070F CB 21                 1315 	sla	c
-    00000711 CB 10                 1316 	rl	b
-    00000713 CB 21                 1317 	sla	c
-    00000715 CB 10                 1318 	rl	b
-    00000717 2B                    1319 	dec	hl
-    00000718 2A                    1320 	ld	a, (hl+)
-    00000719 23                    1321 	inc	hl
-    0000071A 22                    1322 	ld	(hl+), a
-    0000071B 36 00                 1323 	ld	(hl), #0x00
-    0000071D 2B                    1324 	dec	hl
-    0000071E 2A                    1325 	ld	a, (hl+)
-    0000071F 66                    1326 	ld	h, (hl)
-    00000720 6F                    1327 	ld	l, a
-    00000721 09                    1328 	add	hl, bc
-    00000722 4D                    1329 	ld	c, l
-    00000723 44                    1330 	ld	b, h
-    00000724 3E 20                 1331 	ld	a, #0x20
-    00000726 F5                    1332 	push	af
-    00000727 33                    1333 	inc	sp
-    00000728 C5                    1334 	push	bc
-    00000729 CDr00r00              1335 	call	_set_bg_map_tile
-    0000072C E8 03                 1336 	add	sp, #3
-                                   1337 ;src/main.c:231: for(uint8_t j = 0; j < BF_EDITOR_W; j++){
-    0000072E F8 00                 1338 	ldhl	sp,#0
-    00000730 34                    1339 	inc	(hl)
-    00000731 C3rF7r06              1340 	jp	00110$
-    00000734                       1341 00114$:
-                                   1342 ;src/main.c:230: for(uint8_t i = 0; i < BF_EDITOR_H; i++){
-    00000734 F8 01                 1343 	ldhl	sp,#1
-    00000736 34                    1344 	inc	(hl)
-    00000737 C3rECr06              1345 	jp	00113$
-    0000073A                       1346 00102$:
-                                   1347 ;src/gb.h:130: inline void enable_display(){*reg(REG_LCDC) |= LCDC_DISPLAY_ENABLE;}
-    0000073A 11 40 FF              1348 	ld	de, #0xff40
-    0000073D 1A                    1349 	ld	a,(de)
-    0000073E 4F                    1350 	ld	c, a
-    0000073F 06 00                 1351 	ld	b, #0x00
-    00000741 CB F9                 1352 	set	7, c
-    00000743 21 40 FF              1353 	ld	hl, #0xff40
-    00000746 71                    1354 	ld	(hl), c
-                                   1355 ;src/main.c:235: enable_display();
-                                   1356 ;src/main.c:236: }
-    00000747 E8 04                 1357 	add	sp, #4
-    00000749 C9                    1358 	ret
-                                   1359 ;src/main.c:238: void bf_interpreter(){
-                                   1360 ;	---------------------------------
-                                   1361 ; Function bf_interpreter
-                                   1362 ; ---------------------------------
-    0000074A                       1363 _bf_interpreter::
-    0000074A E8 FD                 1364 	add	sp, #-3
-                                   1365 ;src/main.c:239: if(key_push(KEY_START)){
-    0000074C 3E 08                 1366 	ld	a, #0x08
-    0000074E F5                    1367 	push	af
-    0000074F 33                    1368 	inc	sp
-    00000750 CDr00r00              1369 	call	_key_push
-    00000753 33                    1370 	inc	sp
-    00000754 4B                    1371 	ld	c, e
-    00000755 CB 41                 1372 	bit	0, c
-    00000757 28 0B                 1373 	jr	Z,00134$
-                                   1374 ;src/main.c:240: bf_editor_redraw_instr();
-    00000759 CDr26r06              1375 	call	_bf_editor_redraw_instr
-                                   1376 ;src/main.c:241: run_interpreter = false;
-    0000075C 21r00r00              1377 	ld	hl, #_run_interpreter
-    0000075F 36 00                 1378 	ld	(hl), #0x00
-    00000761 C3rFEr08              1379 	jp	00145$
-    00000764                       1380 00134$:
-                                   1381 ;src/main.c:244: switch(bf_instr[bf_pc]){
-    00000764 3Er03                 1382 	ld	a, #<(_bf_instr)
-    00000766 21r03r08              1383 	ld	hl, #_bf_pc
-    00000769 86                    1384 	add	a, (hl)
-    0000076A 4F                    1385 	ld	c, a
-    0000076B 3Es00                 1386 	ld	a, #>(_bf_instr)
-    0000076D 23                    1387 	inc	hl
-    0000076E 8E                    1388 	adc	a, (hl)
-    0000076F 47                    1389 	ld	b, a
-    00000770 0A                    1390 	ld	a, (bc)
-    00000771 FE 20                 1391 	cp	a, #0x20
-    00000773 CArFBr08              1392 	jp	Z,00131$
-    00000776 FE 2B                 1393 	cp	a, #0x2b
-    00000778 28 35                 1394 	jr	Z,00103$
-    0000077A FE 2C                 1395 	cp	a, #0x2c
-    0000077C CAr3Cr08              1396 	jp	Z,00110$
-    0000077F FE 2D                 1397 	cp	a, #0x2d
-    00000781 28 41                 1398 	jr	Z,00104$
-    00000783 FE 2E                 1399 	cp	a, #0x2e
-    00000785 CArD9r07              1400 	jp	Z,00105$
-    00000788 FE 3C                 1401 	cp	a, #0x3c
-    0000078A 28 1A                 1402 	jr	Z,00102$
-    0000078C FE 3E                 1403 	cp	a, #0x3e
-    0000078E 28 0D                 1404 	jr	Z,00101$
-    00000790 FE 5B                 1405 	cp	a, #0x5b
-    00000792 CAr55r08              1406 	jp	Z,00111$
-    00000795 D6 5D                 1407 	sub	a, #0x5d
-    00000797 CArA2r08              1408 	jp	Z,00120$
-    0000079A C3rFBr08              1409 	jp	00131$
-                                   1410 ;src/main.c:245: case '>':
-    0000079D                       1411 00101$:
-                                   1412 ;src/main.c:246: inc_bf_cell_p();
-    0000079D CDrF0r02              1413 	call	_inc_bf_cell_p
-                                   1414 ;src/main.c:247: inc_bf_pc();
-    000007A0 CDr22r03              1415 	call	_inc_bf_pc
-                                   1416 ;src/main.c:248: break;
-    000007A3 C3rFEr08              1417 	jp	00145$
-                                   1418 ;src/main.c:249: case '<':
-    000007A6                       1419 00102$:
-                                   1420 ;src/main.c:250: dec_bf_cell_p();
-    000007A6 CDr09r03              1421 	call	_dec_bf_cell_p
-                                   1422 ;src/main.c:251: inc_bf_pc();
-    000007A9 CDr22r03              1423 	call	_inc_bf_pc
-                                   1424 ;src/main.c:252: break;
-    000007AC C3rFEr08              1425 	jp	00145$
-                                   1426 ;src/main.c:253: case '+':
-    000007AF                       1427 00103$:
-                                   1428 ;src/main.c:254: bf_cell[bf_cell_p]++;
-    000007AF 3Er07                 1429 	ld	a, #<(_bf_cell)
-    000007B1 21r05r08              1430 	ld	hl, #_bf_cell_p
-    000007B4 86                    1431 	add	a, (hl)
-    000007B5 4F                    1432 	ld	c, a
-    000007B6 3Es08                 1433 	ld	a, #>(_bf_cell)
-    000007B8 23                    1434 	inc	hl
-    000007B9 8E                    1435 	adc	a, (hl)
-    000007BA 47                    1436 	ld	b, a
-    000007BB 0A                    1437 	ld	a, (bc)
-    000007BC 3C                    1438 	inc	a
-    000007BD 02                    1439 	ld	(bc), a
-                                   1440 ;src/main.c:255: inc_bf_pc();
-    000007BE CDr22r03              1441 	call	_inc_bf_pc
-                                   1442 ;src/main.c:256: break;
-    000007C1 C3rFEr08              1443 	jp	00145$
-                                   1444 ;src/main.c:257: case '-':
-    000007C4                       1445 00104$:
-                                   1446 ;src/main.c:258: bf_cell[bf_cell_p]--;
-    000007C4 3Er07                 1447 	ld	a, #<(_bf_cell)
-    000007C6 21r05r08              1448 	ld	hl, #_bf_cell_p
-    000007C9 86                    1449 	add	a, (hl)
-    000007CA 4F                    1450 	ld	c, a
-    000007CB 3Es08                 1451 	ld	a, #>(_bf_cell)
-    000007CD 23                    1452 	inc	hl
-    000007CE 8E                    1453 	adc	a, (hl)
-    000007CF 47                    1454 	ld	b, a
-    000007D0 0A                    1455 	ld	a, (bc)
-    000007D1 3D                    1456 	dec	a
-    000007D2 02                    1457 	ld	(bc), a
-                                   1458 ;src/main.c:259: inc_bf_pc();
-    000007D3 CDr22r03              1459 	call	_inc_bf_pc
-                                   1460 ;src/main.c:260: break;
-    000007D6 C3rFEr08              1461 	jp	00145$
-                                   1462 ;src/main.c:261: case '.':
-    000007D9                       1463 00105$:
-                                   1464 ;src/main.c:262: update_bg_map_tile_xy(bf_screen_out_x, bf_screen_out_y, bf_cell[bf_cell_p]);
-    000007D9 3Er07                 1465 	ld	a, #<(_bf_cell)
-    000007DB 21r05r08              1466 	ld	hl, #_bf_cell_p
-    000007DE 86                    1467 	add	a, (hl)
-    000007DF 4F                    1468 	ld	c, a
-    000007E0 3Es08                 1469 	ld	a, #>(_bf_cell)
-    000007E2 23                    1470 	inc	hl
-    000007E3 8E                    1471 	adc	a, (hl)
-    000007E4 47                    1472 	ld	b, a
-    000007E5 0A                    1473 	ld	a, (bc)
-    000007E6 F8 02                 1474 	ldhl	sp,#2
-    000007E8 77                    1475 	ld	(hl), a
-    000007E9 21r08r10              1476 	ld	hl, #_bf_screen_out_y
-    000007EC 4E                    1477 	ld	c, (hl)
-    000007ED 21r07r10              1478 	ld	hl, #_bf_screen_out_x
-    000007F0 5E                    1479 	ld	e, (hl)
-                                   1480 ;src/gb.h:157: inline void update_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){update_bg_map_tile((_y << 5) + _x, _tile);}
-    000007F1 06 00                 1481 	ld	b, #0x00
-    000007F3 CB 21                 1482 	sla	c
-    000007F5 CB 10                 1483 	rl	b
-    000007F7 CB 21                 1484 	sla	c
-    000007F9 CB 10                 1485 	rl	b
-    000007FB CB 21                 1486 	sla	c
-    000007FD CB 10                 1487 	rl	b
-    000007FF CB 21                 1488 	sla	c
-    00000801 CB 10                 1489 	rl	b
-    00000803 CB 21                 1490 	sla	c
-    00000805 CB 10                 1491 	rl	b
-    00000807 F8 00                 1492 	ldhl	sp,#0
-    00000809 73                    1493 	ld	(hl), e
-    0000080A 23                    1494 	inc	hl
-    0000080B 36 00                 1495 	ld	(hl), #0x00
-    0000080D E1                    1496 	pop	hl
-    0000080E E5                    1497 	push	hl
-    0000080F 09                    1498 	add	hl, bc
-    00000810 4D                    1499 	ld	c, l
-    00000811 44                    1500 	ld	b, h
-    00000812 F8 02                 1501 	ldhl	sp,#2
-    00000814 7E                    1502 	ld	a, (hl)
-    00000815 F5                    1503 	push	af
-    00000816 33                    1504 	inc	sp
-    00000817 C5                    1505 	push	bc
-    00000818 CDr00r00              1506 	call	_update_bg_map_tile
-    0000081B E8 03                 1507 	add	sp, #3
-                                   1508 ;src/main.c:263: bf_screen_out_x++;
-    0000081D 21r07r10              1509 	ld	hl, #_bf_screen_out_x
-    00000820 34                    1510 	inc	(hl)
-                                   1511 ;src/main.c:264: if(bf_screen_out_x >= BF_EDITOR_W){
-    00000821 7E                    1512 	ld	a, (hl)
-    00000822 D6 14                 1513 	sub	a, #0x14
-    00000824 38 10                 1514 	jr	C,00109$
-                                   1515 ;src/main.c:265: bf_screen_out_x = 0;
-    00000826 36 00                 1516 	ld	(hl), #0x00
-                                   1517 ;src/main.c:266: bf_screen_out_y++;
-    00000828 21r08r10              1518 	ld	hl, #_bf_screen_out_y
-    0000082B 34                    1519 	inc	(hl)
-                                   1520 ;src/main.c:267: if(bf_screen_out_y >= BF_EDITOR_H){
-    0000082C 7E                    1521 	ld	a, (hl)
-    0000082D D6 12                 1522 	sub	a, #0x12
-    0000082F 38 05                 1523 	jr	C,00109$
-                                   1524 ;src/main.c:268: bf_screen_out_x = 0;
-    00000831 21r07r10              1525 	ld	hl, #_bf_screen_out_x
-    00000834 36 00                 1526 	ld	(hl), #0x00
-    00000836                       1527 00109$:
-                                   1528 ;src/main.c:271: inc_bf_pc();
-    00000836 CDr22r03              1529 	call	_inc_bf_pc
-                                   1530 ;src/main.c:272: break;
-    00000839 C3rFEr08              1531 	jp	00145$
-                                   1532 ;src/main.c:273: case ',':
-    0000083C                       1533 00110$:
-                                   1534 ;src/main.c:274: bf_cell[bf_cell_p] = bf_get_char();
-    0000083C 3Er07                 1535 	ld	a, #<(_bf_cell)
-    0000083E 21r05r08              1536 	ld	hl, #_bf_cell_p
-    00000841 86                    1537 	add	a, (hl)
-    00000842 4F                    1538 	ld	c, a
-    00000843 3Es08                 1539 	ld	a, #>(_bf_cell)
-    00000845 23                    1540 	inc	hl
-    00000846 8E                    1541 	adc	a, (hl)
-    00000847 47                    1542 	ld	b, a
-    00000848 C5                    1543 	push	bc
-    00000849 CDr01r09              1544 	call	_bf_get_char
-    0000084C 7B                    1545 	ld	a, e
-    0000084D C1                    1546 	pop	bc
-    0000084E 02                    1547 	ld	(bc), a
-                                   1548 ;src/main.c:275: inc_bf_pc();
-    0000084F CDr22r03              1549 	call	_inc_bf_pc
-                                   1550 ;src/main.c:276: break;
-    00000852 C3rFEr08              1551 	jp	00145$
-                                   1552 ;src/main.c:277: case '[':
-    00000855                       1553 00111$:
-                                   1554 ;src/main.c:278: inc_bf_pc();
-    00000855 CDr22r03              1555 	call	_inc_bf_pc
-                                   1556 ;src/main.c:279: if(bf_cell[bf_cell_p] == 0){
-    00000858 3Er07                 1557 	ld	a, #<(_bf_cell)
-    0000085A 21r05r08              1558 	ld	hl, #_bf_cell_p
-    0000085D 86                    1559 	add	a, (hl)
-    0000085E 4F                    1560 	ld	c, a
-    0000085F 3Es08                 1561 	ld	a, #>(_bf_cell)
-    00000861 23                    1562 	inc	hl
-    00000862 8E                    1563 	adc	a, (hl)
-    00000863 47                    1564 	ld	b, a
-    00000864 0A                    1565 	ld	a, (bc)
-    00000865 B7                    1566 	or	a, a
-    00000866 C2rFEr08              1567 	jp	NZ, 00145$
-                                   1568 ;src/main.c:280: for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); inc_bf_pc()){
-    00000869 01 01 00              1569 	ld	bc, #0x0001
-    0000086C                       1570 00139$:
-    0000086C 78                    1571 	ld	a, b
-    0000086D B1                    1572 	or	a, c
-    0000086E CArFEr08              1573 	jp	Z, 00145$
-    00000871 21r03r08              1574 	ld	hl, #_bf_pc
-    00000874 7E                    1575 	ld	a, (hl)
-    00000875 D6 00                 1576 	sub	a, #0x00
-    00000877 23                    1577 	inc	hl
-    00000878 7E                    1578 	ld	a, (hl)
-    00000879 DE 08                 1579 	sbc	a, #0x08
-    0000087B D2rFEr08              1580 	jp	NC, 00145$
-                                   1581 ;src/main.c:281: if(bf_instr[bf_pc] == '[')      _bracket_c++;
-    0000087E 11r03r00              1582 	ld	de, #_bf_instr
-    00000881 21r03r08              1583 	ld	hl, #_bf_pc
-    00000884 2A                    1584 	ld	a, (hl+)
-    00000885 66                    1585 	ld	h, (hl)
-    00000886 6F                    1586 	ld	l, a
-    00000887 19                    1587 	add	hl, de
+    00000685 77                    1214 	ld	(hl), a
+                                   1215 ;src/gb.h:159: inline void set_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){set_bg_map_tile((_y << 5) + _x, _tile);}
+    00000686 C1                    1216 	pop	bc
+    00000687 C5                    1217 	push	bc
+    00000688 CB 21                 1218 	sla	c
+    0000068A CB 10                 1219 	rl	b
+    0000068C CB 21                 1220 	sla	c
+    0000068E CB 10                 1221 	rl	b
+    00000690 CB 21                 1222 	sla	c
+    00000692 CB 10                 1223 	rl	b
+    00000694 CB 21                 1224 	sla	c
+    00000696 CB 10                 1225 	rl	b
+    00000698 CB 21                 1226 	sla	c
+    0000069A CB 10                 1227 	rl	b
+    0000069C 2B                    1228 	dec	hl
+    0000069D 2B                    1229 	dec	hl
+    0000069E 2A                    1230 	ld	a, (hl+)
+    0000069F 66                    1231 	ld	h, (hl)
+    000006A0 6F                    1232 	ld	l, a
+    000006A1 09                    1233 	add	hl, bc
+    000006A2 4D                    1234 	ld	c, l
+    000006A3 44                    1235 	ld	b, h
+    000006A4 F8 04                 1236 	ldhl	sp,#4
+    000006A6 7E                    1237 	ld	a, (hl)
+    000006A7 F5                    1238 	push	af
+    000006A8 33                    1239 	inc	sp
+    000006A9 C5                    1240 	push	bc
+    000006AA CDr00r00              1241 	call	_set_bg_map_tile
+    000006AD E8 03                 1242 	add	sp, #3
+                                   1243 ;src/main.c:248: for(uint8_t j = 0; j < BF_EDITOR_W; j++){
+    000006AF F8 05                 1244 	ldhl	sp,#5
+    000006B1 34                    1245 	inc	(hl)
+    000006B2 C3r53r06              1246 	jp	00110$
+    000006B5                       1247 00114$:
+                                   1248 ;src/main.c:247: for(uint8_t i = 0; i < BF_EDITOR_H; i++){
+    000006B5 F8 06                 1249 	ldhl	sp,#6
+    000006B7 34                    1250 	inc	(hl)
+    000006B8 C3r48r06              1251 	jp	00113$
+    000006BB                       1252 00102$:
+                                   1253 ;src/gb.h:134: inline void enable_display(){*reg(REG_LCDC) |= LCDC_DISPLAY_ENABLE;}
+    000006BB 11 40 FF              1254 	ld	de, #0xff40
+    000006BE 1A                    1255 	ld	a,(de)
+    000006BF 4F                    1256 	ld	c, a
+    000006C0 06 00                 1257 	ld	b, #0x00
+    000006C2 CB F9                 1258 	set	7, c
+    000006C4 21 40 FF              1259 	ld	hl, #0xff40
+    000006C7 71                    1260 	ld	(hl), c
+                                   1261 ;src/main.c:252: enable_display();
+                                   1262 ;src/main.c:253: }
+    000006C8 E8 07                 1263 	add	sp, #7
+    000006CA C9                    1264 	ret
+                                   1265 ;src/main.c:255: void bf_clear_screen(){
+                                   1266 ;	---------------------------------
+                                   1267 ; Function bf_clear_screen
+                                   1268 ; ---------------------------------
+    000006CB                       1269 _bf_clear_screen::
+    000006CB E8 FC                 1270 	add	sp, #-4
+                                   1271 ;src/gb.h:135: inline void disable_display(){while((*reg(REG_LCD_STAT) & LCD_STAT_MODE_FLAG) != 1); *reg(REG_LCDC) &= ~LCDC_DISPLAY_ENABLE;}
+    000006CD                       1272 00103$:
+    000006CD 11 41 FF              1273 	ld	de, #0xff41
+    000006D0 1A                    1274 	ld	a,(de)
+    000006D1 4F                    1275 	ld	c, a
+    000006D2 06 00                 1276 	ld	b, #0x00
+    000006D4 79                    1277 	ld	a, c
+    000006D5 E6 03                 1278 	and	a, #0x03
+    000006D7 4F                    1279 	ld	c, a
+    000006D8 06 00                 1280 	ld	b, #0x00
+    000006DA 79                    1281 	ld	a, c
+    000006DB 3D                    1282 	dec	a
+    000006DC B0                    1283 	or	a, b
+    000006DD 20 EE                 1284 	jr	NZ,00103$
+    000006DF 11 40 FF              1285 	ld	de, #0xff40
+    000006E2 1A                    1286 	ld	a,(de)
+    000006E3 CB BF                 1287 	res	7, a
+    000006E5 21 40 FF              1288 	ld	hl, #0xff40
+    000006E8 77                    1289 	ld	(hl), a
+                                   1290 ;src/main.c:257: for(uint8_t i = 0; i < BF_EDITOR_H; i++){
+    000006E9 F8 03                 1291 	ldhl	sp,#3
+    000006EB 36 00                 1292 	ld	(hl), #0x00
+    000006ED                       1293 00113$:
+    000006ED F8 03                 1294 	ldhl	sp,#3
+    000006EF 7E                    1295 	ld	a, (hl)
+    000006F0 D6 12                 1296 	sub	a, #0x12
+    000006F2 D2r39r07              1297 	jp	NC, 00102$
+                                   1298 ;src/main.c:258: for(uint8_t j = 0; j < BF_EDITOR_W; j++){
+    000006F5 2B                    1299 	dec	hl
+    000006F6 36 00                 1300 	ld	(hl), #0x00
+    000006F8                       1301 00110$:
+    000006F8 F8 02                 1302 	ldhl	sp,#2
+    000006FA 7E                    1303 	ld	a, (hl)
+    000006FB D6 14                 1304 	sub	a, #0x14
+    000006FD D2r33r07              1305 	jp	NC, 00114$
+                                   1306 ;src/gb.h:159: inline void set_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){set_bg_map_tile((_y << 5) + _x, _tile);}
+    00000700 23                    1307 	inc	hl
+    00000701 4E                    1308 	ld	c, (hl)
+    00000702 06 00                 1309 	ld	b, #0x00
+    00000704 CB 21                 1310 	sla	c
+    00000706 CB 10                 1311 	rl	b
+    00000708 CB 21                 1312 	sla	c
+    0000070A CB 10                 1313 	rl	b
+    0000070C CB 21                 1314 	sla	c
+    0000070E CB 10                 1315 	rl	b
+    00000710 CB 21                 1316 	sla	c
+    00000712 CB 10                 1317 	rl	b
+    00000714 CB 21                 1318 	sla	c
+    00000716 CB 10                 1319 	rl	b
+    00000718 2B                    1320 	dec	hl
+    00000719 3A                    1321 	ld	a, (hl-)
+    0000071A 2B                    1322 	dec	hl
+    0000071B 22                    1323 	ld	(hl+), a
+    0000071C 36 00                 1324 	ld	(hl), #0x00
+    0000071E E1                    1325 	pop	hl
+    0000071F E5                    1326 	push	hl
+    00000720 09                    1327 	add	hl, bc
+    00000721 4D                    1328 	ld	c, l
+    00000722 44                    1329 	ld	b, h
+    00000723 3E 20                 1330 	ld	a, #0x20
+    00000725 F5                    1331 	push	af
+    00000726 33                    1332 	inc	sp
+    00000727 C5                    1333 	push	bc
+    00000728 CDr00r00              1334 	call	_set_bg_map_tile
+    0000072B E8 03                 1335 	add	sp, #3
+                                   1336 ;src/main.c:258: for(uint8_t j = 0; j < BF_EDITOR_W; j++){
+    0000072D F8 02                 1337 	ldhl	sp,#2
+    0000072F 34                    1338 	inc	(hl)
+    00000730 C3rF8r06              1339 	jp	00110$
+    00000733                       1340 00114$:
+                                   1341 ;src/main.c:257: for(uint8_t i = 0; i < BF_EDITOR_H; i++){
+    00000733 F8 03                 1342 	ldhl	sp,#3
+    00000735 34                    1343 	inc	(hl)
+    00000736 C3rEDr06              1344 	jp	00113$
+    00000739                       1345 00102$:
+                                   1346 ;src/gb.h:134: inline void enable_display(){*reg(REG_LCDC) |= LCDC_DISPLAY_ENABLE;}
+    00000739 11 40 FF              1347 	ld	de, #0xff40
+    0000073C 1A                    1348 	ld	a,(de)
+    0000073D 4F                    1349 	ld	c, a
+    0000073E 06 00                 1350 	ld	b, #0x00
+    00000740 CB F9                 1351 	set	7, c
+    00000742 21 40 FF              1352 	ld	hl, #0xff40
+    00000745 71                    1353 	ld	(hl), c
+                                   1354 ;src/main.c:262: enable_display();
+                                   1355 ;src/main.c:263: }
+    00000746 E8 04                 1356 	add	sp, #4
+    00000748 C9                    1357 	ret
+                                   1358 ;src/main.c:265: void bf_interpreter(){
+                                   1359 ;	---------------------------------
+                                   1360 ; Function bf_interpreter
+                                   1361 ; ---------------------------------
+    00000749                       1362 _bf_interpreter::
+    00000749 E8 FD                 1363 	add	sp, #-3
+                                   1364 ;src/main.c:266: if(key_push(KEY_START)){
+    0000074B 3E 08                 1365 	ld	a, #0x08
+    0000074D F5                    1366 	push	af
+    0000074E 33                    1367 	inc	sp
+    0000074F CDr00r00              1368 	call	_key_push
+    00000752 33                    1369 	inc	sp
+    00000753 4B                    1370 	ld	c, e
+    00000754 CB 41                 1371 	bit	0, c
+    00000756 28 0B                 1372 	jr	Z,00134$
+                                   1373 ;src/main.c:267: bf_editor_redraw_instr();
+    00000758 CDr26r06              1374 	call	_bf_editor_redraw_instr
+                                   1375 ;src/main.c:268: run_interpreter = false;
+    0000075B 21r00r00              1376 	ld	hl, #_run_interpreter
+    0000075E 36 00                 1377 	ld	(hl), #0x00
+    00000760 C3rFDr08              1378 	jp	00145$
+    00000763                       1379 00134$:
+                                   1380 ;src/main.c:271: switch(bf_instr[bf_pc]){
+    00000763 3Er03                 1381 	ld	a, #<(_bf_instr)
+    00000765 21r03r08              1382 	ld	hl, #_bf_pc
+    00000768 86                    1383 	add	a, (hl)
+    00000769 4F                    1384 	ld	c, a
+    0000076A 3Es00                 1385 	ld	a, #>(_bf_instr)
+    0000076C 23                    1386 	inc	hl
+    0000076D 8E                    1387 	adc	a, (hl)
+    0000076E 47                    1388 	ld	b, a
+    0000076F 0A                    1389 	ld	a, (bc)
+    00000770 FE 20                 1390 	cp	a, #0x20
+    00000772 CArFAr08              1391 	jp	Z,00131$
+    00000775 FE 2B                 1392 	cp	a, #0x2b
+    00000777 28 35                 1393 	jr	Z,00103$
+    00000779 FE 2C                 1394 	cp	a, #0x2c
+    0000077B CAr3Br08              1395 	jp	Z,00110$
+    0000077E FE 2D                 1396 	cp	a, #0x2d
+    00000780 28 41                 1397 	jr	Z,00104$
+    00000782 FE 2E                 1398 	cp	a, #0x2e
+    00000784 CArD8r07              1399 	jp	Z,00105$
+    00000787 FE 3C                 1400 	cp	a, #0x3c
+    00000789 28 1A                 1401 	jr	Z,00102$
+    0000078B FE 3E                 1402 	cp	a, #0x3e
+    0000078D 28 0D                 1403 	jr	Z,00101$
+    0000078F FE 5B                 1404 	cp	a, #0x5b
+    00000791 CAr54r08              1405 	jp	Z,00111$
+    00000794 D6 5D                 1406 	sub	a, #0x5d
+    00000796 CArA1r08              1407 	jp	Z,00120$
+    00000799 C3rFAr08              1408 	jp	00131$
+                                   1409 ;src/main.c:272: case '>':
+    0000079C                       1410 00101$:
+                                   1411 ;src/main.c:273: inc_bf_cell_p();
+    0000079C CDrF0r02              1412 	call	_inc_bf_cell_p
+                                   1413 ;src/main.c:274: inc_bf_pc();
+    0000079F CDr22r03              1414 	call	_inc_bf_pc
+                                   1415 ;src/main.c:275: break;
+    000007A2 C3rFDr08              1416 	jp	00145$
+                                   1417 ;src/main.c:276: case '<':
+    000007A5                       1418 00102$:
+                                   1419 ;src/main.c:277: dec_bf_cell_p();
+    000007A5 CDr09r03              1420 	call	_dec_bf_cell_p
+                                   1421 ;src/main.c:278: inc_bf_pc();
+    000007A8 CDr22r03              1422 	call	_inc_bf_pc
+                                   1423 ;src/main.c:279: break;
+    000007AB C3rFDr08              1424 	jp	00145$
+                                   1425 ;src/main.c:280: case '+':
+    000007AE                       1426 00103$:
+                                   1427 ;src/main.c:281: bf_cell[bf_cell_p]++;
+    000007AE 3Er07                 1428 	ld	a, #<(_bf_cell)
+    000007B0 21r05r08              1429 	ld	hl, #_bf_cell_p
+    000007B3 86                    1430 	add	a, (hl)
+    000007B4 4F                    1431 	ld	c, a
+    000007B5 3Es08                 1432 	ld	a, #>(_bf_cell)
+    000007B7 23                    1433 	inc	hl
+    000007B8 8E                    1434 	adc	a, (hl)
+    000007B9 47                    1435 	ld	b, a
+    000007BA 0A                    1436 	ld	a, (bc)
+    000007BB 3C                    1437 	inc	a
+    000007BC 02                    1438 	ld	(bc), a
+                                   1439 ;src/main.c:282: inc_bf_pc();
+    000007BD CDr22r03              1440 	call	_inc_bf_pc
+                                   1441 ;src/main.c:283: break;
+    000007C0 C3rFDr08              1442 	jp	00145$
+                                   1443 ;src/main.c:284: case '-':
+    000007C3                       1444 00104$:
+                                   1445 ;src/main.c:285: bf_cell[bf_cell_p]--;
+    000007C3 3Er07                 1446 	ld	a, #<(_bf_cell)
+    000007C5 21r05r08              1447 	ld	hl, #_bf_cell_p
+    000007C8 86                    1448 	add	a, (hl)
+    000007C9 4F                    1449 	ld	c, a
+    000007CA 3Es08                 1450 	ld	a, #>(_bf_cell)
+    000007CC 23                    1451 	inc	hl
+    000007CD 8E                    1452 	adc	a, (hl)
+    000007CE 47                    1453 	ld	b, a
+    000007CF 0A                    1454 	ld	a, (bc)
+    000007D0 3D                    1455 	dec	a
+    000007D1 02                    1456 	ld	(bc), a
+                                   1457 ;src/main.c:286: inc_bf_pc();
+    000007D2 CDr22r03              1458 	call	_inc_bf_pc
+                                   1459 ;src/main.c:287: break;
+    000007D5 C3rFDr08              1460 	jp	00145$
+                                   1461 ;src/main.c:288: case '.':
+    000007D8                       1462 00105$:
+                                   1463 ;src/main.c:289: update_bg_map_tile_xy(bf_screen_out_x, bf_screen_out_y, bf_cell[bf_cell_p]);
+    000007D8 3Er07                 1464 	ld	a, #<(_bf_cell)
+    000007DA 21r05r08              1465 	ld	hl, #_bf_cell_p
+    000007DD 86                    1466 	add	a, (hl)
+    000007DE 4F                    1467 	ld	c, a
+    000007DF 3Es08                 1468 	ld	a, #>(_bf_cell)
+    000007E1 23                    1469 	inc	hl
+    000007E2 8E                    1470 	adc	a, (hl)
+    000007E3 47                    1471 	ld	b, a
+    000007E4 0A                    1472 	ld	a, (bc)
+    000007E5 F8 02                 1473 	ldhl	sp,#2
+    000007E7 77                    1474 	ld	(hl), a
+    000007E8 21r08r10              1475 	ld	hl, #_bf_screen_out_y
+    000007EB 4E                    1476 	ld	c, (hl)
+    000007EC 21r07r10              1477 	ld	hl, #_bf_screen_out_x
+    000007EF 5E                    1478 	ld	e, (hl)
+                                   1479 ;src/gb.h:161: inline void update_bg_map_tile_xy(uint8_t _x, uint8_t _y, uint8_t _tile){update_bg_map_tile((_y << 5) + _x, _tile);}
+    000007F0 06 00                 1480 	ld	b, #0x00
+    000007F2 CB 21                 1481 	sla	c
+    000007F4 CB 10                 1482 	rl	b
+    000007F6 CB 21                 1483 	sla	c
+    000007F8 CB 10                 1484 	rl	b
+    000007FA CB 21                 1485 	sla	c
+    000007FC CB 10                 1486 	rl	b
+    000007FE CB 21                 1487 	sla	c
+    00000800 CB 10                 1488 	rl	b
+    00000802 CB 21                 1489 	sla	c
+    00000804 CB 10                 1490 	rl	b
+    00000806 F8 00                 1491 	ldhl	sp,#0
+    00000808 73                    1492 	ld	(hl), e
+    00000809 23                    1493 	inc	hl
+    0000080A 36 00                 1494 	ld	(hl), #0x00
+    0000080C E1                    1495 	pop	hl
+    0000080D E5                    1496 	push	hl
+    0000080E 09                    1497 	add	hl, bc
+    0000080F 4D                    1498 	ld	c, l
+    00000810 44                    1499 	ld	b, h
+    00000811 F8 02                 1500 	ldhl	sp,#2
+    00000813 7E                    1501 	ld	a, (hl)
+    00000814 F5                    1502 	push	af
+    00000815 33                    1503 	inc	sp
+    00000816 C5                    1504 	push	bc
+    00000817 CDr00r00              1505 	call	_update_bg_map_tile
+    0000081A E8 03                 1506 	add	sp, #3
+                                   1507 ;src/main.c:290: bf_screen_out_x++;
+    0000081C 21r07r10              1508 	ld	hl, #_bf_screen_out_x
+    0000081F 34                    1509 	inc	(hl)
+                                   1510 ;src/main.c:291: if(bf_screen_out_x >= BF_EDITOR_W){
+    00000820 7E                    1511 	ld	a, (hl)
+    00000821 D6 14                 1512 	sub	a, #0x14
+    00000823 38 10                 1513 	jr	C,00109$
+                                   1514 ;src/main.c:292: bf_screen_out_x = 0;
+    00000825 36 00                 1515 	ld	(hl), #0x00
+                                   1516 ;src/main.c:293: bf_screen_out_y++;
+    00000827 21r08r10              1517 	ld	hl, #_bf_screen_out_y
+    0000082A 34                    1518 	inc	(hl)
+                                   1519 ;src/main.c:294: if(bf_screen_out_y >= BF_EDITOR_H){
+    0000082B 7E                    1520 	ld	a, (hl)
+    0000082C D6 12                 1521 	sub	a, #0x12
+    0000082E 38 05                 1522 	jr	C,00109$
+                                   1523 ;src/main.c:295: bf_screen_out_x = 0;
+    00000830 21r07r10              1524 	ld	hl, #_bf_screen_out_x
+    00000833 36 00                 1525 	ld	(hl), #0x00
+    00000835                       1526 00109$:
+                                   1527 ;src/main.c:298: inc_bf_pc();
+    00000835 CDr22r03              1528 	call	_inc_bf_pc
+                                   1529 ;src/main.c:299: break;
+    00000838 C3rFDr08              1530 	jp	00145$
+                                   1531 ;src/main.c:300: case ',':
+    0000083B                       1532 00110$:
+                                   1533 ;src/main.c:301: bf_cell[bf_cell_p] = bf_get_char();
+    0000083B 3Er07                 1534 	ld	a, #<(_bf_cell)
+    0000083D 21r05r08              1535 	ld	hl, #_bf_cell_p
+    00000840 86                    1536 	add	a, (hl)
+    00000841 4F                    1537 	ld	c, a
+    00000842 3Es08                 1538 	ld	a, #>(_bf_cell)
+    00000844 23                    1539 	inc	hl
+    00000845 8E                    1540 	adc	a, (hl)
+    00000846 47                    1541 	ld	b, a
+    00000847 C5                    1542 	push	bc
+    00000848 CDr00r09              1543 	call	_bf_get_char
+    0000084B 7B                    1544 	ld	a, e
+    0000084C C1                    1545 	pop	bc
+    0000084D 02                    1546 	ld	(bc), a
+                                   1547 ;src/main.c:302: inc_bf_pc();
+    0000084E CDr22r03              1548 	call	_inc_bf_pc
+                                   1549 ;src/main.c:303: break;
+    00000851 C3rFDr08              1550 	jp	00145$
+                                   1551 ;src/main.c:304: case '[':
+    00000854                       1552 00111$:
+                                   1553 ;src/main.c:305: inc_bf_pc();
+    00000854 CDr22r03              1554 	call	_inc_bf_pc
+                                   1555 ;src/main.c:306: if(bf_cell[bf_cell_p] == 0){
+    00000857 3Er07                 1556 	ld	a, #<(_bf_cell)
+    00000859 21r05r08              1557 	ld	hl, #_bf_cell_p
+    0000085C 86                    1558 	add	a, (hl)
+    0000085D 4F                    1559 	ld	c, a
+    0000085E 3Es08                 1560 	ld	a, #>(_bf_cell)
+    00000860 23                    1561 	inc	hl
+    00000861 8E                    1562 	adc	a, (hl)
+    00000862 47                    1563 	ld	b, a
+    00000863 0A                    1564 	ld	a, (bc)
+    00000864 B7                    1565 	or	a, a
+    00000865 C2rFDr08              1566 	jp	NZ, 00145$
+                                   1567 ;src/main.c:307: for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); inc_bf_pc()){
+    00000868 01 01 00              1568 	ld	bc, #0x0001
+    0000086B                       1569 00139$:
+    0000086B 78                    1570 	ld	a, b
+    0000086C B1                    1571 	or	a, c
+    0000086D CArFDr08              1572 	jp	Z, 00145$
+    00000870 21r03r08              1573 	ld	hl, #_bf_pc
+    00000873 7E                    1574 	ld	a, (hl)
+    00000874 D6 00                 1575 	sub	a, #0x00
+    00000876 23                    1576 	inc	hl
+    00000877 7E                    1577 	ld	a, (hl)
+    00000878 DE 08                 1578 	sbc	a, #0x08
+    0000087A D2rFDr08              1579 	jp	NC, 00145$
+                                   1580 ;src/main.c:308: if(bf_instr[bf_pc] == '[')      _bracket_c++;
+    0000087D 11r03r00              1581 	ld	de, #_bf_instr
+    00000880 21r03r08              1582 	ld	hl, #_bf_pc
+    00000883 2A                    1583 	ld	a, (hl+)
+    00000884 66                    1584 	ld	h, (hl)
+    00000885 6F                    1585 	ld	l, a
+    00000886 19                    1586 	add	hl, de
+    00000887 33                    1587 	inc	sp
     00000888 33                    1588 	inc	sp
-    00000889 33                    1589 	inc	sp
-    0000088A E5                    1590 	push	hl
-    0000088B D1                    1591 	pop	de
-    0000088C D5                    1592 	push	de
-    0000088D 1A                    1593 	ld	a,(de)
-    0000088E FE 5B                 1594 	cp	a, #0x5b
-    00000890 20 03                 1595 	jr	NZ,00115$
-    00000892 03                    1596 	inc	bc
-    00000893 18 05                 1597 	jr	00140$
-    00000895                       1598 00115$:
-                                   1599 ;src/main.c:282: else if(bf_instr[bf_pc] == ']') _bracket_c--;
-    00000895 D6 5D                 1600 	sub	a, #0x5d
-    00000897 20 01                 1601 	jr	NZ,00140$
-    00000899 0B                    1602 	dec	bc
-    0000089A                       1603 00140$:
-                                   1604 ;src/main.c:280: for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); inc_bf_pc()){
-    0000089A C5                    1605 	push	bc
-    0000089B CDr22r03              1606 	call	_inc_bf_pc
-    0000089E C1                    1607 	pop	bc
-    0000089F C3r6Cr08              1608 	jp	00139$
-                                   1609 ;src/main.c:286: case ']':
-    000008A2                       1610 00120$:
-                                   1611 ;src/main.c:287: if(bf_cell[bf_cell_p] == 0) inc_bf_pc();
-    000008A2 3Er07                 1612 	ld	a, #<(_bf_cell)
-    000008A4 21r05r08              1613 	ld	hl, #_bf_cell_p
-    000008A7 86                    1614 	add	a, (hl)
-    000008A8 4F                    1615 	ld	c, a
-    000008A9 3Es08                 1616 	ld	a, #>(_bf_cell)
-    000008AB 23                    1617 	inc	hl
-    000008AC 8E                    1618 	adc	a, (hl)
-    000008AD 47                    1619 	ld	b, a
-    000008AE 0A                    1620 	ld	a, (bc)
-    000008AF B7                    1621 	or	a, a
-    000008B0 20 06                 1622 	jr	NZ,00128$
-    000008B2 CDr22r03              1623 	call	_inc_bf_pc
-    000008B5 C3rFEr08              1624 	jp	00145$
-    000008B8                       1625 00128$:
-                                   1626 ;src/main.c:289: dec_bf_pc();
-    000008B8 CDr3Br03              1627 	call	_dec_bf_pc
-                                   1628 ;src/main.c:290: for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); dec_bf_pc()){
-    000008BB 01 01 00              1629 	ld	bc, #0x0001
-    000008BE                       1630 00143$:
-    000008BE 78                    1631 	ld	a, b
-    000008BF B1                    1632 	or	a, c
-    000008C0 CArF3r08              1633 	jp	Z, 00126$
-    000008C3 21r03r08              1634 	ld	hl, #_bf_pc
-    000008C6 7E                    1635 	ld	a, (hl)
-    000008C7 D6 00                 1636 	sub	a, #0x00
-    000008C9 23                    1637 	inc	hl
-    000008CA 7E                    1638 	ld	a, (hl)
-    000008CB DE 08                 1639 	sbc	a, #0x08
-    000008CD 30 24                 1640 	jr	NC,00126$
-                                   1641 ;src/main.c:291: if(bf_instr[bf_pc] == ']')      _bracket_c++;
-    000008CF 11r03r00              1642 	ld	de, #_bf_instr
-    000008D2 21r03r08              1643 	ld	hl, #_bf_pc
-    000008D5 2A                    1644 	ld	a, (hl+)
-    000008D6 66                    1645 	ld	h, (hl)
-    000008D7 6F                    1646 	ld	l, a
-    000008D8 19                    1647 	add	hl, de
+    00000889 E5                    1589 	push	hl
+    0000088A D1                    1590 	pop	de
+    0000088B D5                    1591 	push	de
+    0000088C 1A                    1592 	ld	a,(de)
+    0000088D FE 5B                 1593 	cp	a, #0x5b
+    0000088F 20 03                 1594 	jr	NZ,00115$
+    00000891 03                    1595 	inc	bc
+    00000892 18 05                 1596 	jr	00140$
+    00000894                       1597 00115$:
+                                   1598 ;src/main.c:309: else if(bf_instr[bf_pc] == ']') _bracket_c--;
+    00000894 D6 5D                 1599 	sub	a, #0x5d
+    00000896 20 01                 1600 	jr	NZ,00140$
+    00000898 0B                    1601 	dec	bc
+    00000899                       1602 00140$:
+                                   1603 ;src/main.c:307: for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); inc_bf_pc()){
+    00000899 C5                    1604 	push	bc
+    0000089A CDr22r03              1605 	call	_inc_bf_pc
+    0000089D C1                    1606 	pop	bc
+    0000089E C3r6Br08              1607 	jp	00139$
+                                   1608 ;src/main.c:313: case ']':
+    000008A1                       1609 00120$:
+                                   1610 ;src/main.c:314: if(bf_cell[bf_cell_p] == 0) inc_bf_pc();
+    000008A1 3Er07                 1611 	ld	a, #<(_bf_cell)
+    000008A3 21r05r08              1612 	ld	hl, #_bf_cell_p
+    000008A6 86                    1613 	add	a, (hl)
+    000008A7 4F                    1614 	ld	c, a
+    000008A8 3Es08                 1615 	ld	a, #>(_bf_cell)
+    000008AA 23                    1616 	inc	hl
+    000008AB 8E                    1617 	adc	a, (hl)
+    000008AC 47                    1618 	ld	b, a
+    000008AD 0A                    1619 	ld	a, (bc)
+    000008AE B7                    1620 	or	a, a
+    000008AF 20 06                 1621 	jr	NZ,00128$
+    000008B1 CDr22r03              1622 	call	_inc_bf_pc
+    000008B4 C3rFDr08              1623 	jp	00145$
+    000008B7                       1624 00128$:
+                                   1625 ;src/main.c:316: dec_bf_pc();
+    000008B7 CDr3Br03              1626 	call	_dec_bf_pc
+                                   1627 ;src/main.c:317: for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); dec_bf_pc()){
+    000008BA 01 01 00              1628 	ld	bc, #0x0001
+    000008BD                       1629 00143$:
+    000008BD 78                    1630 	ld	a, b
+    000008BE B1                    1631 	or	a, c
+    000008BF CArF2r08              1632 	jp	Z, 00126$
+    000008C2 21r03r08              1633 	ld	hl, #_bf_pc
+    000008C5 7E                    1634 	ld	a, (hl)
+    000008C6 D6 00                 1635 	sub	a, #0x00
+    000008C8 23                    1636 	inc	hl
+    000008C9 7E                    1637 	ld	a, (hl)
+    000008CA DE 08                 1638 	sbc	a, #0x08
+    000008CC 30 24                 1639 	jr	NC,00126$
+                                   1640 ;src/main.c:318: if(bf_instr[bf_pc] == ']')      _bracket_c++;
+    000008CE 11r03r00              1641 	ld	de, #_bf_instr
+    000008D1 21r03r08              1642 	ld	hl, #_bf_pc
+    000008D4 2A                    1643 	ld	a, (hl+)
+    000008D5 66                    1644 	ld	h, (hl)
+    000008D6 6F                    1645 	ld	l, a
+    000008D7 19                    1646 	add	hl, de
+    000008D8 33                    1647 	inc	sp
     000008D9 33                    1648 	inc	sp
-    000008DA 33                    1649 	inc	sp
-    000008DB E5                    1650 	push	hl
-    000008DC D1                    1651 	pop	de
-    000008DD D5                    1652 	push	de
-    000008DE 1A                    1653 	ld	a,(de)
-    000008DF FE 5D                 1654 	cp	a, #0x5d
-    000008E1 20 03                 1655 	jr	NZ,00124$
-    000008E3 03                    1656 	inc	bc
-    000008E4 18 05                 1657 	jr	00144$
-    000008E6                       1658 00124$:
-                                   1659 ;src/main.c:292: else if(bf_instr[bf_pc] == '[') _bracket_c--;
-    000008E6 D6 5B                 1660 	sub	a, #0x5b
-    000008E8 20 01                 1661 	jr	NZ,00144$
-    000008EA 0B                    1662 	dec	bc
-    000008EB                       1663 00144$:
-                                   1664 ;src/main.c:290: for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); dec_bf_pc()){
-    000008EB C5                    1665 	push	bc
-    000008EC CDr3Br03              1666 	call	_dec_bf_pc
-    000008EF C1                    1667 	pop	bc
-    000008F0 C3rBEr08              1668 	jp	00143$
-    000008F3                       1669 00126$:
-                                   1670 ;src/main.c:294: inc_bf_pc();
-    000008F3 CDr22r03              1671 	call	_inc_bf_pc
-                                   1672 ;src/main.c:295: inc_bf_pc();
-    000008F6 CDr22r03              1673 	call	_inc_bf_pc
-                                   1674 ;src/main.c:297: break;
-    000008F9 18 03                 1675 	jr	00145$
-                                   1676 ;src/main.c:299: default:
-    000008FB                       1677 00131$:
-                                   1678 ;src/main.c:301: inc_bf_pc();
-    000008FB CDr22r03              1679 	call	_inc_bf_pc
-                                   1680 ;src/main.c:303: }
-    000008FE                       1681 00145$:
-                                   1682 ;src/main.c:305: }
-    000008FE E8 03                 1683 	add	sp, #3
-    00000900 C9                    1684 	ret
-                                   1685 ;src/main.c:307: uint8_t bf_get_char(){
-                                   1686 ;	---------------------------------
-                                   1687 ; Function bf_get_char
-                                   1688 ; ---------------------------------
-    00000901                       1689 _bf_get_char::
-    00000901 E8 FA                 1690 	add	sp, #-6
-                                   1691 ;src/main.c:310: for(uint8_t i = 0; i <= ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8); i += 4){
-    00000903 0E 00                 1692 	ld	c, #0x00
-    00000905                       1693 00139$:
-    00000905 3E 30                 1694 	ld	a, #0x30
-    00000907 91                    1695 	sub	a, c
-    00000908 38 22                 1696 	jr	C,00104$
-                                   1697 ;src/main.c:311: set_win_offset(0, 144 - i);
-    0000090A 41                    1698 	ld	b, c
-    0000090B 3E 90                 1699 	ld	a, #0x90
-    0000090D 90                    1700 	sub	a, b
-    0000090E 21r00r00              1701 	ld	hl, #_offset_y
-    00000911 77                    1702 	ld	(hl), a
-                                   1703 ;src/gb.h:170: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
-    00000912 21r00r00              1704 	ld	hl, #_offset_x
-    00000915 36 07                 1705 	ld	(hl), #0x07
-                                   1706 ;src/main.c:312: while(!vblank_happened) halt();
-    00000917                       1707 00101$:
-    00000917 21r00r00              1708 	ld	hl, #_vblank_happened
-    0000091A CB 46                 1709 	bit	0, (hl)
-    0000091C 20 03                 1710 	jr	NZ,00103$
-    0000091E 76                    1711 	halt
-    0000091F 18 F6                 1712 	jr	00101$
-    00000921                       1713 00103$:
-                                   1714 ;src/main.c:313: vblank_happened = false;
-    00000921 21r00r00              1715 	ld	hl, #_vblank_happened
-    00000924 36 00                 1716 	ld	(hl), #0x00
-                                   1717 ;src/main.c:310: for(uint8_t i = 0; i <= ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8); i += 4){
+    000008DA E5                    1649 	push	hl
+    000008DB D1                    1650 	pop	de
+    000008DC D5                    1651 	push	de
+    000008DD 1A                    1652 	ld	a,(de)
+    000008DE FE 5D                 1653 	cp	a, #0x5d
+    000008E0 20 03                 1654 	jr	NZ,00124$
+    000008E2 03                    1655 	inc	bc
+    000008E3 18 05                 1656 	jr	00144$
+    000008E5                       1657 00124$:
+                                   1658 ;src/main.c:319: else if(bf_instr[bf_pc] == '[') _bracket_c--;
+    000008E5 D6 5B                 1659 	sub	a, #0x5b
+    000008E7 20 01                 1660 	jr	NZ,00144$
+    000008E9 0B                    1661 	dec	bc
+    000008EA                       1662 00144$:
+                                   1663 ;src/main.c:317: for(uint16_t _bracket_c = 1; (_bracket_c > 0) && (bf_pc < sizeof(bf_instr)); dec_bf_pc()){
+    000008EA C5                    1664 	push	bc
+    000008EB CDr3Br03              1665 	call	_dec_bf_pc
+    000008EE C1                    1666 	pop	bc
+    000008EF C3rBDr08              1667 	jp	00143$
+    000008F2                       1668 00126$:
+                                   1669 ;src/main.c:321: inc_bf_pc();
+    000008F2 CDr22r03              1670 	call	_inc_bf_pc
+                                   1671 ;src/main.c:322: inc_bf_pc();
+    000008F5 CDr22r03              1672 	call	_inc_bf_pc
+                                   1673 ;src/main.c:324: break;
+    000008F8 18 03                 1674 	jr	00145$
+                                   1675 ;src/main.c:326: default:
+    000008FA                       1676 00131$:
+                                   1677 ;src/main.c:328: inc_bf_pc();
+    000008FA CDr22r03              1678 	call	_inc_bf_pc
+                                   1679 ;src/main.c:330: }
+    000008FD                       1680 00145$:
+                                   1681 ;src/main.c:332: }
+    000008FD E8 03                 1682 	add	sp, #3
+    000008FF C9                    1683 	ret
+                                   1684 ;src/main.c:334: uint8_t bf_get_char(){
+                                   1685 ;	---------------------------------
+                                   1686 ; Function bf_get_char
+                                   1687 ; ---------------------------------
+    00000900                       1688 _bf_get_char::
+    00000900 E8 FA                 1689 	add	sp, #-6
+                                   1690 ;src/main.c:337: for(uint8_t i = 0; i <= ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8); i += 4){
+    00000902 0E 00                 1691 	ld	c, #0x00
+    00000904                       1692 00139$:
+    00000904 3E 30                 1693 	ld	a, #0x30
+    00000906 91                    1694 	sub	a, c
+    00000907 38 22                 1695 	jr	C,00104$
+                                   1696 ;src/main.c:338: set_win_offset(0, 144 - i);
+    00000909 41                    1697 	ld	b, c
+    0000090A 3E 90                 1698 	ld	a, #0x90
+    0000090C 90                    1699 	sub	a, b
+    0000090D 21r00r00              1700 	ld	hl, #_offset_y
+    00000910 77                    1701 	ld	(hl), a
+                                   1702 ;src/gb.h:174: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
+    00000911 21r00r00              1703 	ld	hl, #_offset_x
+    00000914 36 07                 1704 	ld	(hl), #0x07
+                                   1705 ;src/main.c:339: while(!vblank_happened) halt();
+    00000916                       1706 00101$:
+    00000916 21r00r00              1707 	ld	hl, #_vblank_happened
+    00000919 CB 46                 1708 	bit	0, (hl)
+    0000091B 20 03                 1709 	jr	NZ,00103$
+    0000091D 76                    1710 	halt
+    0000091E 18 F6                 1711 	jr	00101$
+    00000920                       1712 00103$:
+                                   1713 ;src/main.c:340: vblank_happened = false;
+    00000920 21r00r00              1714 	ld	hl, #_vblank_happened
+    00000923 36 00                 1715 	ld	(hl), #0x00
+                                   1716 ;src/main.c:337: for(uint8_t i = 0; i <= ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8); i += 4){
+    00000925 0C                    1717 	inc	c
     00000926 0C                    1718 	inc	c
     00000927 0C                    1719 	inc	c
     00000928 0C                    1720 	inc	c
-    00000929 0C                    1721 	inc	c
-    0000092A 18 D9                 1722 	jr	00139$
-    0000092C                       1723 00104$:
-                                   1724 ;src/gb.h:170: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
-    0000092C 21r00r00              1725 	ld	hl, #_offset_x
-    0000092F 36 07                 1726 	ld	(hl), #0x07
-    00000931 21r00r00              1727 	ld	hl, #_offset_y
-    00000934 36 60                 1728 	ld	(hl), #0x60
-                                   1729 ;src/main.c:317: _cx = 0; _cy = 0; _char = 0;
-    00000936 F8 05                 1730 	ldhl	sp,#5
-    00000938 36 00                 1731 	ld	(hl), #0x00
-    0000093A 2B                    1732 	dec	hl
-    0000093B 36 00                 1733 	ld	(hl), #0x00
-                                   1734 ;src/main.c:319: while(!vblank_happened) halt();
-    0000093D                       1735 00105$:
-    0000093D 21r00r00              1736 	ld	hl, #_vblank_happened
-    00000940 CB 46                 1737 	bit	0, (hl)
-    00000942 20 03                 1738 	jr	NZ,00107$
-    00000944 76                    1739 	halt
-    00000945 18 F6                 1740 	jr	00105$
-    00000947                       1741 00107$:
-                                   1742 ;src/main.c:320: vblank_happened = false;
-    00000947 21r00r00              1743 	ld	hl, #_vblank_happened
-    0000094A 36 00                 1744 	ld	(hl), #0x00
-                                   1745 ;src/main.c:321: obj_slot = 0;
-    0000094C 21r00r00              1746 	ld	hl, #_obj_slot
-    0000094F 36 00                 1747 	ld	(hl), #0x00
-                                   1748 ;src/main.c:322: read_joypad();
-    00000951 CDr00r00              1749 	call	_read_joypad
-                                   1750 ;src/main.c:324: if(key_push(KEY_UP))    if(_cy > 0)                                     _cy--;
-    00000954 3E 40                 1751 	ld	a, #0x40
-    00000956 F5                    1752 	push	af
-    00000957 33                    1753 	inc	sp
-    00000958 CDr00r00              1754 	call	_key_push
-    0000095B 33                    1755 	inc	sp
-    0000095C CB 43                 1756 	bit	0, e
-    0000095E 28 07                 1757 	jr	Z,00111$
-    00000960 F8 04                 1758 	ldhl	sp,#4
-    00000962 7E                    1759 	ld	a, (hl)
-    00000963 B7                    1760 	or	a, a
-    00000964 28 01                 1761 	jr	Z,00111$
-    00000966 35                    1762 	dec	(hl)
-    00000967                       1763 00111$:
-                                   1764 ;src/main.c:325: if(key_push(KEY_DOWN))  if((_cy + BF_KEYBOARD_Y) < (BF_KEYBOARD_H - 1)) _cy++;
-    00000967 3E 80                 1765 	ld	a, #0x80
-    00000969 F5                    1766 	push	af
-    0000096A 33                    1767 	inc	sp
-    0000096B CDr00r00              1768 	call	_key_push
-    0000096E 33                    1769 	inc	sp
-    0000096F CB 43                 1770 	bit	0, e
-    00000971 28 11                 1771 	jr	Z,00115$
-    00000973 F8 04                 1772 	ldhl	sp,#4
-    00000975 4E                    1773 	ld	c, (hl)
-    00000976 06 00                 1774 	ld	b, #0x00
-    00000978 79                    1775 	ld	a, c
-    00000979 D6 05                 1776 	sub	a, #0x05
-    0000097B 78                    1777 	ld	a, b
-    0000097C 17                    1778 	rla
-    0000097D 3F                    1779 	ccf
-    0000097E 1F                    1780 	rra
-    0000097F DE 80                 1781 	sbc	a, #0x80
-    00000981 30 01                 1782 	jr	NC,00115$
-    00000983 34                    1783 	inc	(hl)
-    00000984                       1784 00115$:
-                                   1785 ;src/main.c:326: if(key_push(KEY_LEFT))  if(_cx > 0)                                     _cx--;
-    00000984 3E 20                 1786 	ld	a, #0x20
-    00000986 F5                    1787 	push	af
-    00000987 33                    1788 	inc	sp
-    00000988 CDr00r00              1789 	call	_key_push
-    0000098B 33                    1790 	inc	sp
-    0000098C CB 43                 1791 	bit	0, e
-    0000098E 28 07                 1792 	jr	Z,00119$
-    00000990 F8 05                 1793 	ldhl	sp,#5
-    00000992 7E                    1794 	ld	a, (hl)
-    00000993 B7                    1795 	or	a, a
-    00000994 28 01                 1796 	jr	Z,00119$
-    00000996 35                    1797 	dec	(hl)
-    00000997                       1798 00119$:
-                                   1799 ;src/main.c:327: if(key_push(KEY_RIGHT)) if((_cx + BF_KEYBOARD_X) < BF_KEYBOARD_W) _cx++;
-    00000997 3E 10                 1800 	ld	a, #0x10
-    00000999 F5                    1801 	push	af
-    0000099A 33                    1802 	inc	sp
-    0000099B CDr00r00              1803 	call	_key_push
-    0000099E 33                    1804 	inc	sp
-    0000099F CB 43                 1805 	bit	0, e
-    000009A1 28 12                 1806 	jr	Z,00123$
-    000009A3 F8 05                 1807 	ldhl	sp,#5
-    000009A5 4E                    1808 	ld	c, (hl)
-    000009A6 06 00                 1809 	ld	b, #0x00
-    000009A8 03                    1810 	inc	bc
-    000009A9 79                    1811 	ld	a, c
-    000009AA D6 12                 1812 	sub	a, #0x12
-    000009AC 78                    1813 	ld	a, b
-    000009AD 17                    1814 	rla
-    000009AE 3F                    1815 	ccf
-    000009AF 1F                    1816 	rra
-    000009B0 DE 80                 1817 	sbc	a, #0x80
-    000009B2 30 01                 1818 	jr	NC,00123$
-    000009B4 34                    1819 	inc	(hl)
-    000009B5                       1820 00123$:
-                                   1821 ;src/main.c:328: if(key_push(KEY_A) || key_push(KEY_START))                          break;
-    000009B5 3E 01                 1822 	ld	a, #0x01
-    000009B7 F5                    1823 	push	af
-    000009B8 33                    1824 	inc	sp
-    000009B9 CDr00r00              1825 	call	_key_push
-    000009BC 33                    1826 	inc	sp
-                                   1827 ;src/main.c:330: set_obj(&cursor_obj, (_cx + BF_KEYBOARD_X) * 8, 144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8) + ((_cy + BF_KEYBOARD_Y) * 8), 0x7F, 0x10);
-    000009BD F8 04                 1828 	ldhl	sp,#4
-    000009BF 4E                    1829 	ld	c, (hl)
-    000009C0 23                    1830 	inc	hl
-    000009C1 46                    1831 	ld	b, (hl)
-                                   1832 ;src/main.c:328: if(key_push(KEY_A) || key_push(KEY_START))                          break;
-    000009C2 CB 43                 1833 	bit	0, e
-    000009C4 C2r3Dr0A              1834 	jp	NZ, 00129$
-    000009C7 C5                    1835 	push	bc
-    000009C8 3E 08                 1836 	ld	a, #0x08
-    000009CA F5                    1837 	push	af
-    000009CB 33                    1838 	inc	sp
-    000009CC CDr00r00              1839 	call	_key_push
-    000009CF 33                    1840 	inc	sp
-    000009D0 C1                    1841 	pop	bc
-    000009D1 CB 43                 1842 	bit	0, e
-    000009D3 C2r3Dr0A              1843 	jp	NZ, 00129$
-                                   1844 ;src/main.c:330: set_obj(&cursor_obj, (_cx + BF_KEYBOARD_X) * 8, 144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8) + ((_cy + BF_KEYBOARD_Y) * 8), 0x7F, 0x10);
-    000009D6 79                    1845 	ld	a, c
+    00000929 18 D9                 1721 	jr	00139$
+    0000092B                       1722 00104$:
+                                   1723 ;src/gb.h:174: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
+    0000092B 21r00r00              1724 	ld	hl, #_offset_x
+    0000092E 36 07                 1725 	ld	(hl), #0x07
+    00000930 21r00r00              1726 	ld	hl, #_offset_y
+    00000933 36 60                 1727 	ld	(hl), #0x60
+                                   1728 ;src/main.c:344: _cx = 0; _cy = 0; _char = 0;
+    00000935 F8 05                 1729 	ldhl	sp,#5
+    00000937 36 00                 1730 	ld	(hl), #0x00
+    00000939 2B                    1731 	dec	hl
+    0000093A 36 00                 1732 	ld	(hl), #0x00
+                                   1733 ;src/main.c:346: while(!vblank_happened) halt();
+    0000093C                       1734 00105$:
+    0000093C 21r00r00              1735 	ld	hl, #_vblank_happened
+    0000093F CB 46                 1736 	bit	0, (hl)
+    00000941 20 03                 1737 	jr	NZ,00107$
+    00000943 76                    1738 	halt
+    00000944 18 F6                 1739 	jr	00105$
+    00000946                       1740 00107$:
+                                   1741 ;src/main.c:347: vblank_happened = false;
+    00000946 21r00r00              1742 	ld	hl, #_vblank_happened
+    00000949 36 00                 1743 	ld	(hl), #0x00
+                                   1744 ;src/main.c:348: obj_slot = 0;
+    0000094B 21r00r00              1745 	ld	hl, #_obj_slot
+    0000094E 36 00                 1746 	ld	(hl), #0x00
+                                   1747 ;src/main.c:349: read_joypad();
+    00000950 CDr00r00              1748 	call	_read_joypad
+                                   1749 ;src/main.c:351: if(key_push(KEY_UP))    if(_cy > 0)                                     _cy--;
+    00000953 3E 40                 1750 	ld	a, #0x40
+    00000955 F5                    1751 	push	af
+    00000956 33                    1752 	inc	sp
+    00000957 CDr00r00              1753 	call	_key_push
+    0000095A 33                    1754 	inc	sp
+    0000095B CB 43                 1755 	bit	0, e
+    0000095D 28 07                 1756 	jr	Z,00111$
+    0000095F F8 04                 1757 	ldhl	sp,#4
+    00000961 7E                    1758 	ld	a, (hl)
+    00000962 B7                    1759 	or	a, a
+    00000963 28 01                 1760 	jr	Z,00111$
+    00000965 35                    1761 	dec	(hl)
+    00000966                       1762 00111$:
+                                   1763 ;src/main.c:352: if(key_push(KEY_DOWN))  if((_cy + BF_KEYBOARD_Y) < (BF_KEYBOARD_H - 1)) _cy++;
+    00000966 3E 80                 1764 	ld	a, #0x80
+    00000968 F5                    1765 	push	af
+    00000969 33                    1766 	inc	sp
+    0000096A CDr00r00              1767 	call	_key_push
+    0000096D 33                    1768 	inc	sp
+    0000096E CB 43                 1769 	bit	0, e
+    00000970 28 11                 1770 	jr	Z,00115$
+    00000972 F8 04                 1771 	ldhl	sp,#4
+    00000974 4E                    1772 	ld	c, (hl)
+    00000975 06 00                 1773 	ld	b, #0x00
+    00000977 79                    1774 	ld	a, c
+    00000978 D6 05                 1775 	sub	a, #0x05
+    0000097A 78                    1776 	ld	a, b
+    0000097B 17                    1777 	rla
+    0000097C 3F                    1778 	ccf
+    0000097D 1F                    1779 	rra
+    0000097E DE 80                 1780 	sbc	a, #0x80
+    00000980 30 01                 1781 	jr	NC,00115$
+    00000982 34                    1782 	inc	(hl)
+    00000983                       1783 00115$:
+                                   1784 ;src/main.c:353: if(key_push(KEY_LEFT))  if(_cx > 0)                                     _cx--;
+    00000983 3E 20                 1785 	ld	a, #0x20
+    00000985 F5                    1786 	push	af
+    00000986 33                    1787 	inc	sp
+    00000987 CDr00r00              1788 	call	_key_push
+    0000098A 33                    1789 	inc	sp
+    0000098B CB 43                 1790 	bit	0, e
+    0000098D 28 07                 1791 	jr	Z,00119$
+    0000098F F8 05                 1792 	ldhl	sp,#5
+    00000991 7E                    1793 	ld	a, (hl)
+    00000992 B7                    1794 	or	a, a
+    00000993 28 01                 1795 	jr	Z,00119$
+    00000995 35                    1796 	dec	(hl)
+    00000996                       1797 00119$:
+                                   1798 ;src/main.c:354: if(key_push(KEY_RIGHT)) if((_cx + BF_KEYBOARD_X) < BF_KEYBOARD_W) _cx++;
+    00000996 3E 10                 1799 	ld	a, #0x10
+    00000998 F5                    1800 	push	af
+    00000999 33                    1801 	inc	sp
+    0000099A CDr00r00              1802 	call	_key_push
+    0000099D 33                    1803 	inc	sp
+    0000099E CB 43                 1804 	bit	0, e
+    000009A0 28 12                 1805 	jr	Z,00123$
+    000009A2 F8 05                 1806 	ldhl	sp,#5
+    000009A4 4E                    1807 	ld	c, (hl)
+    000009A5 06 00                 1808 	ld	b, #0x00
+    000009A7 03                    1809 	inc	bc
+    000009A8 79                    1810 	ld	a, c
+    000009A9 D6 12                 1811 	sub	a, #0x12
+    000009AB 78                    1812 	ld	a, b
+    000009AC 17                    1813 	rla
+    000009AD 3F                    1814 	ccf
+    000009AE 1F                    1815 	rra
+    000009AF DE 80                 1816 	sbc	a, #0x80
+    000009B1 30 01                 1817 	jr	NC,00123$
+    000009B3 34                    1818 	inc	(hl)
+    000009B4                       1819 00123$:
+                                   1820 ;src/main.c:355: if(key_push(KEY_A) || key_push(KEY_START))                          break;
+    000009B4 3E 01                 1821 	ld	a, #0x01
+    000009B6 F5                    1822 	push	af
+    000009B7 33                    1823 	inc	sp
+    000009B8 CDr00r00              1824 	call	_key_push
+    000009BB 33                    1825 	inc	sp
+                                   1826 ;src/main.c:357: set_obj(&cursor_obj, (_cx + BF_KEYBOARD_X) * 8, 144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8) + ((_cy + BF_KEYBOARD_Y) * 8), 0x7F, 0x10);
+    000009BC F8 04                 1827 	ldhl	sp,#4
+    000009BE 4E                    1828 	ld	c, (hl)
+    000009BF 23                    1829 	inc	hl
+    000009C0 46                    1830 	ld	b, (hl)
+                                   1831 ;src/main.c:355: if(key_push(KEY_A) || key_push(KEY_START))                          break;
+    000009C1 CB 43                 1832 	bit	0, e
+    000009C3 C2r3Cr0A              1833 	jp	NZ, 00129$
+    000009C6 C5                    1834 	push	bc
+    000009C7 3E 08                 1835 	ld	a, #0x08
+    000009C9 F5                    1836 	push	af
+    000009CA 33                    1837 	inc	sp
+    000009CB CDr00r00              1838 	call	_key_push
+    000009CE 33                    1839 	inc	sp
+    000009CF C1                    1840 	pop	bc
+    000009D0 CB 43                 1841 	bit	0, e
+    000009D2 C2r3Cr0A              1842 	jp	NZ, 00129$
+                                   1843 ;src/main.c:357: set_obj(&cursor_obj, (_cx + BF_KEYBOARD_X) * 8, 144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8) + ((_cy + BF_KEYBOARD_Y) * 8), 0x7F, 0x10);
+    000009D5 79                    1844 	ld	a, c
+    000009D6 87                    1845 	add	a, a
     000009D7 87                    1846 	add	a, a
     000009D8 87                    1847 	add	a, a
-    000009D9 87                    1848 	add	a, a
-    000009DA C6 60                 1849 	add	a, #0x60
-    000009DC 57                    1850 	ld	d, a
-    000009DD 78                    1851 	ld	a, b
-    000009DE 3C                    1852 	inc	a
+    000009D9 C6 60                 1848 	add	a, #0x60
+    000009DB 57                    1849 	ld	d, a
+    000009DC 78                    1850 	ld	a, b
+    000009DD 3C                    1851 	inc	a
+    000009DE 87                    1852 	add	a, a
     000009DF 87                    1853 	add	a, a
     000009E0 87                    1854 	add	a, a
-    000009E1 87                    1855 	add	a, a
-    000009E2 47                    1856 	ld	b, a
-    000009E3 21 7F 10              1857 	ld	hl, #0x107f
-    000009E6 E5                    1858 	push	hl
-    000009E7 D5                    1859 	push	de
-    000009E8 33                    1860 	inc	sp
-    000009E9 C5                    1861 	push	bc
-    000009EA 33                    1862 	inc	sp
-    000009EB 21r09r10              1863 	ld	hl, #_cursor_obj
-    000009EE E5                    1864 	push	hl
-    000009EF CDr00r00              1865 	call	_set_obj
-    000009F2 E8 06                 1866 	add	sp, #6
-                                   1867 ;src/main.c:331: obj_slot = copy_to_oam_obj(&cursor_obj, obj_slot);
-    000009F4 21r00r00              1868 	ld	hl, #_obj_slot
-    000009F7 7E                    1869 	ld	a, (hl)
-    000009F8 F5                    1870 	push	af
-    000009F9 33                    1871 	inc	sp
-    000009FA 21r09r10              1872 	ld	hl, #_cursor_obj
-    000009FD E5                    1873 	push	hl
-    000009FE CDr00r00              1874 	call	_copy_to_oam_obj
-    00000A01 E8 03                 1875 	add	sp, #3
-    00000A03 21r00r00              1876 	ld	hl, #_obj_slot
-    00000A06 73                    1877 	ld	(hl), e
-                                   1878 ;src/main.c:333: fill((void*)(((uint16_t)obj) + (obj_slot << 2)), 0xFF, sizeof(obj) - (obj_slot << 2));
-    00000A07 4E                    1879 	ld	c, (hl)
-    00000A08 06 00                 1880 	ld	b, #0x00
-    00000A0A CB 21                 1881 	sla	c
-    00000A0C CB 10                 1882 	rl	b
-    00000A0E CB 21                 1883 	sla	c
-    00000A10 CB 10                 1884 	rl	b
-    00000A12 11 A0 00              1885 	ld	de, #0x00a0
-    00000A15 7B                    1886 	ld	a, e
-    00000A16 91                    1887 	sub	a, c
-    00000A17 5F                    1888 	ld	e, a
-    00000A18 7A                    1889 	ld	a, d
-    00000A19 98                    1890 	sbc	a, b
-    00000A1A F8 03                 1891 	ldhl	sp,#3
-    00000A1C 32                    1892 	ld	(hl-), a
-    00000A1D 73                    1893 	ld	(hl), e
+    000009E1 47                    1855 	ld	b, a
+    000009E2 21 7F 10              1856 	ld	hl, #0x107f
+    000009E5 E5                    1857 	push	hl
+    000009E6 D5                    1858 	push	de
+    000009E7 33                    1859 	inc	sp
+    000009E8 C5                    1860 	push	bc
+    000009E9 33                    1861 	inc	sp
+    000009EA 21r09r10              1862 	ld	hl, #_cursor_obj
+    000009ED E5                    1863 	push	hl
+    000009EE CDr00r00              1864 	call	_set_obj
+    000009F1 E8 06                 1865 	add	sp, #6
+                                   1866 ;src/main.c:358: obj_slot = copy_to_oam_obj(&cursor_obj, obj_slot);
+    000009F3 21r00r00              1867 	ld	hl, #_obj_slot
+    000009F6 7E                    1868 	ld	a, (hl)
+    000009F7 F5                    1869 	push	af
+    000009F8 33                    1870 	inc	sp
+    000009F9 21r09r10              1871 	ld	hl, #_cursor_obj
+    000009FC E5                    1872 	push	hl
+    000009FD CDr00r00              1873 	call	_copy_to_oam_obj
+    00000A00 E8 03                 1874 	add	sp, #3
+    00000A02 21r00r00              1875 	ld	hl, #_obj_slot
+    00000A05 73                    1876 	ld	(hl), e
+                                   1877 ;src/main.c:360: fill((void*)(((uint16_t)obj) + (obj_slot << 2)), 0xFF, sizeof(obj) - (obj_slot << 2));
+    00000A06 4E                    1878 	ld	c, (hl)
+    00000A07 06 00                 1879 	ld	b, #0x00
+    00000A09 CB 21                 1880 	sla	c
+    00000A0B CB 10                 1881 	rl	b
+    00000A0D CB 21                 1882 	sla	c
+    00000A0F CB 10                 1883 	rl	b
+    00000A11 11 A0 00              1884 	ld	de, #0x00a0
+    00000A14 7B                    1885 	ld	a, e
+    00000A15 91                    1886 	sub	a, c
+    00000A16 5F                    1887 	ld	e, a
+    00000A17 7A                    1888 	ld	a, d
+    00000A18 98                    1889 	sbc	a, b
+    00000A19 F8 03                 1890 	ldhl	sp,#3
+    00000A1B 32                    1891 	ld	(hl-), a
+    00000A1C 73                    1892 	ld	(hl), e
+    00000A1D 2B                    1893 	dec	hl
     00000A1E 2B                    1894 	dec	hl
-    00000A1F 2B                    1895 	dec	hl
-    00000A20 36r00                 1896 	ld	(hl), #<(_obj)
-    00000A22 23                    1897 	inc	hl
-    00000A23 36s00                 1898 	ld	(hl), #>(_obj)
-    00000A25 E1                    1899 	pop	hl
-    00000A26 E5                    1900 	push	hl
-    00000A27 09                    1901 	add	hl, bc
-    00000A28 4D                    1902 	ld	c, l
-    00000A29 44                    1903 	ld	b, h
-    00000A2A F8 02                 1904 	ldhl	sp,#2
-    00000A2C 2A                    1905 	ld	a, (hl+)
-    00000A2D 66                    1906 	ld	h, (hl)
-    00000A2E 6F                    1907 	ld	l, a
-    00000A2F E5                    1908 	push	hl
-    00000A30 3E FF                 1909 	ld	a, #0xff
-    00000A32 F5                    1910 	push	af
-    00000A33 33                    1911 	inc	sp
-    00000A34 C5                    1912 	push	bc
-    00000A35 CDr00r00              1913 	call	_fill
-    00000A38 E8 05                 1914 	add	sp, #5
-    00000A3A C3r3Dr09              1915 	jp	00105$
-    00000A3D                       1916 00129$:
-                                   1917 ;src/main.c:335: _char = ' ' + ((_cy * BF_KEYBOARD_W) + _cx);
-    00000A3D 79                    1918 	ld	a, c
+    00000A1F 36r00                 1895 	ld	(hl), #<(_obj)
+    00000A21 23                    1896 	inc	hl
+    00000A22 36s00                 1897 	ld	(hl), #>(_obj)
+    00000A24 E1                    1898 	pop	hl
+    00000A25 E5                    1899 	push	hl
+    00000A26 09                    1900 	add	hl, bc
+    00000A27 4D                    1901 	ld	c, l
+    00000A28 44                    1902 	ld	b, h
+    00000A29 F8 02                 1903 	ldhl	sp,#2
+    00000A2B 2A                    1904 	ld	a, (hl+)
+    00000A2C 66                    1905 	ld	h, (hl)
+    00000A2D 6F                    1906 	ld	l, a
+    00000A2E E5                    1907 	push	hl
+    00000A2F 3E FF                 1908 	ld	a, #0xff
+    00000A31 F5                    1909 	push	af
+    00000A32 33                    1910 	inc	sp
+    00000A33 C5                    1911 	push	bc
+    00000A34 CDr00r00              1912 	call	_fill
+    00000A37 E8 05                 1913 	add	sp, #5
+    00000A39 C3r3Cr09              1914 	jp	00105$
+    00000A3C                       1915 00129$:
+                                   1916 ;src/main.c:362: _char = ' ' + ((_cy * BF_KEYBOARD_W) + _cx);
+    00000A3C 79                    1917 	ld	a, c
+    00000A3D 87                    1918 	add	a, a
     00000A3E 87                    1919 	add	a, a
     00000A3F 87                    1920 	add	a, a
-    00000A40 87                    1921 	add	a, a
-    00000A41 81                    1922 	add	a, c
-    00000A42 87                    1923 	add	a, a
-    00000A43 80                    1924 	add	a, b
-    00000A44 C6 20                 1925 	add	a, #0x20
-    00000A46 4F                    1926 	ld	c, a
-                                   1927 ;src/main.c:336: obj_slot = 0;
-    00000A47 21r00r00              1928 	ld	hl, #_obj_slot
-    00000A4A 36 00                 1929 	ld	(hl), #0x00
-                                   1930 ;src/main.c:337: fill((void*)(((uint16_t)obj) + (obj_slot << 2)), 0xFF, sizeof(obj) - (obj_slot << 2));
-    00000A4C 11r00r00              1931 	ld	de, #_obj
-    00000A4F C5                    1932 	push	bc
-    00000A50 21 A0 00              1933 	ld	hl, #0x00a0
-    00000A53 E5                    1934 	push	hl
-    00000A54 3E FF                 1935 	ld	a, #0xff
-    00000A56 F5                    1936 	push	af
-    00000A57 33                    1937 	inc	sp
-    00000A58 D5                    1938 	push	de
-    00000A59 CDr00r00              1939 	call	_fill
-    00000A5C E8 05                 1940 	add	sp, #5
-    00000A5E C1                    1941 	pop	bc
-                                   1942 ;src/main.c:339: for(uint8_t i = (144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8)); i <= 144; i += 4){
-    00000A5F 06 60                 1943 	ld	b, #0x60
-    00000A61                       1944 00142$:
-    00000A61 3E 90                 1945 	ld	a, #0x90
-    00000A63 90                    1946 	sub	a, b
-    00000A64 38 1E                 1947 	jr	C,00133$
-                                   1948 ;src/gb.h:170: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
-    00000A66 21r00r00              1949 	ld	hl, #_offset_x
-    00000A69 36 07                 1950 	ld	(hl), #0x07
-    00000A6B 21r00r00              1951 	ld	hl, #_offset_y
-    00000A6E 70                    1952 	ld	(hl), b
-                                   1953 ;src/main.c:341: while(!vblank_happened) halt();
-    00000A6F                       1954 00130$:
-    00000A6F 21r00r00              1955 	ld	hl, #_vblank_happened
-    00000A72 CB 46                 1956 	bit	0, (hl)
-    00000A74 20 03                 1957 	jr	NZ,00132$
-    00000A76 76                    1958 	halt
-    00000A77 18 F6                 1959 	jr	00130$
-    00000A79                       1960 00132$:
-                                   1961 ;src/main.c:342: vblank_happened = false;
-    00000A79 21r00r00              1962 	ld	hl, #_vblank_happened
-    00000A7C 36 00                 1963 	ld	(hl), #0x00
-                                   1964 ;src/main.c:339: for(uint8_t i = (144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8)); i <= 144; i += 4){
+    00000A40 81                    1921 	add	a, c
+    00000A41 87                    1922 	add	a, a
+    00000A42 80                    1923 	add	a, b
+    00000A43 C6 20                 1924 	add	a, #0x20
+    00000A45 4F                    1925 	ld	c, a
+                                   1926 ;src/main.c:363: obj_slot = 0;
+    00000A46 21r00r00              1927 	ld	hl, #_obj_slot
+    00000A49 36 00                 1928 	ld	(hl), #0x00
+                                   1929 ;src/main.c:364: fill((void*)(((uint16_t)obj) + (obj_slot << 2)), 0xFF, sizeof(obj) - (obj_slot << 2));
+    00000A4B 11r00r00              1930 	ld	de, #_obj
+    00000A4E C5                    1931 	push	bc
+    00000A4F 21 A0 00              1932 	ld	hl, #0x00a0
+    00000A52 E5                    1933 	push	hl
+    00000A53 3E FF                 1934 	ld	a, #0xff
+    00000A55 F5                    1935 	push	af
+    00000A56 33                    1936 	inc	sp
+    00000A57 D5                    1937 	push	de
+    00000A58 CDr00r00              1938 	call	_fill
+    00000A5B E8 05                 1939 	add	sp, #5
+    00000A5D C1                    1940 	pop	bc
+                                   1941 ;src/main.c:366: for(uint8_t i = (144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8)); i <= 144; i += 4){
+    00000A5E 06 60                 1942 	ld	b, #0x60
+    00000A60                       1943 00142$:
+    00000A60 3E 90                 1944 	ld	a, #0x90
+    00000A62 90                    1945 	sub	a, b
+    00000A63 38 1E                 1946 	jr	C,00133$
+                                   1947 ;src/gb.h:174: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
+    00000A65 21r00r00              1948 	ld	hl, #_offset_x
+    00000A68 36 07                 1949 	ld	(hl), #0x07
+    00000A6A 21r00r00              1950 	ld	hl, #_offset_y
+    00000A6D 70                    1951 	ld	(hl), b
+                                   1952 ;src/main.c:368: while(!vblank_happened) halt();
+    00000A6E                       1953 00130$:
+    00000A6E 21r00r00              1954 	ld	hl, #_vblank_happened
+    00000A71 CB 46                 1955 	bit	0, (hl)
+    00000A73 20 03                 1956 	jr	NZ,00132$
+    00000A75 76                    1957 	halt
+    00000A76 18 F6                 1958 	jr	00130$
+    00000A78                       1959 00132$:
+                                   1960 ;src/main.c:369: vblank_happened = false;
+    00000A78 21r00r00              1961 	ld	hl, #_vblank_happened
+    00000A7B 36 00                 1962 	ld	(hl), #0x00
+                                   1963 ;src/main.c:366: for(uint8_t i = (144 - ((BF_KEYBOARD_Y + BF_KEYBOARD_H) * 8)); i <= 144; i += 4){
+    00000A7D 04                    1964 	inc	b
     00000A7E 04                    1965 	inc	b
     00000A7F 04                    1966 	inc	b
     00000A80 04                    1967 	inc	b
-    00000A81 04                    1968 	inc	b
-    00000A82 18 DD                 1969 	jr	00142$
-    00000A84                       1970 00133$:
-                                   1971 ;src/gb.h:170: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
-    00000A84 21r00r00              1972 	ld	hl, #_offset_x
-    00000A87 36 07                 1973 	ld	(hl), #0x07
-    00000A89 21r00r00              1974 	ld	hl, #_offset_y
-    00000A8C 36 90                 1975 	ld	(hl), #0x90
-                                   1976 ;src/main.c:346: return _char;
-    00000A8E 59                    1977 	ld	e, c
-                                   1978 ;src/main.c:347: }
-    00000A8F E8 06                 1979 	add	sp, #6
-    00000A91 C9                    1980 	ret
-                                   1981 	.area _CODE
-                                   1982 	.area _CABS (ABS)
+    00000A81 18 DD                 1968 	jr	00142$
+    00000A83                       1969 00133$:
+                                   1970 ;src/gb.h:174: inline void set_win_offset(uint8_t _ox, uint8_t _oy){offset_x = _ox + 7; offset_y = _oy;}
+    00000A83 21r00r00              1971 	ld	hl, #_offset_x
+    00000A86 36 07                 1972 	ld	(hl), #0x07
+    00000A88 21r00r00              1973 	ld	hl, #_offset_y
+    00000A8B 36 90                 1974 	ld	(hl), #0x90
+                                   1975 ;src/main.c:373: return _char;
+    00000A8D 59                    1976 	ld	e, c
+                                   1977 ;src/main.c:374: }
+    00000A8E E8 06                 1978 	add	sp, #6
+    00000A90 C9                    1979 	ret
+                                   1980 	.area _CODE
+                                   1981 	.area _CABS (ABS)

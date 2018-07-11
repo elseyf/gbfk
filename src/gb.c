@@ -1,3 +1,7 @@
+/**
+ * GameBoy Hardware Abstraction Layer, by el_seyf
+ * Contains functions and defines for GameBoy Hardware
+*/
 
 #pragma disable_warning 59
 

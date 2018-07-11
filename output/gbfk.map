@@ -31,7 +31,7 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000003  l__INTERRUPT5                   
      00000200  s__CODE                         
      00001106  l__DATA                         
-     00001F1A  l__CODE                         
+     00001F19  l__CODE                         
      0000C000  s__DATA                         
      0000D106  s__GSFINAL                      
      0000D106  s__GSINIT                       
@@ -42,7 +42,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_CODE                               00000200    00001F1A =        7962. bytes (REL,CON)
+_CODE                               00000200    00001F19 =        7961. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -88,39 +88,39 @@ _CODE                               00000200    00001F1A =        7962. bytes (R
      0000089D  _bf_editor                         main
      00000AF3  _bf_editor_update_instr            main
      00000B6F  _bf_editor_redraw_instr            main
-     00000C13  _bf_clear_screen                   main
-     00000C93  _bf_interpreter                    main
-     00000E4A  _bf_get_char                       main
-     00000FDB  _bg_tiles                          
-     00001FDB  __divsuchar                        
-     00001FEA  __modsuchar                        
-     00001FF6  __divuschar                        
-     00002008  __moduschar                        
+     00000C14  _bf_clear_screen                   main
+     00000C92  _bf_interpreter                    main
+     00000E49  _bf_get_char                       main
+     00000FDA  _bg_tiles                          
+     00001FDA  __divsuchar                        
+     00001FE9  __modsuchar                        
+     00001FF5  __divuschar                        
+     00002007  __moduschar                        
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-_CODE                               00000200    00001F1A =        7962. bytes (REL,CON)
+_CODE                               00000200    00001F19 =        7961. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00002018  __divschar                         
-     00002026  __modschar                         
-     00002032  __divsint                          
-     00002046  __modsint                          
-     00002058  __divuchar                         
-     00002066  __moduchar                         
-     00002072  __divuint                          
-     00002086  __moduint                          
-     00002098  .div8                              
-     00002098  .mod8                              
-     000020A0  .div16                             
-     000020A0  .mod16                             
-     000020D6  .divu8                             
-     000020D6  .modu8                             
-     000020D9  .divu16                            
-     000020D9  .modu16                            
+     00002017  __divschar                         
+     00002025  __modschar                         
+     00002031  __divsint                          
+     00002045  __modsint                          
+     00002057  __divuchar                         
+     00002065  __moduchar                         
+     00002071  __divuint                          
+     00002085  __moduint                          
+     00002097  .div8                              
+     00002097  .mod8                              
+     0000209F  .div16                             
+     0000209F  .mod16                             
+     000020D5  .divu8                             
+     000020D5  .modu8                             
+     000020D8  .divu16                            
+     000020D8  .modu16                            
 ASxxxx Linker V03.00 + NoICE + sdld,  page 4.
 Hexadecimal  [32-Bits]
 

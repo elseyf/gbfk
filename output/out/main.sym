@@ -11,16 +11,16 @@ Symbol Table
     __moduint                                                       ******** GX
   1 _bf_cell                                                        00000807 GR
   1 _bf_cell_p                                                      00000805 GR
-  0 _bf_clear_screen                                                000006CA GR
+  0 _bf_clear_screen                                                000006CB GR
   0 _bf_editor                                                      00000354 GR
   0 _bf_editor_redraw_instr                                         00000626 GR
   0 _bf_editor_update_instr                                         000005AA GR
-  0 _bf_get_char                                                    00000901 GR
+  0 _bf_get_char                                                    00000900 GR
   0 _bf_hello_world                                                 00000259 GR
   1 _bf_instr                                                       00000003 GR
   1 _bf_instr_p                                                     00000001 GR
   0 _bf_instruction_char                                            00000250 GR
-  0 _bf_interpreter                                                 0000074A GR
+  0 _bf_interpreter                                                 00000749 GR
   1 _bf_pc                                                          00000803 GR
   1 _bf_screen_out_x                                                00001007 GR
   1 _bf_screen_out_y                                                00001008 GR
@@ -71,7 +71,7 @@ Hexadecimal [32-Bits]
 
 Area Table
 
-   0 _CODE                                      size      A92   flags    0
+   0 _CODE                                      size      A91   flags    0
    1 _DATA                                      size     100D   flags    0
    2 _DABS                                      size        0   flags    8
    3 _HOME                                      size        0   flags    0
